@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:layout_marginTop="@dimen/TopicBottomandTop"
+    android:layout_marginBottom="@dimen/TopicBottomandTop"
+    android:layout_marginLeft="@dimen/TopicLeftandRight"
+    android:layout_marginRight="@dimen/TopicLeftandRight"
+    tools:context="blackcore.tdc.edu.com.gamevhta.MainMenuActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2.5"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/btnSchool"
+                    android:background="@color/tran"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/school"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.6"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/txtNameTopic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textTopic"
+                    android:textSize="45sp"
+                    android:textStyle="bold"
+                    android:text="say oh yeah"/>
+        </LinearLayout>
+
+</LinearLayout>

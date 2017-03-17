@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/DialogTopicBottomandTop"
+    android:layout_marginLeft="@dimen/DialogTopicLeftandRight"
+    android:layout_marginRight="@dimen/DialogTopicLeftandRight"
+    android:layout_marginTop="@dimen/DialogTopicBottomandTop"
+    android:orientation="horizontal"
+    tools:context="blackcore.tdc.edu.com.gamevhta.MainMenuActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/dialogchoosetheme"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/btnCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@color/tran"
+                android:src="@drawable/cancel" />
+
+            <ImageView
+                android:id="@+id/btnLearn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/tran"
+                android:src="@drawable/learn_vocabulary" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/btnMemory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/tran"
+                android:src="@drawable/memorychallenge" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/btnPractice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/tran"
+                android:src="@drawable/practice" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">VHTA</string>
+    <string name="fontPath">fonts/bubblegum.ttf</string>
+    <string name="txtdialogbackgame">Pause</string>
+</resources>

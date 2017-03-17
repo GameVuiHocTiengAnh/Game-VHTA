@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--dialogExit-->
+    <dimen name="DialogExitTopandBottom">40dp</dimen>
+    <dimen name="DialogExitLeftandRight">60dp</dimen>
+    <!--dialogTopic-->
+    <dimen name="DialogTopicBottomandTop">10dp</dimen>
+    <dimen name="DialogTopicLeftandRight">80dp</dimen>
+    <!--dialogBackGame-->
+    <dimen name="DialogBackGameBottomandTop">30dp</dimen>
+    <dimen name="DialogBackGameLeftandRight">80dp</dimen>
+    <!--Topic-->
+    <dimen name="TopicBottomandTop">40dp</dimen>
+    <dimen name="TopicLeftandRight">70dp</dimen>
+</resources>

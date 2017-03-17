@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--MainMenu-->
+    <dimen name="guideBottom">75dp</dimen>
+    <dimen name="scoreBottom">20dp</dimen>
+    <dimen name="playLeft">40dp</dimen>
+    <dimen name="playTop">20dp</dimen>
+    <dimen name="exitBottom">15dp</dimen>
+    <!--Guide-->
+    <dimen name="textsizeGuide">15sp</dimen>
+    <dimen name="guideTextBottom">65dp</dimen>
+    <dimen name="guideTextLeft">120dp</dimen>
+    <dimen name="guideTextRight">120dp</dimen>
+    <dimen name="btnBackGuideTop">20dp</dimen>
+    <dimen name="btnBackGuideLeft">20dp</dimen>
+    <!--Score -->
+    <dimen name="btnBackScoreTop">10dp</dimen>
+    <dimen name="btnBackScoreLeft">10dp</dimen>
+    <dimen name="lvTop">90dp</dimen>
+    <dimen name="lvBottom">20dp</dimen>
+    <dimen name="lvLeft">60dp</dimen>
+    <dimen name="lvRight">30dp</dimen>
+    <!--Topic-->
+    <dimen name="btnBackTopicTop">10dp</dimen>
+    <dimen name="btnBackTopicLeft">10dp</dimen>
+    <dimen name="btnPrev">70dp</dimen>
+    <!--dialog Exit-->
+    <dimen name="btnYesBottom">40dp</dimen>
+    <dimen name="btnYesRight">10dp</dimen>
+    <dimen name="btnNoBottom">36dp</dimen>
+    <!--game Assemble picture -->
+    <dimen name="answer">25dp</dimen>
+    <dimen name="questionTwo">30dp</dimen>
+    <dimen name="questionThree">60dp</dimen>
+    <dimen name="questionFour">30dp</dimen>
+    <dimen name="questionFive">50dp</dimen>
+    <dimen name="Time">60dp</dimen>
+    <dimen name="txttime">20sp</dimen>
+    <dimen name="txtScore">25sp</dimen>
+    <dimen name="imvScore">10dp</dimen>
+    <dimen name="backGame">10dp</dimen>
+    !-- dialog back game-->
+    <dimen name="imageBottomBackGame">50dp</dimen>
+    <dimen name="txtDialogBackgame">65sp</dimen>
+
+    <!--Screen 5-->
+    <dimen name="layout_left">130dp</dimen>
+    <dimen name="layout_left_timer_height">60dp</dimen>
+    <dimen name="layout_left_timer_padding_right">25dp</dimen>
+    <dimen name="layout_left_timer_text_size">35sp</dimen>
+
+    <dimen name="layout_left_score_margin_bottom">45dp</dimen>
+    <dimen name="layout_left_score_layout_width">80dp</dimen>
+    <dimen name="layout_left_score_layout_height">40dp</dimen>
+    <dimen name="layout_left_score_margin_right">20dp</dimen>
+    <dimen name="layout_left_score_text_size">22sp</dimen>
+
+
+    <dimen name="layout_right_top_word_width">250dp</dimen>
+    <dimen name="layout_right_top_word_height">100dp</dimen>
+    <dimen name="layout_right_top_word_padding_bottom">20dp</dimen>
+    <dimen name="layout_right_top_word_text_size">30sp</dimen>
+
+    <dimen name="layout_right_bot_row_padding">10dp</dimen>
+    <dimen name="layout_right_bot_row_image_size">95dp</dimen>
+
+    <!-- End screen 5 -->
+</resources>

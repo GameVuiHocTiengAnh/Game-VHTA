@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_load_prev"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context="blackcore.tdc.edu.com.gamevhta.MainMenuActivity">
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/aviSplashLoadingPrev"
+        style="@style/AVLoadingIndicatorView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:indicatorColor="@android:color/white"
+        app:indicatorName="BallSpinFadeLoaderIndicator" />
+
+
+</LinearLayout>
