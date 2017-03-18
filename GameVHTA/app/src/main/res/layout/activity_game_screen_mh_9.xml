@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/screen_5_background_1920x1080"
-    tools:context="blackcore.tdc.edu.com.gamevhta.GameScreen5">
+    tools:context="blackcore.tdc.edu.com.gamevhta.GameScreenMH9">
 
     <LinearLayout
         android:layout_width="@dimen/layout_left"
