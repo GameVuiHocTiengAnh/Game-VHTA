@@ -1,9 +1,13 @@
 package blackcore.tdc.edu.com.gamevhta;
 
 import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -18,22 +22,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
+
 /**
  * Created by Hoang on 3/16/2017.
  */
 
-public class GameScreen5 extends AppCompatActivity {
+public class GameScreenMH9 extends AppCompatActivity {
     private Handler handler;
     private Animation animation;
     private Timer timer = new Timer();
     private ImageButton btnImage1, btnImage2, btnImage3, btnImage4, btnImage5, btnImage6;
     private TextView lblTimer, lblWord, lblScore;
-    private MediaPlayer mp, mpSoundBackground;
+    private MediaPlayer mpClicked, mpSoundBackground;
     private ImageView imgListOver, imgReplayOver;
 
     private int SCORE = 0;
@@ -50,7 +57,7 @@ public class GameScreen5 extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_game_screen_5);
+        setContentView(R.layout.activity_game_screen_mh_9);
         initialize();
         handler = new Handler() {
             @Override
@@ -71,11 +78,6 @@ public class GameScreen5 extends AppCompatActivity {
             }
         };
 
-        getAnimationImageButton();
-        mp = MediaPlayer.create(getApplicationContext(), R.raw.game_5_sound_clicked);
-        mpSoundBackground = MediaPlayer.create(getApplicationContext(), R.raw.game_9_screen_background_sound);
-        mpSoundBackground.setLooping(true);
-        mpSoundBackground.start();
     }
 
 
@@ -98,7 +100,6 @@ public class GameScreen5 extends AppCompatActivity {
     }
 
     private void initialize() {
-
         btnImage1 = (ImageButton) findViewById(R.id.btnImage1);
         btnImage2 = (ImageButton) findViewById(R.id.btnImage2);
         btnImage3 = (ImageButton) findViewById(R.id.btnImage3);
@@ -112,22 +113,32 @@ public class GameScreen5 extends AppCompatActivity {
 
         listImageFromData = new ArrayList<>();
 
-        dialogGameOver = new Dialog(GameScreen5.this);
+        dialogGameOver = new Dialog(GameScreenMH9.this);
         dialogGameOver.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogGameOver.setCancelable(false);
         dialogGameOver.setContentView(R.layout.activity_dialog_game_over);
         dialogGameOver.getWindow().setBackgroundDrawableResource(R.color.tran);
         imgListOver = (ImageView) dialogGameOver.findViewById(R.id.imgListOver);
         imgReplayOver = (ImageView) dialogGameOver.findViewById(R.id.imgReplayOver);
+
+        mpClicked = MediaPlayer.create(getApplicationContext(), R.raw.game_5_sound_clicked);
+        mpSoundBackground = MediaPlayer.create(getApplicationContext(), R.raw.game_9_screen_background_sound);
+        mpSoundBackground.setLooping(true);
+        mpSoundBackground.start();
+
+        //set time left default
+        lblTimer.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
+
         addDataList();
         getEvents();
         setFont();
+        getAnimationImageButton();
         loadGame();
-
     }
 
+    //play game
     private void loadGame() {
-        lblTimer.setText("50");
+        lblTimer.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
         lblScore.setText(String.valueOf(SCORE));
         RESULT_FAILED = 0;
         RESULT_CHOSEN = -1;
@@ -149,39 +160,59 @@ public class GameScreen5 extends AppCompatActivity {
         loadLevel();
     }
 
+    //List Image was loaded from database
     private void addDataList() {
         for (int i = 0; i < 30; i++) {
             listImageFromData.add("Word" + (i + 1));
         }
     }
 
+
     private void loadLevel() {
         listImageLevel = new ArrayList<>();
         Random rd = new Random();
         for (int j = 0; j < 6; j++) {
 
-            int x = rd.nextInt(listImageFromData.size() - 1);
+            int x = rd.nextInt(listImageFromData.size());
             listImageLevel.add(j, "Word" + x);
         }
-        RESULT_CHOSEN = rd.nextInt(listImageLevel.size() - 1) + 1;
-        lblWord.setText(listImageLevel.get(RESULT_CHOSEN).toString());
+        RESULT_CHOSEN = rd.nextInt(listImageLevel.size()) + 1;
+        lblWord.setText(listImageLevel.get(RESULT_CHOSEN - 1).toString());
         Toast.makeText(getApplicationContext(), "RS: " + RESULT_CHOSEN, Toast.LENGTH_SHORT).show();
         switch (RESULT_CHOSEN) {
             case 1:
+                //btnImage1.setImageBitmap(getImageBitmap(listImageLevel.get(RESULT_CHOSEN)));
                 break;
             case 2:
+                //btnImage2.setImageBitmap(getImageBitmap(listImageLevel.get(RESULT_CHOSEN)));
                 break;
             case 3:
+                //btnImage3.setImageBitmap(getImageBitmap(listImageLevel.get(RESULT_CHOSEN)));
                 break;
             case 4:
+                //btnImage4.setImageBitmap(getImageBitmap(listImageLevel.get(RESULT_CHOSEN)));
                 break;
             case 5:
+                //btnImage5.setImageBitmap(getImageBitmap(listImageLevel.get(RESULT_CHOSEN)));
                 break;
             case 6:
+                //btnImage6.setImageBitmap(getImageBitmap(listImageLevel.get(RESULT_CHOSEN)));
                 break;
         }
     }
 
+    //Add image to ImageButton
+    private Bitmap getImageBitmap(String imageName){
+        String path = Environment.getExternalStorageDirectory().toString() +""+ imageName +".jpg";
+        File  fileImage = new File(path);
+        Bitmap bmp = null;
+        if(fileImage.exists()) {
+            bmp = BitmapFactory.decodeFile(fileImage.getAbsolutePath());
+        }
+        return bmp;
+    }
+
+    //Font
     private void setFont() {
         Typeface custom_font = Typeface.createFromAsset(getAssets(), getResources().getString(R.string.fontPath));
         lblTimer.setTypeface(custom_font);
@@ -189,11 +220,13 @@ public class GameScreen5 extends AppCompatActivity {
         lblScore.setTypeface(custom_font);
     }
 
+    //Event
     private void getEvents() {
         imgListOver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(GameScreenMH9.this,TopisChoosingActivity.class));
+                finish();
             }
         });
         imgReplayOver.setOnClickListener(new View.OnClickListener() {
@@ -215,7 +248,7 @@ public class GameScreen5 extends AppCompatActivity {
                         // PRESSED
                         btnImage6.startAnimation(animation);
                         getResult(6);
-                        mp.start();
+                        mpClicked.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
@@ -234,7 +267,7 @@ public class GameScreen5 extends AppCompatActivity {
                         // PRESSED
                         btnImage5.startAnimation(animation);
                         getResult(5);
-                        mp.start();
+                        mpClicked.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
@@ -253,7 +286,7 @@ public class GameScreen5 extends AppCompatActivity {
                         // PRESSED
                         btnImage4.startAnimation(animation);
                         getResult(4);
-                        mp.start();
+                        mpClicked.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
@@ -272,7 +305,7 @@ public class GameScreen5 extends AppCompatActivity {
                         // PRESSED
                         btnImage3.startAnimation(animation);
                         getResult(3);
-                        mp.start();
+                        mpClicked.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
@@ -291,7 +324,7 @@ public class GameScreen5 extends AppCompatActivity {
                         // PRESSED
                         btnImage2.startAnimation(animation);
                         getResult(2);
-                        mp.start();
+                        mpClicked.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
@@ -311,7 +344,7 @@ public class GameScreen5 extends AppCompatActivity {
                         // PRESSED
                         btnImage1.startAnimation(animation);
                         getResult(1);
-                        mp.start();
+                        mpClicked.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
