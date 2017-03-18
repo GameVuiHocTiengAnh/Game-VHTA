@@ -29,7 +29,7 @@ public class TopisChoosingActivity extends AppCompatActivity {
     public ArrayList<BitmapTopic> ImageTopics = null;
     public static Integer position = 0;
     private Animation alpha1,alpha2,alpha3;
-    private MediaPlayer mClick;
+    private MediaPlayer mClick,mTopic;
 
     private MusicService mService = new MusicService();
     ServiceConnection conn = new ServiceConnection() {
@@ -46,6 +46,16 @@ public class TopisChoosingActivity extends AppCompatActivity {
 
         }
     };
+
+    protected void onPause(){
+        mService.pauseMusic(mTopic);
+        super.onPause();
+
+    }
+    protected  void onResume(){
+        mService.playMusic(mTopic);
+        super.onResume();
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +89,9 @@ public class TopisChoosingActivity extends AppCompatActivity {
         btnBack.setMoveActivity(intent,TopisChoosingActivity.this);
 
         mClick = MediaPlayer.create(getApplicationContext(),R.raw.click);
+        mTopic = MediaPlayer.create(getApplicationContext(),R.raw.topic);
+
+        musicTopic();
 
         //call frist Topic
         this.callFragmentTopics(position);
@@ -115,6 +128,10 @@ public class TopisChoosingActivity extends AppCompatActivity {
         });
     }
 
+    public void musicTopic(){
+        mService.playMusic(mTopic);
+        mTopic.setLooping(true);
+    }
     public void onBackPressed()
     {
         Intent intent = new Intent(getApplicationContext(),MainMenuActivity.class);

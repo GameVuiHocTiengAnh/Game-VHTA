@@ -21,6 +21,12 @@
             android:name=".MainMenuActivity"
             android:screenOrientation="landscape" />
         <activity
+            android:name=".GuideActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".ScoresActivity"
+            android:screenOrientation="landscape" />
+        <activity
             android:name=".TopisChoosingActivity"
             android:screenOrientation="landscape" />
         <activity
@@ -29,28 +35,17 @@
         <activity
             android:name=".LoadingGoOutGameActivity"
             android:screenOrientation="landscape" />
+        <!-- game picture puzzle game-->
         <activity
-            android:name=".picture_puzzle_game.DragGame"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".ScoresActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".GuideActivity"
+            android:name=".picture_puzzle_game.PicturePuzzleActivity"
             android:screenOrientation="landscape" />
 
         <!--game catching words-->
         <activity android:name=".catching_words_game.CatchingWordsActivity"
             android:screenOrientation="landscape">
-
-
         </activity>
 
         <!--Game Screen 5 -->
-        <activity
-            android:name=".GameScreen5"
-            android:screenOrientation="landscape">
-        </activity>
     </application>
 
 </manifest>

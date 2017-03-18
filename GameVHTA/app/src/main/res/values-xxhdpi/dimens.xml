@@ -7,10 +7,9 @@
     <dimen name="playTop">20dp</dimen>
     <dimen name="exitBottom">15dp</dimen>
     <!--Guide-->
-    <dimen name="textsizeGuide">15sp</dimen>
-    <dimen name="guideTextBottom">65dp</dimen>
-    <dimen name="guideTextLeft">120dp</dimen>
-    <dimen name="guideTextRight">120dp</dimen>
+    <dimen name="guideTextBottom">35dp</dimen>
+    <dimen name="guideTextLeft">125dp</dimen>
+    <dimen name="guideTextRight">125dp</dimen>
     <dimen name="btnBackGuideTop">20dp</dimen>
     <dimen name="btnBackGuideLeft">20dp</dimen>
     <!--Score -->
@@ -29,19 +28,23 @@
     <dimen name="btnYesRight">10dp</dimen>
     <dimen name="btnNoBottom">36dp</dimen>
     <!--game Assemble picture -->
-    <dimen name="answer">25dp</dimen>
     <dimen name="questionTwo">30dp</dimen>
     <dimen name="questionThree">60dp</dimen>
     <dimen name="questionFour">30dp</dimen>
     <dimen name="questionFive">50dp</dimen>
     <dimen name="Time">60dp</dimen>
-    <dimen name="txttime">20sp</dimen>
+    <dimen name="txttime">30sp</dimen>
     <dimen name="txtScore">25sp</dimen>
     <dimen name="imvScore">10dp</dimen>
     <dimen name="backGame">10dp</dimen>
-    !-- dialog back game-->
+    <dimen name="background_score_game_top">10dp</dimen>
+    <dimen name="background_score_game_left">70dp</dimen>
+    <dimen name="txtAnswer">20sp</dimen>
+    <!-- dialog back game-->
     <dimen name="imageBottomBackGame">50dp</dimen>
     <dimen name="txtDialogBackgame">65sp</dimen>
+    <!-- dialog over game -->
+    <dimen name="imageOverGame">30dp</dimen>
 
     <!--Screen 5-->
     <dimen name="layout_left">130dp</dimen>

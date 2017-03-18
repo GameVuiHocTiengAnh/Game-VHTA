@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import com.wang.avi.AVLoadingIndicatorView;
 
-import blackcore.tdc.edu.com.gamevhta.picture_puzzle_game.DragGame;
+import blackcore.tdc.edu.com.gamevhta.picture_puzzle_game.PicturePuzzleActivity;
 
 /**
  * Created by phong on 2/27/2017.
@@ -32,7 +32,7 @@ public class LoadingGoInGameActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(LoadingGoInGameActivity.this, DragGame.class);
+                Intent intent = new Intent(LoadingGoInGameActivity.this, PicturePuzzleActivity.class);
                 startActivity(intent);
                 finish();
             }

@@ -87,7 +87,8 @@ public class MainMenuActivity extends AppCompatActivity {
                         return true;
                     case MotionEvent.ACTION_UP:
                         btnPlay.clearAnimation();
-                        flagMain = false;
+                        mService.playMusic(mClick);
+                        flagMain = true;
                         playMusicMain();
                         Intent intent = new Intent(getApplicationContext(),TopisChoosingActivity.class);
                         startActivity(intent);
@@ -108,7 +109,8 @@ public class MainMenuActivity extends AppCompatActivity {
                         return true;
                     case MotionEvent.ACTION_UP:
                         btnScore.clearAnimation();
-                        flagMain = false;
+                        mService.playMusic(mClick);
+                        flagMain = true;
                         playMusicMain();
                         Intent intent = new Intent(getApplicationContext(),ScoresActivity.class);
                         startActivity(intent);
@@ -129,7 +131,8 @@ public class MainMenuActivity extends AppCompatActivity {
                         return true;
                     case MotionEvent.ACTION_UP:
                         btnGuide.clearAnimation();
-                        flagMain = false;
+                        mService.playMusic(mClick);
+                        flagMain = true;
                         playMusicMain();
                         Intent intent = new Intent(getApplicationContext(),GuideActivity.class);
                         startActivity(intent);
@@ -197,8 +200,8 @@ public class MainMenuActivity extends AppCompatActivity {
             mService.playMusic(mMain);
             mMain.setLooping(true);
         }else if(flagMain == false){
-            mService.stopMusic(mMain);
             mService.playMusic(mClick);
+            mService.stopMusic(mMain);
         }
     }
 

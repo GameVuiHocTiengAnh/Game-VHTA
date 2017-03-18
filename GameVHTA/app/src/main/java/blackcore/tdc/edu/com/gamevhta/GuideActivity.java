@@ -1,18 +1,53 @@
 package blackcore.tdc.edu.com.gamevhta;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.graphics.Color;
+import android.media.MediaPlayer;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.view.View;
 import android.view.WindowManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import blackcore.tdc.edu.com.gamevhta.button.BackButton;
+import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 public class GuideActivity extends AppCompatActivity {
 
     private BackButton btnBackGuide;
-    private TextView txtGuide;
+    private WebView webviewGuide;
+    private MediaPlayer mpGuide;
+    private MusicService mService = new MusicService();
+    ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            MusicService.MyBinder mBinder = (MusicService.MyBinder) iBinder;
+            mService = mBinder.getService();
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mService = null;
+
+        }
+    };
+
+    protected void onPause(){
+        mService.pauseMusic(mpGuide);
+        super.onPause();
+
+    }
+    protected  void onResume(){
+        mService.playMusic(mpGuide);
+        super.onResume();
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,22 +59,23 @@ public class GuideActivity extends AppCompatActivity {
         btnBackGuide = (BackButton) findViewById(R.id.btnBackGuide);
         Intent intent = new Intent(getApplicationContext(),MainMenuActivity.class);
         btnBackGuide.setMoveActivity(intent,GuideActivity.this);
-        txtGuide = (TextView) findViewById(R.id.txtGuide);
+
+        webviewGuide = (WebView) findViewById(R.id.webviewGuide);
+        WebSettings ws = webviewGuide.getSettings();
+        ws.setJavaScriptEnabled(true);
+        webviewGuide.setBackgroundColor(Color.TRANSPARENT);
+        webviewGuide.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
+        webviewGuide.loadUrl("file:///android_asset/guide/guide.html");
+
+        mpGuide = MediaPlayer.create(getApplicationContext(),R.raw.guide);
+        musicGuide();
 
 
-        txtGuide.setText("hướng dẫn chơi : " +
-                "khi người chơi nhấp vào play sẽ vào màn chọn chủ đề chơi ," +
-                "khi chọn chủ đề sẽ hiện ra dialog báo người chơi chọn cấp độ chơi" +
-                "khi người chơi muốn trở về màn hình menu chính sẽ nhấp nút back để trở về" +
-                "nếu người chơi muốn xem điểm thì nhấp vào hình bảng điểm trên màn hình menu chính và xem điểm" +
-                "khi không muốn chơi nữa hãy nhấp vào hình tấm thảm trên màn hình menu chính để exit"+
-                "Phần chơi game:" +
-                "khi chọn chủ để chơi sẽ xuất hiện 3 phần tương ứng là chọn học từ , nhớ từ và luyện từ, khi vào màn chơi sẽ random các game nhằm tạo hứng thú cho người chơi" +
-                ", bạn sẽ không chọn dc màn chơi mà sẽ phụ thuộc vào việc random" +
-                "khi kết thúc 1 màn chơi : nếu thắng sẽ được điểm thưởng và qua màn mới , nếu thua hiện ra một bảng nhập tên người chơi vừa rồi để kết thúc game và chơi lại");
+    }
 
-        txtGuide.setMovementMethod(new ScrollingMovementMethod());
-
+    public void musicGuide(){
+        mService.playMusic(mpGuide);
+        mpGuide.setLooping(true);
     }
 
     public void onBackPressed()

@@ -18,15 +18,13 @@
         android:background="@color/tran"
         android:clickable="true" />
 
-    <TextView
-        android:id="@+id/txtGuide"
+    <WebView
+        android:id="@+id/webviewGuide"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/guideTextBottom"
         android:layout_marginLeft="@dimen/guideTextLeft"
         android:layout_marginRight="@dimen/guideTextRight"
-        android:scrollbars="vertical"
-        android:textColor="@color/textGuide"
-        android:textSize="@dimen/textsizeGuide" />
+        android:scrollbars="vertical" />
 
 </LinearLayout>

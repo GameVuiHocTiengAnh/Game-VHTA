@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="blackcore.tdc.edu.com.gamevhta.MainMenuActivity">
 
     <LinearLayout
@@ -15,7 +15,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -24,11 +24,10 @@
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <ImageView
+                <blackcore.tdc.edu.com.gamevhta.button.PauseButton
+                    android:id="@+id/btnBackGame"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/btnBackGame"
-                    android:src="@drawable/back1"
                     android:layout_marginLeft="@dimen/backGame"
                     android:layout_marginTop="@dimen/backGame" />
             </LinearLayout>
@@ -44,13 +43,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/Time"
                     android:layout_marginRight="@dimen/Time"
-                    android:background="@drawable/time_image_sc5"
                     android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/iconTimer"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:background="@drawable/time_image_sc5" />
 
                     <TextView
                         android:id="@+id/txtTime"
@@ -59,8 +58,7 @@
                         android:layout_alignBottom="@+id/iconTimer"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:gravity="center"
-                        android:text="50"
+                        android:text="10"
                         android:textColor="#f9f7f8"
                         android:textSize="@dimen/txttime"
                         android:textStyle="bold" />
@@ -71,14 +69,16 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/background_score_game_top"
                 android:layout_weight="1"
-                android:gravity="right"
+                android:gravity="right|bottom"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/txtScore"
-                    android:layout_width="150dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/background_score_game_left"
                     android:background="@drawable/backgroud_word"
                     android:gravity="center"
                     android:paddingBottom="@dimen/imvScore"
@@ -102,11 +102,12 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/txtAnswerFour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Cow"
                     android:textColor="#000"
-                    android:textSize="30dp" />
+                    android:textSize="@dimen/txtAnswer" />
 
                 <ImageView
                     android:id="@+id/imbAnimalquestionfour"
@@ -124,12 +125,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/txtAnswerFive"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Goat"
                     android:textColor="#000"
-                    android:textSize="30dp" />
+                    android:textSize="@dimen/txtAnswer" />
 
                 <ImageView
                     android:id="@+id/imbAnimalquestionfive"
@@ -148,12 +150,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/txtAnswerTwo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Bunny"
                     android:textColor="#000"
-                    android:textSize="30dp" />
+                    android:textSize="@dimen/txtAnswer" />
 
                 <ImageView
                     android:id="@+id/imbAnimalquestiontwo"
@@ -172,13 +175,13 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/txtAnswerThree"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Cat"
                     android:textColor="#000"
-                    android:textSize="30dp" />
+                    android:textSize="@dimen/txtAnswer" />
 
                 <ImageView
                     android:id="@+id/imbAnimalquestionthree"
@@ -197,12 +200,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/txtAnswerSix"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Dog"
                     android:textColor="#000"
-                    android:textSize="30dp" />
+                    android:textSize="@dimen/txtAnswer" />
 
                 <ImageView
                     android:id="@+id/imbAnimalquestionsix"
@@ -221,12 +225,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/txtAnswerOne"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Buffalo"
                     android:textColor="#000"
-                    android:textSize="30dp" />
+                    android:textSize="@dimen/txtAnswer" />
 
                 <ImageView
                     android:id="@+id/imbAnimalquestionone"
@@ -243,59 +248,95 @@
             android:layout_weight="0.5"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/imbAnimalone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/answer"
-                android:layout_marginRight="@dimen/answer"
-                android:background="@android:color/transparent"
-                android:src="@drawable/buffalo_answer" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom|center_horizontal"
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/imbAnimaltwo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/answer"
-                android:layout_marginRight="@dimen/answer"
-                android:background="@android:color/transparent"
-                android:src="@drawable/bunny_answer" />
+                <ImageView
+                    android:id="@+id/imbAnimalone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/buffalo_answer" />
+            </LinearLayout>
 
-            <ImageView
-                android:id="@+id/imbAnimalthree"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/answer"
-                android:layout_marginRight="@dimen/answer"
-                android:background="@android:color/transparent"
-                android:src="@drawable/cat_answer" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom|center_horizontal"
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/imbAnimlafour"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/answer"
-                android:layout_marginRight="@dimen/answer"
-                android:background="@android:color/transparent"
-                android:src="@drawable/cow_answer" />
+                <ImageView
+                    android:id="@+id/imbAnimaltwo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/bunny_answer" />
+            </LinearLayout>
 
-            <ImageView
-                android:id="@+id/imbAnimalfive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/answer"
-                android:layout_marginRight="@dimen/answer"
-                android:background="@android:color/transparent"
-                android:src="@drawable/goat_answer" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom|center_horizontal"
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/imbAnimalsix"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/dog_answer" />
+                <ImageView
+                    android:id="@+id/imbAnimalthree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/cat_answer" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom|center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imbAnimlafour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/cow_answer" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom|center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imbAnimalfive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/goat_answer" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom|center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imbAnimalsix"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/dog_answer" />
+            </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
