@@ -7,12 +7,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import java.util.Random;
 
@@ -23,7 +20,7 @@ import blackcore.tdc.edu.com.gamevhta.models.ConfigCWGame;
  * Created by Shiro on 3/16/2017.
  */
 
-public class CharacterGameView extends SurfaceView implements Runnable, View.OnTouchListener{
+public class CharacterGameView extends SurfaceView implements Runnable{
 
     private Thread thread = null;
     private SurfaceHolder surfaceHolder;
@@ -45,7 +42,6 @@ public class CharacterGameView extends SurfaceView implements Runnable, View.OnT
                 );
         layoutParams.setMargins(300,0,0,50);
         this.setLayoutParams(layoutParams);
-        this.setOnTouchListener(this);
         thread = new Thread(this);
         thread.start();
     }
@@ -90,11 +86,5 @@ public class CharacterGameView extends SurfaceView implements Runnable, View.OnT
                 }
             }
         }
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        Toast.makeText(getContext(),"touch",Toast.LENGTH_SHORT).show();
-        return true;
     }
 }
