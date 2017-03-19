@@ -48,16 +48,18 @@ public class CatchingWordsActivity extends AppCompatActivity {
         frameGame.setLayoutParams(lpframe);
         setContentView(frameGame);
 
-        //add backgroud for frame game
-        backgroudGameView = new BackgroudGameView(this,0,0);
-        frameGame.addView(backgroudGameView);
-        backgroudGameView.startMoveBG(this);
+
 
         // add charracter for game
         ninja = new CharacterGameView(this);
         ninja.setZOrderOnTop(true);
         ninja.getHolder().setFormat(PixelFormat.TRANSPARENT);
 
+        //add backgroud for frame game
+        backgroudGameView = new BackgroudGameView(this,0,0,ninja);
+        backgroudGameView.startMoveBG(this);
+
+        frameGame.addView(backgroudGameView);
         frameGame.addView(ninja);
         this.addTopBarView(frameGame);
 

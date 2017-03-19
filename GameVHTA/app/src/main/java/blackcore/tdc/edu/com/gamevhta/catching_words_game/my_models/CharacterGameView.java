@@ -42,8 +42,6 @@ public class CharacterGameView extends SurfaceView implements Runnable{
                 );
         layoutParams.setMargins(300,0,0,50);
         this.setLayoutParams(layoutParams);
-        thread = new Thread(this);
-        thread.start();
     }
 
     public void onResumeMySurfaceView(){

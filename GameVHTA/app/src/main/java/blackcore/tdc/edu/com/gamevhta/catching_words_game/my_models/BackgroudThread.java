@@ -12,9 +12,12 @@ public class BackgroudThread extends Thread {
     private BackgroudGameView backgroudGameView;
     private Boolean gameRunning = false;
     private Activity activity = null;
-    public BackgroudThread(BackgroudGameView backgroudGameView, Activity activity) {
+    private CharacterGameView charac= null;
+    private volatile boolean canPauseGame;
+    public BackgroudThread(BackgroudGameView backgroudGameView, CharacterGameView charac, Activity activity) {
         this.backgroudGameView = backgroudGameView;
         this.activity = activity;
+        this.charac = charac;
     }
 
     @Override
@@ -33,6 +36,14 @@ public class BackgroudThread extends Thread {
                     public void run() {
                         backgroudGameView.moveBgWithXleft(-3);
                         backgroudGameView.invalidate();
+                        if(backgroudGameView.getxLeftBGClone() >= 0){
+                            canPauseGame = true;
+                        }
+                        if(backgroudGameView.getxLeftBGClone() <= -500 && canPauseGame){
+                            gameRunning = false;
+                            charac.onPauseMySurfaceView();
+                            canPauseGame = false;
+                        }
                     }
                 });
             }

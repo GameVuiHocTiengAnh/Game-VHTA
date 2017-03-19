@@ -38,6 +38,4 @@ public class ConfigCWGame {
         }
         return margin;
     }
-
-
 }

@@ -22,11 +22,14 @@ public class Backgroud {
         this.HEIGHT = img.getHeight();
     }
 
-    public void tranlate(int x, int y){
+    public void tranlate(int x, int y,Bitmap bitmap){
         this.xleft += x;
         if(Math.abs(this.xleft)>= WIDTH){
             // Log.d("testx",String.valueOf(SizeOfDevice.getScreenWidth()));
             this.xleft = this.WIDTH;
+            if(bitmap != null){
+                setBackgroud(bitmap);
+            }
         }
     }
 
@@ -37,5 +40,13 @@ public class Backgroud {
 
     public int getWIDTH() {
         return WIDTH;
+    }
+
+    public void setBackgroud(Bitmap backgroud) {
+        this.backgroud = backgroud;
+    }
+
+    public int getXleft() {
+        return xleft;
     }
 }

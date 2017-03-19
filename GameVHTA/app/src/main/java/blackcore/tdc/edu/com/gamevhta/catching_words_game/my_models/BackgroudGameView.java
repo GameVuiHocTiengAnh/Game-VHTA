@@ -5,7 +5,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.PorterDuff;
+import android.view.MotionEvent;
 import android.view.View;
 
 import blackcore.tdc.edu.com.gamevhta.R;
@@ -15,19 +17,29 @@ import blackcore.tdc.edu.com.gamevhta.models.SizeOfDevice;
  * Created by Shiro on 3/15/2017.
  */
 
-public class BackgroudGameView extends View {
+public class BackgroudGameView extends View  implements View.OnTouchListener{
     private Bitmap imgRoot;
     private Backgroud backgroud;
     private Backgroud backgroudClone;
     private BackgroudThread thread;
+    private Bitmap trunk;
+    private Bitmap bgTrunk;
+    private CharacterGameView characterGameView;
+    private Activity context;
 
-    public BackgroudGameView(Context context, int xLeft, int yTop) {
+    public BackgroudGameView(Activity context, int xLeft, int yTop, CharacterGameView characterGameView) {
         super(context);
-        this.setFocusable(false);
+        this.setFocusable(true);
+        this.context = context;
         Bitmap img = BitmapFactory.decodeResource(getResources(), R.drawable.mh6_backgroud_dark);
+        trunk = BitmapFactory.decodeResource(getResources(),R.drawable.mh6_trunk);
         imgRoot = Bitmap.createScaledBitmap(img, SizeOfDevice.getScreenWidth(),SizeOfDevice.getScreenHeight(),false);
         backgroud = new Backgroud(imgRoot,xLeft,yTop);
-        backgroudClone = new Backgroud(imgRoot,backgroud.getWIDTH(),0);
+        trunk = BitmapFactory.decodeResource(getResources(),R.drawable.mh6_trunk);
+        bgTrunk = overlay(imgRoot,trunk);
+        backgroudClone = new Backgroud(bgTrunk,backgroud.getWIDTH(),0);
+        this.characterGameView = characterGameView;
+        this.setOnTouchListener(this);
     }
 
     @Override
@@ -38,14 +50,15 @@ public class BackgroudGameView extends View {
         super.onDraw(canvas);
     }
     protected void moveBgWithXleft(int x){
-        backgroud.tranlate(x,0);
-        backgroudClone.tranlate(x,0);
+        backgroud.tranlate(x,0,null);
+        backgroudClone.tranlate(x,0,bgTrunk);
     }
 
     public void startMoveBG(Activity context){
-        thread = new BackgroudThread(this,context);
+        thread = new BackgroudThread(this,characterGameView, context);
         thread.setGameRunning(true);
         thread.start();
+        characterGameView.onResumeMySurfaceView();
     }
 
     public void stopMoveBG(){
@@ -57,6 +70,23 @@ public class BackgroudGameView extends View {
                 e.printStackTrace();
             }
         }
+        characterGameView.onPauseMySurfaceView();
+    }
+    private Bitmap overlay(Bitmap backgroud, Bitmap trunk) {
+        Bitmap bmOverlay = Bitmap.createBitmap(backgroud.getWidth(), backgroud.getHeight(), backgroud.getConfig());
+        Canvas canvas = new Canvas(bmOverlay);
+        canvas.drawBitmap(backgroud,new Matrix(), null);
+        canvas.drawBitmap(trunk,SizeOfDevice.getScreenWidth() - 300,SizeOfDevice.getScreenHeight() - 270, null);
+        return bmOverlay;
+    }
+    public int getxLeftBGClone(){
+        return backgroudClone.getXleft();
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        backgroudClone.setBackgroud(imgRoot);
+        this.startMoveBG(this.context);
+        return false;
+    }
 }
