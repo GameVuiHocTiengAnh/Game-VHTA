@@ -49,9 +49,11 @@
         </activity>
 
         <!--Game Screen 5 -->
-        <activity android:name=".GameScreenMH9"
+        <activity android:name=".image_guessing_game.ImageGuessingActivity"
             android:screenOrientation="landscape">
+
         </activity>
+
     </application>
 
 </manifest>

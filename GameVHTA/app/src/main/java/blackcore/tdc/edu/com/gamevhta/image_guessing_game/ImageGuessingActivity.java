@@ -1,4 +1,4 @@
-package blackcore.tdc.edu.com.gamevhta;
+package blackcore.tdc.edu.com.gamevhta.image_guessing_game;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -11,12 +11,14 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,28 +30,41 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import blackcore.tdc.edu.com.gamevhta.R;
+import blackcore.tdc.edu.com.gamevhta.TopisChoosingActivity;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
+import blackcore.tdc.edu.com.gamevhta.data_models.DbScoreHelper;
+import blackcore.tdc.edu.com.gamevhta.data_models.DbWordHelper;
+import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
+
 
 /**
  * Created by Hoang on 3/16/2017.
  */
 
-public class GameScreenMH9 extends AppCompatActivity {
+public class ImageGuessingActivity extends AppCompatActivity {
     private Handler handler;
     private Animation animation;
     private Timer timer = new Timer();
     private ImageButton btnImage1, btnImage2, btnImage3, btnImage4, btnImage5, btnImage6;
-    private TextView lblTimer, lblWord, lblScore;
+    private TextView lblTimer, lblWord, lblScore, lblScoreGameOver;
     private MediaPlayer mpClicked, mpSoundBackground;
     private ImageView imgListOver, imgReplayOver;
+    private EditText lblPlayerNameGameOver;
 
+    private String OBJECT = "";
+    private int TURN = 0;
     private int SCORE = 0;
     private int RESULT_FAILED = 0;
     private int RESULT_CHOSEN = -1;
+    //    private ArrayList<WordObject> listImageFromData;
+//    private ArrayList<WordObject> listImageLevel;
     private ArrayList<String> listImageFromData;
     private ArrayList<String> listImageLevel;
 
     private Dialog dialogGameOver;
+    private DbWordHelper dbWordHelper;
+    private DbScoreHelper dbScoreHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +94,6 @@ public class GameScreenMH9 extends AppCompatActivity {
         };
 
     }
-
 
     @Override
     protected void onResume() {
@@ -113,22 +127,33 @@ public class GameScreenMH9 extends AppCompatActivity {
 
         listImageFromData = new ArrayList<>();
 
-        dialogGameOver = new Dialog(GameScreenMH9.this);
+        dialogGameOver = new Dialog(ImageGuessingActivity.this);
         dialogGameOver.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogGameOver.setCancelable(false);
         dialogGameOver.setContentView(R.layout.activity_dialog_game_over);
         dialogGameOver.getWindow().setBackgroundDrawableResource(R.color.tran);
         imgListOver = (ImageView) dialogGameOver.findViewById(R.id.imgListOver);
         imgReplayOver = (ImageView) dialogGameOver.findViewById(R.id.imgReplayOver);
+        lblScoreGameOver = (TextView) dialogGameOver.findViewById(R.id.lblScoreGameOver);
+        lblPlayerNameGameOver = (EditText) dialogGameOver.findViewById(R.id.lblPlayerNameGameOver);
 
         mpClicked = MediaPlayer.create(getApplicationContext(), R.raw.game_5_sound_clicked);
         mpSoundBackground = MediaPlayer.create(getApplicationContext(), R.raw.game_9_screen_background_sound);
         mpSoundBackground.setLooping(true);
         mpSoundBackground.start();
 
+        //database
+        dbWordHelper = new DbWordHelper(this);
+        dbScoreHelper = new DbScoreHelper(this);
         //set time left default
         lblTimer.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
 
+        //get Object selected at screen topic
+        if (getIntent().getExtras() != null) {
+            OBJECT = getIntent().getStringExtra(ConfigApplication.OBJECT_SELECTED);
+            //listImageFromData = dbWordHelper.getWordObject(OBJECT, 30);
+        }
+        //example
         addDataList();
         getEvents();
         setFont();
@@ -157,24 +182,13 @@ public class GameScreenMH9 extends AppCompatActivity {
                 }
             }
         }, 1000, 1000);
-        loadLevel();
-    }
 
-    //List Image was loaded from database
-    private void addDataList() {
-        for (int i = 0; i < 30; i++) {
-            listImageFromData.add("Word" + (i + 1));
-        }
-    }
-
-
-    private void loadLevel() {
         listImageLevel = new ArrayList<>();
         Random rd = new Random();
         for (int j = 0; j < 6; j++) {
-
             int x = rd.nextInt(listImageFromData.size());
             listImageLevel.add(j, "Word" + x);
+            listImageFromData.remove(x);
         }
         RESULT_CHOSEN = rd.nextInt(listImageLevel.size()) + 1;
         lblWord.setText(listImageLevel.get(RESULT_CHOSEN - 1).toString());
@@ -201,12 +215,19 @@ public class GameScreenMH9 extends AppCompatActivity {
         }
     }
 
+    //List Image was loaded from database
+    private void addDataList() {
+        for (int i = 0; i < 30; i++) {
+            listImageFromData.add("Word" + (i + 1));
+        }
+    }
+
     //Add image to ImageButton
-    private Bitmap getImageBitmap(String imageName){
-        String path = Environment.getExternalStorageDirectory().toString() +""+ imageName +".jpg";
-        File  fileImage = new File(path);
+    private Bitmap getImageBitmap(String imageName) {
+        String path = Environment.getExternalStorageDirectory().toString() + "" + imageName + ".jpg";
+        File fileImage = new File(path);
         Bitmap bmp = null;
-        if(fileImage.exists()) {
+        if (fileImage.exists()) {
             bmp = BitmapFactory.decodeFile(fileImage.getAbsolutePath());
         }
         return bmp;
@@ -218,6 +239,8 @@ public class GameScreenMH9 extends AppCompatActivity {
         lblTimer.setTypeface(custom_font);
         lblWord.setTypeface(custom_font);
         lblScore.setTypeface(custom_font);
+        lblScoreGameOver.setTypeface(custom_font);
+        lblPlayerNameGameOver.setTypeface(custom_font);
     }
 
     //Event
@@ -225,13 +248,16 @@ public class GameScreenMH9 extends AppCompatActivity {
         imgListOver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(GameScreenMH9.this,TopisChoosingActivity.class));
+                startActivity(new Intent(ImageGuessingActivity.this, TopisChoosingActivity.class));
                 finish();
             }
         });
         imgReplayOver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                addDataList();
+                doSaveScore();
+                TURN = 0;
                 SCORE = 0;
                 loadGame();
                 dialogGameOver.dismiss();
@@ -359,24 +385,44 @@ public class GameScreenMH9 extends AppCompatActivity {
 
     //Save Score
     private void doSaveScore() {
-        Toast.makeText(getApplicationContext(), "Saving Score", Toast.LENGTH_SHORT).show();
+        if(SCORE>0) {
+            String playerName = lblPlayerNameGameOver.getText().toString();
+            if (playerName.equals(""))
+                playerName = "Unknown Player";
+            ScoreObject scoreObject = new ScoreObject();
+            scoreObject.setsPlayer(playerName);
+            scoreObject.setsScore(SCORE);
+            Log.d("ScoreSave", String.valueOf(SCORE));
+            Log.d("ScoreSavePlayer", playerName);
+            dbScoreHelper.doInsertScore(scoreObject);
+            lblPlayerNameGameOver.setText("");
+            Toast.makeText(getApplicationContext(), "Saving Score", Toast.LENGTH_SHORT).show();
+        }
     }
 
     //Check Result
     private void getResult(int choose) {
         if (choose == RESULT_CHOSEN) {
-            timer.cancel();
-            SCORE += lblWord.getText().length() * 10;
-            lblScore.setText(String.valueOf(SCORE));
-            loadGame();
-            Toast.makeText(getApplicationContext(), "You WIN", Toast.LENGTH_SHORT).show();
+            Log.d("Size", String.valueOf(listImageFromData.size()));
+            TURN++;
+            Log.d("SizeTurn", String.valueOf(TURN));
+            if(TURN >= 5){
+                Toast.makeText(getApplicationContext(), "You WIN", Toast.LENGTH_SHORT).show();
+            }else {
+                timer.cancel();
+                SCORE += lblWord.getText().length() * 10 * Integer.parseInt(lblTimer.getText().toString());
+                lblScore.setText(String.valueOf(SCORE));
+                loadGame();
+
+            }
         } else {
             RESULT_FAILED++;
             if (RESULT_FAILED == 2) {
-                doSaveScore();
+                lblScoreGameOver.setText(String.valueOf(SCORE));
                 timer.cancel();
                 dialogGameOver.show();
             }
         }
     }
+
 }

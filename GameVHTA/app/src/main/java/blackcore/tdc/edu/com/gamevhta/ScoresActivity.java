@@ -13,6 +13,8 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import blackcore.tdc.edu.com.gamevhta.button.BackButton;
+import blackcore.tdc.edu.com.gamevhta.data_models.DbScoreHelper;
+import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.models.Score;
 import blackcore.tdc.edu.com.gamevhta.my_adapter.AdapterScore;
 import blackcore.tdc.edu.com.gamevhta.service.MusicService;
@@ -25,6 +27,7 @@ public class ScoresActivity extends AppCompatActivity {
 
     private MediaPlayer mScore;
     private MusicService mService = new MusicService();
+    private DbScoreHelper dbScoreHelper;
     ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -63,7 +66,9 @@ public class ScoresActivity extends AppCompatActivity {
         imgBack.setMoveActivity(intent,ScoresActivity.this);
 
         ListView listView = (ListView) findViewById(R.id.lvScore);
-
+        //get Score
+        dbScoreHelper = new DbScoreHelper(this);
+        ArrayList<ScoreObject> listScore =dbScoreHelper.getScoreObject(10);
         list.add(new Score("Người Chơi 1 ","500"));
         list.add(new Score("Người Chơi 2 ","1000"));
         list.add(new Score("Người Chơi 3 ","1500"));
@@ -75,8 +80,12 @@ public class ScoresActivity extends AppCompatActivity {
         list.add(new Score("Người Chơi 9 ","4500"));
         list.add(new Score("Người Chơi 10 ","5000"));
 
-        adapter = new AdapterScore(this,R.layout.activity_lv_score_item,list);
+        adapter = new AdapterScore(this,R.layout.activity_lv_score_item);
         listView.setAdapter(adapter);
+        for (ScoreObject so : listScore){
+            adapter.add(so);
+        }
+        adapter.notifyDataSetChanged();
 
         mScore = MediaPlayer.create(getApplicationContext(),R.raw.score);
 

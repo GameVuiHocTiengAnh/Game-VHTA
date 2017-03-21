@@ -22,17 +22,37 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="horizontal">
-            <TextView
-                android:gravity="center"
-                android:id="@+id/txtover"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/txtdialogovergame"
-                android:textSize="@dimen/txtDialogBackgame"
-                android:textColor="@android:color/holo_blue_light"/>
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingTop="@dimen/DialogBackGamePanddingGameOver">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/image_game_over"/>
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.8"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/lblScoreGameOver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1000"
+                android:textSize="30sp"/>
+            <EditText
+                android:id="@+id/lblPlayerNameGameOver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginLeft="@dimen/DialogBackGameLeftandRight"
+                android:layout_marginRight="@dimen/DialogBackGameLeftandRight"
+                android:hint="Enter your name!"
+                android:gravity="center"
+                android:lines="1"/>
 
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"

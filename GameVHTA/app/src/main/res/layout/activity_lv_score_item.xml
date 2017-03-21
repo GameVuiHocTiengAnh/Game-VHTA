@@ -20,8 +20,7 @@
                             android:id="@+id/imgMedal"
                             android:gravity="center_vertical|right"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/medal"/>
+                            android:layout_height="match_parent" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
