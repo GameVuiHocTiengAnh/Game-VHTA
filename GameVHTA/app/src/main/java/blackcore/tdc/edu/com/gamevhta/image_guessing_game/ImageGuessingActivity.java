@@ -58,7 +58,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
     private int RESULT_FAILED = 0;
     private int RESULT_CHOSEN = -1;
     //    private ArrayList<WordObject> listImageFromData;
-//    private ArrayList<WordObject> listImageLevel;
+    //    private ArrayList<WordObject> listImageLevel;
     private ArrayList<String> listImageFromData;
     private ArrayList<String> listImageLevel;
 
@@ -86,13 +86,18 @@ public class ImageGuessingActivity extends AppCompatActivity {
                     lblTimer.startAnimation(animation);
                 } else if (t == 0) {
                     timer.cancel();
-                    doSaveScore();
+                    lblScoreGameOver.setText(String.valueOf(SCORE));
                     dialogGameOver.show();
                     Toast.makeText(getApplicationContext(), "Game Over", Toast.LENGTH_SHORT).show();
                 }
             }
         };
-
+        //get Object selected at screen topic
+        if (getIntent().getExtras() != null) {
+            OBJECT = getIntent().getStringExtra(ConfigApplication.OBJECT_SELECTED);
+            listImageFromData.clear();
+            //listImageFromData = dbWordHelper.getWordObject(OBJECT, 30);
+        }
     }
 
     @Override
@@ -148,11 +153,6 @@ public class ImageGuessingActivity extends AppCompatActivity {
         //set time left default
         lblTimer.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
 
-        //get Object selected at screen topic
-        if (getIntent().getExtras() != null) {
-            OBJECT = getIntent().getStringExtra(ConfigApplication.OBJECT_SELECTED);
-            //listImageFromData = dbWordHelper.getWordObject(OBJECT, 30);
-        }
         //example
         addDataList();
         getEvents();
@@ -217,6 +217,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
 
     //List Image was loaded from database
     private void addDataList() {
+        listImageFromData.clear();
         for (int i = 0; i < 30; i++) {
             listImageFromData.add("Word" + (i + 1));
         }

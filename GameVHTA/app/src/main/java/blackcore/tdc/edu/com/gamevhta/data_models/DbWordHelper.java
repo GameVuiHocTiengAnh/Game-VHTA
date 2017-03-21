@@ -49,7 +49,7 @@ public class DbWordHelper extends SQLiteOpenHelper {
                 W_COLUMN_PATH_IMAGE + " TEXT," +
                 W_COLUMN_PATH_SOUND + " TEXT," +
                 W_COLUMN_OBJECT + " TEXT," +
-                W_COLUMN_LEVEL +" TEXT )";
+                W_COLUMN_LEVEL + " TEXT )";
         db.execSQL(script);
     }
 
@@ -93,9 +93,9 @@ public class DbWordHelper extends SQLiteOpenHelper {
     public ArrayList<WordObject> getAllWord() {
         ArrayList<WordObject> arrWord = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "SELECT * FROM "+ TABLE_WORD, null );
+        Cursor res = db.rawQuery("SELECT * FROM " + TABLE_WORD, null);
         res.moveToFirst();
-        while(res.isAfterLast() == false){
+        while (res.isAfterLast() == false) {
             WordObject wordObject = new WordObject();
             wordObject.setwEng(res.getString(res.getColumnIndex(W_COLUMN_WORD_ENG)));
             wordObject.setwVie(res.getString(res.getColumnIndex(W_COLUMN_WORD_VIE)));
@@ -112,9 +112,9 @@ public class DbWordHelper extends SQLiteOpenHelper {
     public ArrayList<WordObject> getWordObject(String strObject, int size) {
         ArrayList<WordObject> arrWord = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "SELECT * FROM "+ TABLE_WORD + " WHERE " +W_COLUMN_OBJECT+" = "+strObject +" LIMIT " + size, null );
+        Cursor res = db.rawQuery("SELECT * FROM " + TABLE_WORD + " WHERE " + W_COLUMN_OBJECT + " = " + strObject + " LIMIT " + size, null);
         res.moveToFirst();
-        while(res.isAfterLast() == false){
+        while (res.isAfterLast() == false) {
             WordObject wordObject = new WordObject();
             wordObject.setwEng(res.getString(res.getColumnIndex(W_COLUMN_WORD_ENG)));
             wordObject.setwVie(res.getString(res.getColumnIndex(W_COLUMN_WORD_VIE)));
@@ -128,4 +128,60 @@ public class DbWordHelper extends SQLiteOpenHelper {
         return arrWord;
     }
 
+    public ArrayList<WordObject> getWordObject(String strObject) {
+        ArrayList<WordObject> arrWord = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + TABLE_WORD + " WHERE " + W_COLUMN_OBJECT + " = " + strObject, null);
+        res.moveToFirst();
+        while (res.isAfterLast() == false) {
+            WordObject wordObject = new WordObject();
+            wordObject.setwEng(res.getString(res.getColumnIndex(W_COLUMN_WORD_ENG)));
+            wordObject.setwVie(res.getString(res.getColumnIndex(W_COLUMN_WORD_VIE)));
+            wordObject.setwPathImage(res.getString(res.getColumnIndex(W_COLUMN_PATH_IMAGE)));
+            wordObject.setwPathSound(res.getString(res.getColumnIndex(W_COLUMN_PATH_SOUND)));
+            wordObject.setwObject(res.getString(res.getColumnIndex(W_COLUMN_OBJECT)));
+            wordObject.setưLevel(res.getString(res.getColumnIndex(W_COLUMN_LEVEL)));
+            arrWord.add(wordObject);
+            res.moveToNext();
+        }
+        return arrWord;
+    }
+
+    public ArrayList<WordObject> getWordObjectLevel(String strObject,int size, int level) {
+        ArrayList<WordObject> arrWord = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + TABLE_WORD + " WHERE " + W_COLUMN_OBJECT + " = " + strObject + " AND " + W_COLUMN_LEVEL + " = " + level + " LIMIT " + size, null);
+        res.moveToFirst();
+        while (res.isAfterLast() == false) {
+            WordObject wordObject = new WordObject();
+            wordObject.setwEng(res.getString(res.getColumnIndex(W_COLUMN_WORD_ENG)));
+            wordObject.setwVie(res.getString(res.getColumnIndex(W_COLUMN_WORD_VIE)));
+            wordObject.setwPathImage(res.getString(res.getColumnIndex(W_COLUMN_PATH_IMAGE)));
+            wordObject.setwPathSound(res.getString(res.getColumnIndex(W_COLUMN_PATH_SOUND)));
+            wordObject.setwObject(res.getString(res.getColumnIndex(W_COLUMN_OBJECT)));
+            wordObject.setưLevel(res.getString(res.getColumnIndex(W_COLUMN_LEVEL)));
+            arrWord.add(wordObject);
+            res.moveToNext();
+        }
+        return arrWord;
+    }
+
+    public ArrayList<WordObject> getWordObjectLevel(String strObject, int level) {
+        ArrayList<WordObject> arrWord = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + TABLE_WORD + " WHERE " + W_COLUMN_OBJECT + " = " + strObject + " AND " + W_COLUMN_LEVEL + " = " + level, null);
+        res.moveToFirst();
+        while (res.isAfterLast() == false) {
+            WordObject wordObject = new WordObject();
+            wordObject.setwEng(res.getString(res.getColumnIndex(W_COLUMN_WORD_ENG)));
+            wordObject.setwVie(res.getString(res.getColumnIndex(W_COLUMN_WORD_VIE)));
+            wordObject.setwPathImage(res.getString(res.getColumnIndex(W_COLUMN_PATH_IMAGE)));
+            wordObject.setwPathSound(res.getString(res.getColumnIndex(W_COLUMN_PATH_SOUND)));
+            wordObject.setwObject(res.getString(res.getColumnIndex(W_COLUMN_OBJECT)));
+            wordObject.setưLevel(res.getString(res.getColumnIndex(W_COLUMN_LEVEL)));
+            arrWord.add(wordObject);
+            res.moveToNext();
+        }
+        return arrWord;
+    }
 }
