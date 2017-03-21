@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.graphics.PorterDuff;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.models.SizeOfDevice;
@@ -26,6 +27,8 @@ public class BackgroudGameView extends View  implements View.OnTouchListener{
     private Bitmap bgTrunk;
     private CharacterGameView characterGameView;
     private Activity context;
+    private boolean pauseGame;
+    private int xleftTrunk, yTrunk, xTrunk; //xleftTrunk is current x of trunk on screen
 
     public BackgroudGameView(Activity context, int xLeft, int yTop, CharacterGameView characterGameView) {
         super(context);
@@ -39,6 +42,7 @@ public class BackgroudGameView extends View  implements View.OnTouchListener{
         bgTrunk = overlay(imgRoot,trunk);
         backgroudClone = new Backgroud(bgTrunk,backgroud.getWIDTH(),0);
         this.characterGameView = characterGameView;
+        pauseGame = false;
         this.setOnTouchListener(this);
     }
 
@@ -76,7 +80,7 @@ public class BackgroudGameView extends View  implements View.OnTouchListener{
         Bitmap bmOverlay = Bitmap.createBitmap(backgroud.getWidth(), backgroud.getHeight(), backgroud.getConfig());
         Canvas canvas = new Canvas(bmOverlay);
         canvas.drawBitmap(backgroud,new Matrix(), null);
-        canvas.drawBitmap(trunk,SizeOfDevice.getScreenWidth() - 300,SizeOfDevice.getScreenHeight() - 270, null);
+        canvas.drawBitmap(trunk,SizeOfDevice.getScreenWidth() - 500,SizeOfDevice.getScreenHeight() - 270, null);
         return bmOverlay;
     }
     public int getxLeftBGClone(){
@@ -85,8 +89,21 @@ public class BackgroudGameView extends View  implements View.OnTouchListener{
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        backgroudClone.setBackgroud(imgRoot);
-        this.startMoveBG(this.context);
+        if(pauseGame){
+            backgroudClone.setBackgroud(imgRoot);
+            this.startMoveBG(this.context);
+            pauseGame = false;
+            return true;
+        }else
         return false;
     }
+
+    public void setPauseGame(boolean pauseGame) {
+        this.pauseGame = pauseGame;
+    }
+
+    public int getXleftTrunk() {
+        return xleftTrunk = backgroudClone.getXleft() + (SizeOfDevice.getScreenWidth() - 500);
+    }
+
 }

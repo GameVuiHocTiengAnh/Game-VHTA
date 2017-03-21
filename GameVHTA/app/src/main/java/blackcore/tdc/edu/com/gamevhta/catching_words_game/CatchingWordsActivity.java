@@ -1,27 +1,25 @@
 package blackcore.tdc.edu.com.gamevhta.catching_words_game;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
-import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models.BackgroudGameView;
-import blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models.BackgroudThread;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models.CharacterGameView;
 import blackcore.tdc.edu.com.gamevhta.models.ConfigCWGame;
 import blackcore.tdc.edu.com.gamevhta.models.SizeOfDevice;
@@ -35,6 +33,7 @@ public class CatchingWordsActivity extends AppCompatActivity {
     private ImageView imvVocalubary;
     private TextView txtVocalubary;
     private TextView tvScore;
+    private ProgressBar helth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +46,8 @@ public class CatchingWordsActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT);
         frameGame.setLayoutParams(lpframe);
         setContentView(frameGame);
-
-
+        this.addTopBarView(frameGame);
+        addProgressbarHelth(frameGame);
 
         // add charracter for game
         ninja = new CharacterGameView(this);
@@ -61,21 +60,17 @@ public class CatchingWordsActivity extends AppCompatActivity {
 
         frameGame.addView(backgroudGameView);
         frameGame.addView(ninja);
-        this.addTopBarView(frameGame);
-
     }
 
     @Override
     protected void onRestart() {
         backgroudGameView.startMoveBG(this);
-        ninja.onResumeMySurfaceView();
         super.onRestart();
     }
 
     @Override
     protected void onStop() {
         backgroudGameView.stopMoveBG();
-        ninja.onPauseMySurfaceView();
         super.onStop();
     }
 
@@ -152,5 +147,23 @@ public class CatchingWordsActivity extends AppCompatActivity {
         rootLayout.addView(linearLayout);
     }
 
+    private void addProgressbarHelth(FrameLayout root){
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(300, FrameLayout.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(919,SizeOfDevice.getScreenHeight() - 350,0,0);
+        helth = new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
+        helth.setLayoutParams(lp);
+        helth.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
+        helth.setMax(100);
+        helth.setProgress(100);
+        root.addView(helth);
+        helth.setVisibility(View.INVISIBLE);
+    }
 
+    public void showHelthbar(){
+        helth.setVisibility(View.VISIBLE);
+    }
+
+    public void hideHelthbar(){
+        helth.setVisibility(View.INVISIBLE);
+    }
 }

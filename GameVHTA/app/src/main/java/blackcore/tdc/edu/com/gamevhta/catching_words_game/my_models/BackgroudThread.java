@@ -1,7 +1,9 @@
 package blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models;
 
 import android.app.Activity;
+import android.util.Log;
 
+import blackcore.tdc.edu.com.gamevhta.catching_words_game.CatchingWordsActivity;
 import blackcore.tdc.edu.com.gamevhta.models.ConfigCWGame;
 
 /**
@@ -41,7 +43,10 @@ public class BackgroudThread extends Thread {
                         }
                         if(backgroudGameView.getxLeftBGClone() <= -500 && canPauseGame){
                             gameRunning = false;
+                            (CatchingWordsActivity)activity.show
+                            //Log.d("Tagtest",backgroudGameView.getXleftTrunk()+"");
                             charac.onPauseMySurfaceView();
+                            backgroudGameView.setPauseGame(true);
                             canPauseGame = false;
                         }
                     }
