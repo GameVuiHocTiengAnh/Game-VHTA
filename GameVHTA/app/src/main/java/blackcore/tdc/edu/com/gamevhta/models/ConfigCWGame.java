@@ -7,6 +7,7 @@ package blackcore.tdc.edu.com.gamevhta.models;
 public class ConfigCWGame {
     public static final int SPEED_MOVE_BACKGROUD = 15;
     public static final int ROW_USING_OF_ROOT_IMG_CHAR = 1; //begin by zero
+    public static final int ROW_USING_OF_ROOT_IMG_CHAR_FIGTHING = 0; //begin by zero
     public static final int SPEED_MOVE_CHARACTER = 200;
 
     public static  int getMarginScoresView(){

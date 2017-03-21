@@ -1,13 +1,16 @@
 package blackcore.tdc.edu.com.gamevhta.catching_words_game;
 
-import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +22,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import blackcore.tdc.edu.com.gamevhta.R;
+import blackcore.tdc.edu.com.gamevhta.TopisChoosingActivity;
+import blackcore.tdc.edu.com.gamevhta.button.PauseButton;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models.BackgroudGameView;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models.CharacterGameView;
+import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.models.ConfigCWGame;
 import blackcore.tdc.edu.com.gamevhta.models.SizeOfDevice;
+import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 public class CatchingWordsActivity extends AppCompatActivity {
 
@@ -34,6 +41,24 @@ public class CatchingWordsActivity extends AppCompatActivity {
     private TextView txtVocalubary;
     private TextView tvScore;
     private ProgressBar helth;
+    private MusicService themeMusic = new MusicService();
+    private MediaPlayer songThemeMusic;
+    private PauseButton btnPause;
+
+    ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            MusicService.MyBinder mBinder = (MusicService.MyBinder) iBinder;
+            themeMusic = mBinder.getService();
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            themeMusic = null;
+
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,18 +86,21 @@ public class CatchingWordsActivity extends AppCompatActivity {
         frameGame.addView(ninja);
         this.addTopBarView(frameGame);
         this.addProgressbarHelth(frameGame);
+        this.playThemeMusic();
 
     }
 
     @Override
     protected void onRestart() {
-        backgroudGameView.startMoveBG(this);
         super.onRestart();
+        btnPause.callOnClick();
+        themeMusic.playMusic(songThemeMusic);
     }
 
     @Override
     protected void onStop() {
         backgroudGameView.stopMoveBG();
+        themeMusic.pauseMusic(songThemeMusic);
         super.onStop();
     }
 
@@ -106,10 +134,12 @@ public class CatchingWordsActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT);
         lpSubElement.gravity = Gravity.CENTER;
         // add btn back
-        ImageView btnBack = new ImageView(this);
-        btnBack.setLayoutParams(lpSubElement);
-        btnBack.setImageResource(R.drawable.back1);
-        lnBack.addView(btnBack);
+        btnPause = new PauseButton(this,null);
+        Intent intent = new Intent(this,TopisChoosingActivity.class);
+        btnPause.setMoveActivity(intent,this);
+        btnPause.setScreenUse(ConfigApplication.SCREEN_USING_PAUSE_DIALOG_MH6,backgroudGameView);
+        btnPause.setLayoutParams(lpSubElement);
+        lnBack.addView(btnPause);
 
         // show vocalubary
         lnVocalubary.setLayoutParams(lpHorizaltal);
@@ -167,4 +197,21 @@ public class CatchingWordsActivity extends AppCompatActivity {
     public void hideHelthbar(){
         helth.setVisibility(View.INVISIBLE);
     }
+
+    public void onResumeGame(){
+        if(!backgroudGameView.getPausegame()) {
+            backgroudGameView.startMoveBG(this);
+        }else {
+            ninja.setRunning(false);
+            ninja.onResumeMySurfaceView();
+        }
+    }
+
+    private void playThemeMusic(){
+        songThemeMusic = MediaPlayer.create(getApplicationContext(),R.raw.eagle_rock);
+        songThemeMusic.setVolume(0.25f,0.25f);
+        songThemeMusic.setLooping(true);
+        themeMusic.playMusic(this.songThemeMusic);
+    }
+
 }

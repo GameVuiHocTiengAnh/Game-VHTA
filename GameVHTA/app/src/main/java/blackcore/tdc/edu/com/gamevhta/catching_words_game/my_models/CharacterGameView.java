@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -25,7 +26,11 @@ public class CharacterGameView extends SurfaceView implements Runnable{
     private Thread thread = null;
     private SurfaceHolder surfaceHolder;
     private CharacterGame ninja;
+    private CharacterGame ninjaFighting;
+    private CharacterGame ninjaDefaut;
     volatile boolean running = false;
+    private boolean isNinjaFighting;
+    private int countDrawNinjaFighting;
 
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     Random random;
@@ -35,8 +40,12 @@ public class CharacterGameView extends SurfaceView implements Runnable{
         surfaceHolder = getHolder();
         random = new Random();
         running = true;
+        isNinjaFighting = false;
         Bitmap rootCharacter = BitmapFactory.decodeResource(getResources(), R.drawable.mh6_character_ninja);
-        ninja = new CharacterGame(rootCharacter, 2, 6);
+        ninjaDefaut = new CharacterGame(rootCharacter, 2, 6,ConfigCWGame.ROW_USING_OF_ROOT_IMG_CHAR);
+        ninjaFighting = new CharacterGame(rootCharacter,2,4,ConfigCWGame.ROW_USING_OF_ROOT_IMG_CHAR_FIGTHING);
+        ninja = ninjaDefaut;
+        countDrawNinjaFighting = 0;
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ninja.getWidthSubImg(),ninja.getHeightSubImg(),
                 Gravity.BOTTOM
                 );
@@ -45,7 +54,6 @@ public class CharacterGameView extends SurfaceView implements Runnable{
     }
 
     public void onResumeMySurfaceView(){
-        running = true;
         thread = new Thread(this);
         thread.start();
     }
@@ -67,22 +75,47 @@ public class CharacterGameView extends SurfaceView implements Runnable{
     @Override
     public void run() {
         // TODO Auto-generated method stub
-        while(running){
-            //Log.d("test","okRun");
-            if(surfaceHolder.getSurface().isValid()){
+        do{
+
                 try {
                     Thread.sleep(ConfigCWGame.SPEED_MOVE_CHARACTER);
+                    Canvas canvas = surfaceHolder.lockCanvas();
+                    if(isNinjaFighting){
+                        countDrawNinjaFighting++;
+                        if(countDrawNinjaFighting == 4){
+                            setRunning(false);
+                            ninjaFighting.setColUsing(0);
+                        }
+                    }
+                    if(canvas != null){
+//                    Log.d("Tagtest","runOK");
+                        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+                        ninja.draw(canvas);
+                        ninja.updateColUsing();
+                        surfaceHolder.unlockCanvasAndPost(canvas);
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                Canvas canvas = surfaceHolder.lockCanvas();
-                if(canvas != null){
-                    canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-                    ninja.draw(canvas);
-                    ninja.updateColUsing();
-                    surfaceHolder.unlockCanvasAndPost(canvas);
-                }
-            }
-        }
+        }while(running);
     }
+    public void setRunning(boolean running){
+        this.running = running;
+    }
+
+    public void setNinjaFigting(){
+        ninja = ninjaFighting;
+        countDrawNinjaFighting = 0;
+        isNinjaFighting = true;
+    }
+
+    public  void setNinjaDefaut(){
+        ninja = this.ninjaDefaut;
+        isNinjaFighting = false;
+    }
+
+    public boolean isRunning(){
+        return running;
+    }
+
 }

@@ -47,4 +47,9 @@ public class ConfigApplication {
     public static final String S_COLUMN_PLAYER_SCORE = "PLAYER_SCORE";
 
     /*------------- END HOANG -----------------*/
+
+     /*------------- GAME CATCHING WORDS-----------------*/
+     public  static final String SCREEN_USING_PAUSE_DIALOG_MH6 = "MH6";
+     /*------------- END GAME CATCHING WORDS-----------------*/
+
 }

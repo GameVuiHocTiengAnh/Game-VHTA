@@ -1,5 +1,6 @@
 package blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models;
 
+import android.content.pm.ProviderInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
@@ -18,8 +19,9 @@ public class CharacterGame {
     private int heightSubImg;
     private final int WIDTH_ROOT;
     private final int HEIGHT_ROOT;
+    private final int ROW_USING_OF_ROOT_IMG_CHAR;
 
-    public CharacterGame(Bitmap rootImg, int rowCount, int colCountReal) {
+    public CharacterGame(Bitmap rootImg, int rowCount, int colCountReal, int ROW_USING_OF_ROOT_IMG_CHAR) {
         this.rootImg = rootImg;
         this.movingCharacter = new Bitmap[colCountReal];
         this.colCount = colCountReal -1;
@@ -28,8 +30,9 @@ public class CharacterGame {
         this.HEIGHT_ROOT = rootImg.getHeight();
         this.widthSubImg = WIDTH_ROOT/colCountReal;
         this.heightSubImg = HEIGHT_ROOT/rowCount;
+        this.ROW_USING_OF_ROOT_IMG_CHAR = ROW_USING_OF_ROOT_IMG_CHAR;
         for(int i = 0; i < colCountReal; i++){
-            movingCharacter[i] = createSubImageAt(ConfigCWGame.ROW_USING_OF_ROOT_IMG_CHAR,i);
+            movingCharacter[i] = createSubImageAt(ROW_USING_OF_ROOT_IMG_CHAR,i);
         }
     }
 
@@ -53,12 +56,15 @@ public class CharacterGame {
     public void draw(Canvas canvas){
         canvas.drawBitmap(getUsingBitmap(),0,0,null);
     }
-
     public int getWidthSubImg() {
         return widthSubImg;
     }
 
     public int getHeightSubImg() {
         return heightSubImg;
+    }
+
+    public void setColUsing(int colUsing) {
+        this.colUsing = colUsing;
     }
 }

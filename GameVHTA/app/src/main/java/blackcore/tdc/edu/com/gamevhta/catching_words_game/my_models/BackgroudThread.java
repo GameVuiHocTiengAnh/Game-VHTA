@@ -38,13 +38,12 @@ public class BackgroudThread extends Thread {
                     public void run() {
                         backgroudGameView.moveBgWithXleft(-3);
                         backgroudGameView.invalidate();
-                        if(backgroudGameView.getxLeftBGClone() >= 0){
+                        if(backgroudGameView.getxLeftBGClone() >= -499){
                             canPauseGame = true;
                         }
                         if(backgroudGameView.getxLeftBGClone() <= -500 && canPauseGame){
                             gameRunning = false;
                             activity.showHelthbar();
-                            //Log.d("Tagtest",backgroudGameView.getXleftTrunk()+"");
                             charac.onPauseMySurfaceView();
                             backgroudGameView.setPauseGame(true);
                             canPauseGame = false;
@@ -53,6 +52,10 @@ public class BackgroudThread extends Thread {
                 });
             }
         }
+    }
+
+    public void setCanPauseGame(boolean canPauseGame) {
+        this.canPauseGame = canPauseGame;
     }
 
     public void setGameRunning(Boolean gameRunning) {

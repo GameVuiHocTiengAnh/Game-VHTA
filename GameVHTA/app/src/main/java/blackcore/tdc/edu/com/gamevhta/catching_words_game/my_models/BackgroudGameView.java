@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -63,6 +64,12 @@ public class BackgroudGameView extends View  implements View.OnTouchListener{
         thread = new BackgroudThread(this,characterGameView, context);
         thread.setGameRunning(true);
         thread.start();
+        characterGameView.setRunning(true);
+        characterGameView.onResumeMySurfaceView();
+    }
+    public void startCharacterFighting(CatchingWordsActivity context){
+        characterGameView.setRunning(true);
+        characterGameView.setNinjaFigting();
         characterGameView.onResumeMySurfaceView();
     }
 
@@ -90,10 +97,12 @@ public class BackgroudGameView extends View  implements View.OnTouchListener{
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if(pauseGame){
-            backgroudClone.setBackgroud(imgRoot);
-            this.startMoveBG(this.context);
-            pauseGame = false;
+        if(pauseGame && !characterGameView.isRunning()){
+            context.hideHelthbar();
+//            backgroudClone.setBackgroud(imgRoot);
+            this.startCharacterFighting(this.context);
+//            pauseGame = false;
+//            Log.d("Tagtest","touch bg");
             return true;
         }else
         return false;
@@ -105,6 +114,10 @@ public class BackgroudGameView extends View  implements View.OnTouchListener{
 
     public int getXleftTrunk() {
         return xleftTrunk = backgroudClone.getXleft() + (SizeOfDevice.getScreenWidth() - 500);
+    }
+
+    public boolean getPausegame(){
+        return this.pauseGame;
     }
 
 }
