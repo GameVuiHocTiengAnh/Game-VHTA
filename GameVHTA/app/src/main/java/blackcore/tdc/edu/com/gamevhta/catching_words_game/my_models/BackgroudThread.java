@@ -13,10 +13,10 @@ import blackcore.tdc.edu.com.gamevhta.models.ConfigCWGame;
 public class BackgroudThread extends Thread {
     private BackgroudGameView backgroudGameView;
     private Boolean gameRunning = false;
-    private Activity activity = null;
+    private CatchingWordsActivity activity = null;
     private CharacterGameView charac= null;
     private volatile boolean canPauseGame;
-    public BackgroudThread(BackgroudGameView backgroudGameView, CharacterGameView charac, Activity activity) {
+    public BackgroudThread(BackgroudGameView backgroudGameView, CharacterGameView charac, CatchingWordsActivity activity) {
         this.backgroudGameView = backgroudGameView;
         this.activity = activity;
         this.charac = charac;
@@ -43,7 +43,7 @@ public class BackgroudThread extends Thread {
                         }
                         if(backgroudGameView.getxLeftBGClone() <= -500 && canPauseGame){
                             gameRunning = false;
-                            (CatchingWordsActivity)activity.show
+                            activity.showHelthbar();
                             //Log.d("Tagtest",backgroudGameView.getXleftTrunk()+"");
                             charac.onPauseMySurfaceView();
                             backgroudGameView.setPauseGame(true);

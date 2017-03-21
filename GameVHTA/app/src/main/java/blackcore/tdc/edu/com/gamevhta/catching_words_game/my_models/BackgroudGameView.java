@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import blackcore.tdc.edu.com.gamevhta.R;
+import blackcore.tdc.edu.com.gamevhta.catching_words_game.CatchingWordsActivity;
 import blackcore.tdc.edu.com.gamevhta.models.SizeOfDevice;
 
 /**
@@ -26,11 +27,11 @@ public class BackgroudGameView extends View  implements View.OnTouchListener{
     private Bitmap trunk;
     private Bitmap bgTrunk;
     private CharacterGameView characterGameView;
-    private Activity context;
+    private CatchingWordsActivity context;
     private boolean pauseGame;
     private int xleftTrunk, yTrunk, xTrunk; //xleftTrunk is current x of trunk on screen
 
-    public BackgroudGameView(Activity context, int xLeft, int yTop, CharacterGameView characterGameView) {
+    public BackgroudGameView(CatchingWordsActivity context, int xLeft, int yTop, CharacterGameView characterGameView) {
         super(context);
         this.setFocusable(true);
         this.context = context;
@@ -58,7 +59,7 @@ public class BackgroudGameView extends View  implements View.OnTouchListener{
         backgroudClone.tranlate(x,0,bgTrunk);
     }
 
-    public void startMoveBG(Activity context){
+    public void startMoveBG(CatchingWordsActivity context){
         thread = new BackgroudThread(this,characterGameView, context);
         thread.setGameRunning(true);
         thread.start();

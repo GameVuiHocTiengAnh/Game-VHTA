@@ -46,9 +46,8 @@ public class CatchingWordsActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT);
         frameGame.setLayoutParams(lpframe);
         setContentView(frameGame);
-        this.addTopBarView(frameGame);
-        addProgressbarHelth(frameGame);
 
+        helth = new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
         // add charracter for game
         ninja = new CharacterGameView(this);
         ninja.setZOrderOnTop(true);
@@ -60,6 +59,9 @@ public class CatchingWordsActivity extends AppCompatActivity {
 
         frameGame.addView(backgroudGameView);
         frameGame.addView(ninja);
+        this.addTopBarView(frameGame);
+        this.addProgressbarHelth(frameGame);
+
     }
 
     @Override
@@ -150,13 +152,12 @@ public class CatchingWordsActivity extends AppCompatActivity {
     private void addProgressbarHelth(FrameLayout root){
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(300, FrameLayout.LayoutParams.WRAP_CONTENT);
         lp.setMargins(919,SizeOfDevice.getScreenHeight() - 350,0,0);
-        helth = new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
         helth.setLayoutParams(lp);
         helth.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
         helth.setMax(100);
         helth.setProgress(100);
-        root.addView(helth);
         helth.setVisibility(View.INVISIBLE);
+        root.addView(helth);
     }
 
     public void showHelthbar(){
