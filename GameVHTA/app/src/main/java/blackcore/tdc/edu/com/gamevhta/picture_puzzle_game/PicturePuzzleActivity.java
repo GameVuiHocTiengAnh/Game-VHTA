@@ -11,34 +11,44 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import blackcore.tdc.edu.com.gamevhta.LoadingGoInGameActivity;
 import blackcore.tdc.edu.com.gamevhta.LoadingGoOutGameActivity;
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.button.PauseButton;
+import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 public class PicturePuzzleActivity extends AppCompatActivity {
 
     TextView txtTime,txtScore,txtAnswerOne,txtAnswerTwo,txtAnswerThree,txtAnswerFour,txtAnswerFive,txtAnswerSix;
 
-    private Dialog dialog;
+    private Dialog dialogOver;
     private ArrayList<Bitmap> listBitMapAnswer = null;
 
     final int color = Color.parseColor("#FFFFFF");
     private boolean flagVoice = true;
 
-    private MediaPlayer mCorrect,mWrong;
+    private MediaPlayer mCorrect,mWrong,mClick,mTickTac;
     private MusicService mService = new MusicService();
 
     ServiceConnection conn = new ServiceConnection() {
@@ -55,6 +65,11 @@ public class PicturePuzzleActivity extends AppCompatActivity {
 
         }
     };
+    private Animation animation;
+    private ImageView imgListOver, imgReplayOver;
+    private Handler handler;
+    private Timer timer;
+    private int SCORE_ONE = 0, SCORE_TWO = 0, SCORE_THREE = 0, SCORE_FOUR = 0, SCORE_FIVE = 0, SCORE_SIX = 0, SCORE_ALL = 0;
 
     ImageView imbAnimalOne,imbAnimalTwo,imbAnimalThree,imbAnimalFour,imbAnimalFive,imbAnimalSix;
     ImageView imbAnimalQuestionOne,imbAnimalQuestionTwo,imbAnimalQuestionThree,imbAnimalQuestionFour,imbAnimalQuestionFive,imbAnimalQuestionSix;
@@ -68,6 +83,8 @@ public class PicturePuzzleActivity extends AppCompatActivity {
 
         mCorrect = MediaPlayer.create(PicturePuzzleActivity.this,R.raw.dung);
         mWrong = MediaPlayer.create(PicturePuzzleActivity.this,R.raw.sai);
+        mClick = MediaPlayer.create(PicturePuzzleActivity.this, R.raw.click);
+        mTickTac = MediaPlayer.create(PicturePuzzleActivity.this, R.raw.time);
 
         txtTime = (TextView) findViewById(R.id.txtTime);
         txtScore = (TextView) findViewById(R.id.txtScore);
@@ -77,6 +94,8 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         txtAnswerFour = (TextView) findViewById(R.id.txtAnswerFour);
         txtAnswerFive = (TextView) findViewById(R.id.txtAnswerFive);
         txtAnswerSix = (TextView) findViewById(R.id.txtAnswerSix);
+
+        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_in);
 
         imbAnimalOne = (ImageView) findViewById(R.id.imbAnimalone);
         imbAnimalTwo = (ImageView) findViewById(R.id.imbAnimaltwo);
@@ -99,19 +118,19 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         imbAnimalFive.setOnTouchListener(touchListener);
         imbAnimalSix.setOnTouchListener(touchListener);
 
-        imbAnimalQuestionOne.setOnDragListener(dragListener);
-        imbAnimalQuestionTwo.setOnDragListener(dragListener);
-        imbAnimalQuestionThree.setOnDragListener(dragListener);
-        imbAnimalQuestionFour.setOnDragListener(dragListener);
-        imbAnimalQuestionFive.setOnDragListener(dragListener);
-        imbAnimalQuestionSix.setOnDragListener(dragListener);
-
         imbAnimalQuestionOne.setColorFilter(color);
         imbAnimalQuestionTwo.setColorFilter(color);
         imbAnimalQuestionThree.setColorFilter(color);
         imbAnimalQuestionFour.setColorFilter(color);
         imbAnimalQuestionFive.setColorFilter(color);
         imbAnimalQuestionSix.setColorFilter(color);
+
+        imbAnimalQuestionOne.setOnDragListener(dragListener);
+        imbAnimalQuestionTwo.setOnDragListener(dragListener);
+        imbAnimalQuestionThree.setOnDragListener(dragListener);
+        imbAnimalQuestionFour.setOnDragListener(dragListener);
+        imbAnimalQuestionFive.setOnDragListener(dragListener);
+        imbAnimalQuestionSix.setOnDragListener(dragListener);
 
         listBitMapAnswer = new ArrayList<>();
         Bitmap cat = BitmapFactory.decodeResource(getResources(),R.drawable.cat_answer);
@@ -126,12 +145,109 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         listBitMapAnswer.add(buffalo);
         listBitMapAnswer.add(rabbit);
         listBitMapAnswer.add(goat);
+        Collections.shuffle(listBitMapAnswer);
+
         moveActivity();
         setFont();
         Answer();
         Question();
+        Timer();
     }
 
+    private void Timer(){
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle reMessage = msg.getData();
+                String time = reMessage.getString("time");
+
+                txtTime.setText(time);
+                int t = Integer.parseInt(time);
+                if (t > 0 && t <= 10) {
+                    txtTime.startAnimation(animation);
+                    mService.playMusic(mTickTac);
+                    mTickTac.setLooping(true);
+
+                } else if (t == 0) {
+                    timer.cancel();
+                    mService.stopMusic(mTickTac);
+                    mService.playMusic(mWrong);
+                    dialogOver = new Dialog(PicturePuzzleActivity.this);
+                    dialogOver.setCancelable(false);
+                    dialogOver.setCanceledOnTouchOutside(false);
+                    dialogOver.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialogOver.setContentView(R.layout.activity_dialog_game_over);
+                    dialogOver.getWindow().setBackgroundDrawableResource(R.color.tran);
+                    dialogOver.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+                    dialogOver.show();
+
+                    Typeface custom_font = Typeface.createFromAsset(PicturePuzzleActivity.this.getAssets(), getResources().getString(R.string.fontPath));
+                    TextView txtOver = (TextView) dialogOver.findViewById(R.id.txtover);
+                    txtOver.setTypeface(custom_font);
+
+                    imgListOver = (ImageView) dialogOver.findViewById(R.id.imgListOver);
+                    imgReplayOver = (ImageView) dialogOver.findViewById(R.id.imgReplayOver);
+
+                    imgListOver.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                            switch (motionEvent.getAction()) {
+                                case MotionEvent.ACTION_DOWN:
+                                    mService.playMusic(mClick);
+                                    imgListOver.setSelected(!imgListOver.isSelected());
+                                    imgListOver.isSelected();
+                                    return true;
+                                case MotionEvent.ACTION_UP:
+                                    mService.playMusic(mClick);
+                                    Intent intent = new Intent(PicturePuzzleActivity.this, LoadingGoOutGameActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                    return true;
+                            }
+                            return false;
+                        }
+                    });
+
+                    imgReplayOver.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            switch (motionEvent.getAction()) {
+                                case MotionEvent.ACTION_DOWN:
+                                    imgReplayOver.setSelected(!imgReplayOver.isSelected());
+                                    imgReplayOver.isSelected();
+                                    mService.playMusic(mClick);
+                                    return true;
+                                case MotionEvent.ACTION_UP:
+                                    mService.playMusic(mClick);
+                                    Intent intent = new Intent(PicturePuzzleActivity.this, LoadingGoInGameActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                    return true;
+                            }
+                            return false;
+                        }
+                    });
+                }
+            }
+        };
+        txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                int t = Integer.parseInt(txtTime.getText().toString());
+                if (t > 0) {
+                    t--;
+                    Message message = new Message();
+                    Bundle sendMsg = new Bundle();
+                    sendMsg.putString("time", String.valueOf(t));
+                    message.setData(sendMsg);
+                    handler.sendMessage(message);
+                }
+            }
+        }, 1000, 1000);
+    }
     private void Answer(){
         imbAnimalOne.setImageBitmap(listBitMapAnswer.get(0));
         imbAnimalTwo.setImageBitmap(listBitMapAnswer.get(1));
@@ -170,12 +286,14 @@ public class PicturePuzzleActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         // TODO Auto-generated method stub
-        super.onPause();
-
+    }
+    public void onSuperBackPressed(){
+        super.onBackPressed();
     }
     @Override
     protected void onPause() {
         // TODO Auto-generated method stub
+        timer.cancel();
         super.onPause();
     }
 
@@ -183,6 +301,8 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         // TODO Auto-generated method stub
         super.onResume();
     }
+
+
 
     View.OnTouchListener touchListener = new View.OnTouchListener() {
         @Override
@@ -207,61 +327,90 @@ public class PicturePuzzleActivity extends AppCompatActivity {
             mService.playMusic(mWrong);
         }
     }
+        View.OnDragListener dragListener = new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View view, DragEvent event) {
+                int dragEvent = event.getAction();
+                final View v = (View) event.getLocalState();
+                switch (dragEvent) {
+                    case DragEvent.ACTION_DRAG_ENTERED:
+                        break;
+                    case DragEvent.ACTION_DRAG_EXITED:
+                        break;
+                    case DragEvent.ACTION_DROP:
+                        if(v.getId() == R.id.imbAnimalone && view.getId() == R.id.imbAnimalquestionone){
+                            imbAnimalQuestionOne.clearColorFilter();
+                            imbAnimalQuestionOne.setImageBitmap(listBitMapAnswer.get(0));
+                            getResult(1);
+                            flagVoice = true;
+                            Voice();
+                            imbAnimalOne.setVisibility(View.INVISIBLE);
+                        }else if(v.getId() == R.id.imbAnimaltwo && view.getId() == R.id.imbAnimalquestiontwo){
+                            imbAnimalQuestionTwo.clearColorFilter();
+                            imbAnimalQuestionTwo.setImageBitmap(listBitMapAnswer.get(1));
+                            getResult(2);
+                            flagVoice = true;
+                            Voice();
+                            imbAnimalTwo.setVisibility(View.INVISIBLE);
+                        }else if(v.getId() == R.id.imbAnimalthree && view.getId() == R.id.imbAnimalquestionthree){
+                            imbAnimalQuestionThree.clearColorFilter();
+                            imbAnimalQuestionThree.setImageBitmap(listBitMapAnswer.get(2));
+                            getResult(3);
+                            flagVoice = true;
+                            Voice();
+                            imbAnimalThree.setVisibility(View.INVISIBLE);
+                        }else if(v.getId() == R.id.imbAnimlafour && view.getId() == R.id.imbAnimalquestionfour){
+                            imbAnimalQuestionFour.clearColorFilter();
+                            imbAnimalQuestionFour.setImageBitmap(listBitMapAnswer.get(3));
+                            getResult(4);
+                            flagVoice = true;
+                            Voice();
+                            imbAnimalFour.setVisibility(View.INVISIBLE);
+                        }else if(v.getId() == R.id.imbAnimalfive && view.getId() == R.id.imbAnimalquestionfive){
+                            imbAnimalQuestionFive.clearColorFilter();
+                            imbAnimalQuestionFive.setImageBitmap(listBitMapAnswer.get(4));
+                            getResult(5);
+                            flagVoice = true;
+                            Voice();
+                            imbAnimalFive.setVisibility(View.INVISIBLE);
+                        }else if(v.getId() == R.id.imbAnimalsix && view.getId() == R.id.imbAnimalquestionsix){
+                            imbAnimalQuestionSix.clearColorFilter();
 
-    View.OnDragListener dragListener = new View.OnDragListener() {
-        @Override
-        public boolean onDrag(View view, DragEvent event) {
-            int dragEvent = event.getAction();
-            final View v = (View) event.getLocalState();
-            switch (dragEvent) {
-                case DragEvent.ACTION_DRAG_ENTERED:
-                    break;
-                case DragEvent.ACTION_DRAG_EXITED:
-                    break;
-                case DragEvent.ACTION_DROP:
-                    if(v.getId() == R.id.imbAnimalone && view.getId() == R.id.imbAnimalquestionone){
-                        imbAnimalQuestionOne.clearColorFilter();
-                        imbAnimalQuestionOne.setImageBitmap(listBitMapAnswer.get(0));
-                        flagVoice = true;
+                            imbAnimalQuestionSix.setImageBitmap(listBitMapAnswer.get(5));
+                            getResult(6);
+                            flagVoice = true;
+                            Voice();
+                            imbAnimalSix.setVisibility(View.INVISIBLE);
+                        }else
+                            flagVoice = false;
                         Voice();
-                        imbAnimalOne.setVisibility(View.INVISIBLE);
-                    }else if(v.getId() == R.id.imbAnimaltwo && view.getId() == R.id.imbAnimalquestiontwo){
-                        imbAnimalQuestionTwo.clearColorFilter();
-                        imbAnimalQuestionTwo.setImageBitmap(listBitMapAnswer.get(1));
-                        flagVoice = true;
-                        Voice();
-                        imbAnimalTwo.setVisibility(View.INVISIBLE);
-                    }else if(v.getId() == R.id.imbAnimalthree && view.getId() == R.id.imbAnimalquestionthree){
-                        imbAnimalQuestionThree.clearColorFilter();
-                        imbAnimalQuestionThree.setImageBitmap(listBitMapAnswer.get(2));
-                        flagVoice = true;
-                        Voice();
-                        imbAnimalThree.setVisibility(View.INVISIBLE);
-                    }else if(v.getId() == R.id.imbAnimlafour && view.getId() == R.id.imbAnimalquestionfour){
-                        imbAnimalQuestionFour.clearColorFilter();
-                        imbAnimalQuestionFour.setImageBitmap(listBitMapAnswer.get(3));
-                        flagVoice = true;
-                        Voice();
-                        imbAnimalFour.setVisibility(View.INVISIBLE);
-                    }else if(v.getId() == R.id.imbAnimalfive && view.getId() == R.id.imbAnimalquestionfive){
-                        imbAnimalQuestionFive.clearColorFilter();
-                        imbAnimalQuestionFive.setImageBitmap(listBitMapAnswer.get(4));
-                        flagVoice = true;
-                        Voice();
-                        imbAnimalFive.setVisibility(View.INVISIBLE);
-                    }else if(v.getId() == R.id.imbAnimalsix && view.getId() == R.id.imbAnimalquestionsix){
-                        imbAnimalQuestionSix.clearColorFilter();
-
-                        imbAnimalQuestionSix.setImageBitmap(listBitMapAnswer.get(5));
-                        flagVoice = true;
-                        Voice();
-                        imbAnimalSix.setVisibility(View.INVISIBLE);
-                    }else
-                        flagVoice = false;
-                        Voice();
-                    break;
+                        break;
+                }
+                return true;
             }
-            return true;
+        };
+
+    //Save Score
+    private void doSaveScore() {
+    }
+
+    //Check Result
+    private void getResult(int choose) {
+        if (choose == 1) {
+            SCORE_ONE += 100;
+        }else if(choose == 2) {
+            SCORE_TWO += 100;
+        }else if(choose == 3) {
+            SCORE_THREE += 100;
+        }else if(choose == 4) {
+            SCORE_FOUR += 100;
+        }else if(choose == 5) {
+            SCORE_FIVE += 100;
+        }else if(choose == 6) {
+            SCORE_SIX += 100;
         }
-    };
+            SCORE_ALL = SCORE_ONE + SCORE_TWO + SCORE_THREE + SCORE_FOUR + SCORE_FIVE + SCORE_SIX;
+            txtScore.setText(String.valueOf(SCORE_ALL));
+            doSaveScore();
+        }
 }

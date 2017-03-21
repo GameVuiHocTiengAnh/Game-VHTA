@@ -11,6 +11,7 @@ import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -18,6 +19,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import blackcore.tdc.edu.com.gamevhta.LoadingGoInGameActivity;
 import blackcore.tdc.edu.com.gamevhta.R;
@@ -72,6 +76,8 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
                 PauseButton.this.clearAnimation();
                 mService.playMusic(mClick);
                 dialog = new Dialog(view.getContext());
+                dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(false);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.activity_dialog_back_game);
                 dialog.getWindow().setBackgroundDrawableResource(R.color.tran);
@@ -108,7 +114,6 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
                 imgReplay.setOnTouchListener(new OnTouchListener() {
                     @Override
                     public boolean onTouch(View view, MotionEvent motionEvent) {
-                        returnIdBtn = "replay";
                         switch (motionEvent.getAction()) {
                             case MotionEvent.ACTION_DOWN:
                                 imgReplay.setSelected(!imgReplay.isSelected());

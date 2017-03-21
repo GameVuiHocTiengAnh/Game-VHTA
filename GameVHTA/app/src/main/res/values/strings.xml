@@ -3,4 +3,6 @@
     <string name="fontPath">fonts/bubblegum.ttf</string>
     <string name="txtdialogbackgame">Pause</string>
     <string name="txtdialogovergame">Game Over</string>
+    <string name="txtTime">60</string>
+    <string name="txtScore">0</string>
 </resources>

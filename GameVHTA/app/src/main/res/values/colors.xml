@@ -6,4 +6,5 @@
     <color name="tran">#00000000</color>
     <color name="textGuide">#0600f6</color>
     <color name="textTopic">#007f3f</color>
+    <color name="TimeAndScore">#f9f7f8</color>
 </resources>
