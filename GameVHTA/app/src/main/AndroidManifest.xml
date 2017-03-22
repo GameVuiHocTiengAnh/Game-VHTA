@@ -42,17 +42,18 @@
         <!--game catching words-->
         <activity android:name=".catching_words_game.CatchingWordsActivity"
             android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
 
         <!--Game Screen 5 -->
         <activity android:name=".image_guessing_game.ImageGuessingActivity"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
     </application>

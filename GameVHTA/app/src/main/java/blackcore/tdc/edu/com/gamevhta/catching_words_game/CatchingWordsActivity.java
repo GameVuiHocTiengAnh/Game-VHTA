@@ -3,18 +3,23 @@ package blackcore.tdc.edu.com.gamevhta.catching_words_game;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,6 +49,7 @@ public class CatchingWordsActivity extends AppCompatActivity {
     private MusicService themeMusic = new MusicService();
     private MediaPlayer songThemeMusic;
     private PauseButton btnPause;
+    private MediaPlayer soundThrowShuriken;
 
     ServiceConnection conn = new ServiceConnection() {
         @Override
@@ -87,7 +93,7 @@ public class CatchingWordsActivity extends AppCompatActivity {
         this.addTopBarView(frameGame);
         this.addProgressbarHelth(frameGame);
         this.playThemeMusic();
-
+        soundThrowShuriken = MediaPlayer.create(this,R.raw.shuriken_throw);
     }
 
     @Override
@@ -143,15 +149,14 @@ public class CatchingWordsActivity extends AppCompatActivity {
 
         // show vocalubary
         lnVocalubary.setLayoutParams(lpHorizaltal);
-        lnVocalubary.setGravity(Gravity.CENTER_HORIZONTAL);
+        lnVocalubary.setGravity(Gravity.CENTER);
         imvVocalubary = new ImageView(this);
         imvVocalubary.setLayoutParams(lpWrap);
-        imvVocalubary.setImageResource(R.drawable.cow_answer);
         txtVocalubary = new TextView(this);
         txtVocalubary.setTypeface(gothic);
         txtVocalubary.setTextColor(Color.RED);
         txtVocalubary.setLayoutParams(lpWrap);
-        txtVocalubary.setText("Cow");
+        txtVocalubary.setText("");
         txtVocalubary.setTextSize(ConfigCWGame.getSizeTextScores());
         lnVocalubary.addView(imvVocalubary);
         lnVocalubary.addView(txtVocalubary);
@@ -181,13 +186,23 @@ public class CatchingWordsActivity extends AppCompatActivity {
 
     private void addProgressbarHelth(FrameLayout root){
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(300, FrameLayout.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(919,SizeOfDevice.getScreenHeight() - 350,0,0);
+        lp.setMargins(SizeOfDevice.getScreenWidth() - 1100,SizeOfDevice.getScreenHeight() - 350,0,0);
         helth.setLayoutParams(lp);
-        helth.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
         helth.setMax(100);
         helth.setProgress(100);
         helth.setVisibility(View.INVISIBLE);
         root.addView(helth);
+    }
+
+    public void updateProgressHeth(final int progress){
+        boolean handler = new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                helth.setProgress(progress);
+            }
+        },1300);
+
+//        Log.d("Tagtest",helth.getProgress()+"");
     }
 
     public void showHelthbar(){
@@ -212,6 +227,44 @@ public class CatchingWordsActivity extends AppCompatActivity {
         songThemeMusic.setVolume(0.25f,0.25f);
         songThemeMusic.setLooping(true);
         themeMusic.playMusic(this.songThemeMusic);
+    }
+
+    public void throwShuriken(){
+        Animation throwShurikenAnim = AnimationUtils.loadAnimation(this,R.anim.throw_shuriken);
+        final ImageView shuriken = new ImageView(this);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(50, 50, Gravity.BOTTOM);
+        lp.setMargins(440,0,0,175);
+        shuriken.setBackgroundResource(R.drawable.mh6_shuriken);
+        shuriken.setLayoutParams(lp);
+        shuriken.bringToFront();
+        shuriken.startAnimation(throwShurikenAnim);
+        soundThrowShuriken.setVolume(0.9f,0.9f);
+        soundThrowShuriken.seekTo(0);
+        soundThrowShuriken.start();
+        frameGame.addView(shuriken);
+
+        throwShurikenAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                shuriken.setVisibility(View.GONE);
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    public void setImvVocalubary(Bitmap images , String text){
+        this.imvVocalubary.setImageBitmap(images);
+        this.txtVocalubary.setText(text);
     }
 
 }

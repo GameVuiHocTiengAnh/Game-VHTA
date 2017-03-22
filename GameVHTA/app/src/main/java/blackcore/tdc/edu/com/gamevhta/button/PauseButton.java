@@ -83,6 +83,7 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
             case MotionEvent.ACTION_UP:
                 PauseButton.this.clearAnimation();
                 mService.playMusic(mClick);
+                callOnClick();
                 dialog.show();
         }
         return true;
@@ -208,7 +209,8 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
                 stopGameMH6();
             }
         }
-        dialog.show();
+        if(!dialog.isShowing())
+            dialog.show();
     }
 }
 

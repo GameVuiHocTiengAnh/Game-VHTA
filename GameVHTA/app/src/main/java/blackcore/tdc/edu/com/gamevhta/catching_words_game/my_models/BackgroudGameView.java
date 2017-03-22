@@ -7,14 +7,19 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import java.util.ArrayList;
+
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.CatchingWordsActivity;
+import blackcore.tdc.edu.com.gamevhta.data_models.DbWordHelper;
 import blackcore.tdc.edu.com.gamevhta.models.SizeOfDevice;
+import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
 /**
  * Created by Shiro on 3/15/2017.
@@ -30,7 +35,17 @@ public class BackgroudGameView extends View  implements View.OnTouchListener{
     private CharacterGameView characterGameView;
     private CatchingWordsActivity context;
     private boolean pauseGame;
+    private int vocaLength;
+    private int countTouch;
+    private int progressHelth;
+    private int uinitHelth;
+
     private int xleftTrunk, yTrunk, xTrunk; //xleftTrunk is current x of trunk on screen
+    String txtVocalubary;
+    Bitmap imgVocalubary;
+
+
+//    private ArrayList<WordObject> listWordObjedt = null;
 
     public BackgroudGameView(CatchingWordsActivity context, int xLeft, int yTop, CharacterGameView characterGameView) {
         super(context);
@@ -45,7 +60,17 @@ public class BackgroudGameView extends View  implements View.OnTouchListener{
         backgroudClone = new Backgroud(bgTrunk,backgroud.getWIDTH(),0);
         this.characterGameView = characterGameView;
         pauseGame = false;
+//        listWordObjedt = new ArrayList<WordObject>();
         this.setOnTouchListener(this);
+        countTouch = 0;
+
+        //test
+        imgVocalubary = BitmapFactory.decodeResource(getResources(),R.drawable.cow_answer);
+        txtVocalubary = "COW";
+        vocaLength = txtVocalubary.length();
+        progressHelth = 100;
+
+
     }
 
     @Override
@@ -88,7 +113,7 @@ public class BackgroudGameView extends View  implements View.OnTouchListener{
         Bitmap bmOverlay = Bitmap.createBitmap(backgroud.getWidth(), backgroud.getHeight(), backgroud.getConfig());
         Canvas canvas = new Canvas(bmOverlay);
         canvas.drawBitmap(backgroud,new Matrix(), null);
-        canvas.drawBitmap(trunk,SizeOfDevice.getScreenWidth() - 500,SizeOfDevice.getScreenHeight() - 270, null);
+        canvas.drawBitmap(trunk,SizeOfDevice.getScreenWidth() - 600,SizeOfDevice.getScreenHeight() - 270, null);
         return bmOverlay;
     }
     public int getxLeftBGClone(){
@@ -98,11 +123,37 @@ public class BackgroudGameView extends View  implements View.OnTouchListener{
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if(pauseGame && !characterGameView.isRunning()){
-            context.hideHelthbar();
-//            backgroudClone.setBackgroud(imgRoot);
+            countTouch++;
+//            Log.d("Tagtest",progressHelth+"/////"+uinitHelth);
+            uinitHelth = (int)(100/vocaLength);
+            progressHelth -= uinitHelth;
+
+            context.updateProgressHeth(progressHelth);
             this.startCharacterFighting(this.context);
-//            pauseGame = false;
-//            Log.d("Tagtest","touch bg");
+            boolean handler = new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    context.throwShuriken();
+                }
+            },500);
+
+            if(countTouch == vocaLength){
+                boolean handlerdelay = new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        countTouch = 0;
+                        context.hideHelthbar();
+                        pauseGame = false;
+                        characterGameView.setNinjaDefaut();
+                        backgroudClone.setBackgroud(imgRoot);
+                        context.setImvVocalubary(imgVocalubary,txtVocalubary);
+                        context.updateProgressHeth(100);
+                        progressHelth = 100;
+                        startMoveBG(context);
+                    }
+                },1400);
+
+            }
             return true;
         }else
         return false;
@@ -119,5 +170,10 @@ public class BackgroudGameView extends View  implements View.OnTouchListener{
     public boolean getPausegame(){
         return this.pauseGame;
     }
+
+//    private void createListWordObjedt(){
+////        DbWordHelper db = new DbWordHelper(context);
+//
+//    }
 
 }
