@@ -24,7 +24,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -181,9 +180,6 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                     dialogOver.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
                     dialogOver.show();
 
-                    Typeface custom_font = Typeface.createFromAsset(PicturePuzzleActivity.this.getAssets(), getResources().getString(R.string.fontPath));
-                    TextView txtOver = (TextView) dialogOver.findViewById(R.id.txtover);
-                    txtOver.setTypeface(custom_font);
 
                     imgListOver = (ImageView) dialogOver.findViewById(R.id.imgListOver);
                     imgReplayOver = (ImageView) dialogOver.findViewById(R.id.imgReplayOver);
@@ -279,8 +275,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
     public void moveActivity() {
         PauseButton imgBackGame = (PauseButton) findViewById(R.id.btnBackGame);
         Intent intent = new Intent(getApplicationContext(),LoadingGoOutGameActivity.class);
-        imgBackGame.setMoveActivity(intent,PicturePuzzleActivity.this);
-
+        imgBackGame.setMoveActivity(intent,this);
 
     }
 

@@ -118,6 +118,7 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
                         return true;
                     case MotionEvent.ACTION_UP:
                         mService.playMusic(mClick);
+                        imgList.setSelected(false);
                         MoveActivity();
                         return true;
                 }
@@ -137,6 +138,7 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
                         return true;
                     case MotionEvent.ACTION_UP:
                         mService.playMusic(mClick);
+                        imgReplay.setSelected(false);
                         intent = new Intent( PauseButton.this.context,PauseButton.this.context.getClass());
                         PauseButton.this.context.startActivity(intent);
                         PauseButton.this.context.finish();
@@ -157,6 +159,7 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
                         return true;
                     case MotionEvent.ACTION_UP:
                         mService.playMusic(mClick);
+                        imgResume.setSelected(false);
                         resumeGameMH6();
                         dialog.dismiss();
                         return true;
