@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
@@ -36,6 +37,7 @@ import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbScoreHelper;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbWordHelper;
 import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
+import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
 
 /**
@@ -46,10 +48,10 @@ public class ImageGuessingActivity extends AppCompatActivity {
     private Handler handler;
     private Animation animation;
     private Timer timer = new Timer();
-    private ImageButton btnImage1, btnImage2, btnImage3, btnImage4, btnImage5, btnImage6;
+    private ImageButton btnImage1, btnImage2, btnImage3, btnImage4, btnImage5, btnImage6, btnPauseGame5;
     private TextView lblTimer, lblWord, lblScore, lblScoreGameOver;
     private MediaPlayer mpClicked, mpSoundBackground;
-    private ImageView imgListOver, imgReplayOver;
+    private ImageView imgListOver, imgReplayOver, imgList, imgReplay, imgResume;
     private EditText lblPlayerNameGameOver;
 
     private String OBJECT = "";
@@ -57,11 +59,10 @@ public class ImageGuessingActivity extends AppCompatActivity {
     private int SCORE = 0;
     private int RESULT_FAILED = 0;
     private int RESULT_CHOSEN = -1;
-    //    private ArrayList<WordObject> listImageFromData;
-    //    private ArrayList<WordObject> listImageLevel;
-    private ArrayList<String> listImageFromData;
-    private ArrayList<String> listImageLevel;
+    private ArrayList<WordObject> listImageFromDataO;
+    private ArrayList<WordObject> listImageLevelO;
 
+    private Dialog dialogBack;
     private Dialog dialogGameOver;
     private DbWordHelper dbWordHelper;
     private DbScoreHelper dbScoreHelper;
@@ -95,8 +96,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
         //get Object selected at screen topic
         if (getIntent().getExtras() != null) {
             OBJECT = getIntent().getStringExtra(ConfigApplication.OBJECT_SELECTED);
-            listImageFromData.clear();
-            //listImageFromData = dbWordHelper.getWordObject(OBJECT, 30);
+            addDataList();
         }
     }
 
@@ -119,19 +119,23 @@ public class ImageGuessingActivity extends AppCompatActivity {
     }
 
     private void initialize() {
+        //database
+        dbWordHelper = new DbWordHelper(this);
+        dbScoreHelper = new DbScoreHelper(this);
+
         btnImage1 = (ImageButton) findViewById(R.id.btnImage1);
         btnImage2 = (ImageButton) findViewById(R.id.btnImage2);
         btnImage3 = (ImageButton) findViewById(R.id.btnImage3);
         btnImage4 = (ImageButton) findViewById(R.id.btnImage4);
         btnImage5 = (ImageButton) findViewById(R.id.btnImage5);
         btnImage6 = (ImageButton) findViewById(R.id.btnImage6);
+        btnPauseGame5 = (ImageButton) findViewById(R.id.btnPauseGame5);
         lblTimer = (TextView) findViewById(R.id.lblTimer);
         lblWord = (TextView) findViewById(R.id.lblWord);
         lblScore = (TextView) findViewById(R.id.lblScore);
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_in);
 
-        listImageFromData = new ArrayList<>();
-
+        //dialog game over
         dialogGameOver = new Dialog(ImageGuessingActivity.this);
         dialogGameOver.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogGameOver.setCancelable(false);
@@ -142,22 +146,29 @@ public class ImageGuessingActivity extends AppCompatActivity {
         lblScoreGameOver = (TextView) dialogGameOver.findViewById(R.id.lblScoreGameOver);
         lblPlayerNameGameOver = (EditText) dialogGameOver.findViewById(R.id.lblPlayerNameGameOver);
 
+        //dialog back game
+        dialogBack = new Dialog(ImageGuessingActivity.this);
+        dialogBack.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogBack.setCancelable(false);
+        dialogBack.setContentView(R.layout.activity_dialog_back_game);
+        dialogBack.getWindow().setBackgroundDrawableResource(R.color.tran);
+        imgResume = (ImageView) dialogBack.findViewById(R.id.imgResume);
+        imgList = (ImageView) dialogBack.findViewById(R.id.imgList);
+        imgReplay = (ImageView) dialogBack.findViewById(R.id.imgReplay);
+
         mpClicked = MediaPlayer.create(getApplicationContext(), R.raw.game_5_sound_clicked);
         mpSoundBackground = MediaPlayer.create(getApplicationContext(), R.raw.game_9_screen_background_sound);
         mpSoundBackground.setLooping(true);
         mpSoundBackground.start();
 
-        //database
-        dbWordHelper = new DbWordHelper(this);
-        dbScoreHelper = new DbScoreHelper(this);
         //set time left default
         lblTimer.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
 
-        //example
-        addDataList();
         getEvents();
         setFont();
         getAnimationImageButton();
+
+        addDataList();
         loadGame();
     }
 
@@ -183,47 +194,47 @@ public class ImageGuessingActivity extends AppCompatActivity {
             }
         }, 1000, 1000);
 
-        listImageLevel = new ArrayList<>();
+        listImageLevelO = new ArrayList<>();
         Random rd = new Random();
         for (int j = 0; j < 6; j++) {
-            int x = rd.nextInt(listImageFromData.size());
-            listImageLevel.add(j, "Word" + x);
-            listImageFromData.remove(x);
+            int x = rd.nextInt(listImageFromDataO.size());
+            listImageLevelO.add(j, listImageFromDataO.get(x));
+            Log.d("ImageSize", String.valueOf(listImageLevelO.size()) + "-Object: " + listImageFromDataO.get(j).getwEng()+":"+listImageFromDataO.get(j).getwPathImage());
         }
-        RESULT_CHOSEN = rd.nextInt(listImageLevel.size()) + 1;
-        lblWord.setText(listImageLevel.get(RESULT_CHOSEN - 1).toString());
-        Toast.makeText(getApplicationContext(), "RS: " + RESULT_CHOSEN, Toast.LENGTH_SHORT).show();
-        switch (RESULT_CHOSEN) {
-            case 1:
-                //btnImage1.setImageBitmap(getImageBitmap(listImageLevel.get(RESULT_CHOSEN)));
-                break;
-            case 2:
-                //btnImage2.setImageBitmap(getImageBitmap(listImageLevel.get(RESULT_CHOSEN)));
-                break;
-            case 3:
-                //btnImage3.setImageBitmap(getImageBitmap(listImageLevel.get(RESULT_CHOSEN)));
-                break;
-            case 4:
-                //btnImage4.setImageBitmap(getImageBitmap(listImageLevel.get(RESULT_CHOSEN)));
-                break;
-            case 5:
-                //btnImage5.setImageBitmap(getImageBitmap(listImageLevel.get(RESULT_CHOSEN)));
-                break;
-            case 6:
-                //btnImage6.setImageBitmap(getImageBitmap(listImageLevel.get(RESULT_CHOSEN)));
-                break;
-        }
+        Log.d("ImageSize", String.valueOf(listImageFromDataO.size()));
+        RESULT_CHOSEN = rd.nextInt(listImageLevelO.size());
+        listImageFromDataO.remove(RESULT_CHOSEN);
+        lblWord.setText(listImageLevelO.get(RESULT_CHOSEN).getwEng().toString());
+        Log.d("ImageSizeResult", String.valueOf(RESULT_CHOSEN));
+
+        btnImage1.setBackground(getBitmapResource(listImageLevelO.get(0).getwPathImage()));
+        btnImage2.setBackground(getBitmapResource(listImageLevelO.get(1).getwPathImage()));
+        btnImage3.setBackground(getBitmapResource(listImageLevelO.get(2).getwPathImage()));
+        btnImage4.setBackground(getBitmapResource(listImageLevelO.get(3).getwPathImage()));
+        btnImage5.setBackground(getBitmapResource(listImageLevelO.get(4).getwPathImage()));
+        btnImage6.setBackground(getBitmapResource(listImageLevelO.get(5).getwPathImage()));
+
     }
 
     //List Image was loaded from database
     private void addDataList() {
-        listImageFromData.clear();
-        for (int i = 0; i < 30; i++) {
-            listImageFromData.add("Word" + (i + 1));
-        }
+        listImageFromDataO = new ArrayList<>();
+        listImageFromDataO = dbWordHelper.getWordObject(ConfigApplication.OBJECT_ANIMALS);
+        //Log.d("ImageSize", String.valueOf(listImageFromDataO.size()) + "-Object: " + listImageFromDataO.get(0).getwEng());
     }
 
-    //Add image to ImageButton
+    //Add image from resource to ImageButton
+    private Drawable getBitmapResource(String name) {
+        int id = getResources().getIdentifier(name, "drawable", getApplicationContext().getPackageName());
+        Drawable dr;
+        if(id != 0)
+            dr =getApplicationContext().getResources().getDrawable(id);
+        else
+            dr =getApplicationContext().getResources().getDrawable(R.drawable.screen_5_dv);
+        return  dr;
+    }
+
+    //Add image from sdcard to ImageButton
     private Bitmap getImageBitmap(String imageName) {
         String path = Environment.getExternalStorageDirectory().toString() + "" + imageName + ".jpg";
         File fileImage = new File(path);
@@ -264,6 +275,53 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 dialogGameOver.dismiss();
             }
         });
+        btnPauseGame5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnPauseGame5.startAnimation(animation);
+                timer.cancel();
+                dialogBack.show();
+            }
+        });
+        imgResume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        int t = Integer.parseInt(lblTimer.getText().toString());
+                        if (t > 0) {
+                            t--;
+                            Message message = new Message();
+                            Bundle sendMsg = new Bundle();
+                            sendMsg.putString("time", String.valueOf(t));
+                            message.setData(sendMsg);
+                            handler.sendMessage(message);
+                        }
+                    }
+                }, 1000, 1000);
+                dialogBack.dismiss();
+            }
+        });
+        imgList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ImageGuessingActivity.this, TopisChoosingActivity.class));
+                finish();
+            }
+        });
+        imgReplay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addDataList();
+                doSaveScore();
+                TURN = 0;
+                SCORE = 0;
+                loadGame();
+                dialogBack.dismiss();
+            }
+        });
     }
 
     private void getAnimationImageButton() {
@@ -274,7 +332,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
                         btnImage6.startAnimation(animation);
-                        getResult(6);
+                        getResult(5);
                         mpClicked.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
@@ -293,7 +351,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
                         btnImage5.startAnimation(animation);
-                        getResult(5);
+                        getResult(4);
                         mpClicked.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
@@ -312,7 +370,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
                         btnImage4.startAnimation(animation);
-                        getResult(4);
+                        getResult(3);
                         mpClicked.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
@@ -331,7 +389,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
                         btnImage3.startAnimation(animation);
-                        getResult(3);
+                        getResult(2);
                         mpClicked.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
@@ -350,7 +408,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
                         btnImage2.startAnimation(animation);
-                        getResult(2);
+                        getResult(1);
                         mpClicked.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
@@ -370,7 +428,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
                         btnImage1.startAnimation(animation);
-                        getResult(1);
+                        getResult(0);
                         mpClicked.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
@@ -386,7 +444,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
 
     //Save Score
     private void doSaveScore() {
-        if(SCORE>0) {
+        if (SCORE > 0) {
             String playerName = lblPlayerNameGameOver.getText().toString();
             if (playerName.equals(""))
                 playerName = "Unknown Player";
@@ -404,12 +462,12 @@ public class ImageGuessingActivity extends AppCompatActivity {
     //Check Result
     private void getResult(int choose) {
         if (choose == RESULT_CHOSEN) {
-            Log.d("Size", String.valueOf(listImageFromData.size()));
+            Log.d("Size", String.valueOf(listImageFromDataO.size()));
             TURN++;
             Log.d("SizeTurn", String.valueOf(TURN));
-            if(TURN >= 5){
+            if (TURN >= 5) {
                 Toast.makeText(getApplicationContext(), "You WIN", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 timer.cancel();
                 SCORE += lblWord.getText().length() * 10 * Integer.parseInt(lblTimer.getText().toString());
                 lblScore.setText(String.valueOf(SCORE));

@@ -38,17 +38,17 @@ public class DbScoreHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String script = "CREATE TABLE " + TABLE_SCORE + "( " +
-                S_COLUMN_ID_PLAYER + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                S_COLUMN_PLAYER_NAME + " TEXT," +
-                S_COLUMN_PLAYER_SCORE + " INTEGER )";
-        db.execSQL(script);
+//        String script = "CREATE TABLE " + TABLE_SCORE + "( " +
+//                S_COLUMN_ID_PLAYER + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+//                S_COLUMN_PLAYER_NAME + " TEXT," +
+//                S_COLUMN_PLAYER_SCORE + " INTEGER )";
+//        db.execSQL(script);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SCORE);
-        onCreate(db);
+//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SCORE);
+//        onCreate(db);
     }
 
     public boolean doInsertScore(ScoreObject scoreObject) {

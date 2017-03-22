@@ -12,7 +12,7 @@ public class ConfigApplication {
 
 
     //Object
-    public static final String OBJECT_SELECTED = "SCH";
+    public static final String OBJECT_SELECTED = "OBJECT_SELECTED";
     //School
     public static final String OBJECT_SCHOOL = "SCH";
     //Animals
