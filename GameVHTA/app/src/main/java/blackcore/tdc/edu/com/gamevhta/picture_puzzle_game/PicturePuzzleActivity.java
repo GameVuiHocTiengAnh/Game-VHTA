@@ -46,10 +46,10 @@ import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 public class PicturePuzzleActivity extends AppCompatActivity {
 
-    TextView txtTime,txtScore,txtAnswerOne,txtAnswerTwo,txtAnswerThree,txtAnswerFour,txtAnswerFive,txtAnswerSix,lblScoreGameOver;
+    TextView txtTime,txtScore,txtAnswerOne,txtAnswerTwo,txtAnswerThree,txtAnswerFour,txtAnswerFive,txtAnswerSix,lblScoreGameOver,txtNameScoreWin,txtScoreWin;
     EditText lblPlayerNameGameOver;
 
-    private Dialog dialogOver;
+    private Dialog dialogOver,dialogWin;
     private ArrayList<Bitmap> listBitMapAnswer = null;
 
     final int color = Color.parseColor("#FFFFFF");
@@ -79,11 +79,12 @@ public class PicturePuzzleActivity extends AppCompatActivity {
     private Handler handler;
     private Timer timer;
     private int SCORE_ONE = 0, SCORE_TWO = 0, SCORE_THREE = 0, SCORE_FOUR = 0, SCORE_FIVE = 0, SCORE_SIX = 0, SCORE_ALL = 0;
+    private int timesDrop = 0;
     private DbAccessHelper dbWordHelper;
     private DbScoreHelper dbScoreHelper;
     private String OBJECT = "";
 
-    ImageView imbAnimalOne,imbAnimalTwo,imbAnimalThree,imbAnimalFour,imbAnimalFive,imbAnimalSix;
+    ImageView imbAnimalOne,imbAnimalTwo,imbAnimalThree,imbAnimalFour,imbAnimalFive,imbAnimalSix,imbNextGameWin;
     ImageView imbAnimalQuestionOne,imbAnimalQuestionTwo,imbAnimalQuestionThree,imbAnimalQuestionFour,imbAnimalQuestionFive,imbAnimalQuestionSix;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,6 +176,19 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         imgReplayOver = (ImageView) dialogOver.findViewById(R.id.imgReplayOver);
         lblPlayerNameGameOver = (EditText) dialogOver.findViewById(R.id.lblPlayerNameGameOver);
         lblScoreGameOver = (TextView) dialogOver.findViewById(R.id.lblScoreGameOver);
+
+        dialogWin = new Dialog(PicturePuzzleActivity.this);
+        dialogWin.setCancelable(false);
+        dialogWin.setCanceledOnTouchOutside(false);
+        dialogWin.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogWin.setContentView(R.layout.activity_dialog_win_game);
+        dialogWin.getWindow().setBackgroundDrawableResource(R.color.tran);
+        dialogWin.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+
+        imbNextGameWin = (ImageView) dialogWin.findViewById(R.id.imvNextGame);
+        txtNameScoreWin = (TextView) dialogWin.findViewById(R.id.txtNameScoreWin);
+        txtScoreWin = (TextView) dialogWin.findViewById(R.id.txtScoreWin);
+
 
         //get Object selected at screen topic
         if (getIntent().getExtras() != null) {
@@ -313,6 +327,8 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         txtAnswerSix.setTypeface(custom_font);
         lblScoreGameOver.setTypeface(custom_font);
         lblPlayerNameGameOver.setTypeface(custom_font);
+        txtNameScoreWin.setTypeface(custom_font);
+        txtScoreWin.setTypeface(custom_font);
     }
 
     public void moveActivity() {
@@ -373,11 +389,13 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                 final View v = (View) event.getLocalState();
                 switch (dragEvent) {
                     case DragEvent.ACTION_DRAG_ENTERED:
+
                         break;
                     case DragEvent.ACTION_DRAG_EXITED:
                         break;
                     case DragEvent.ACTION_DROP:
                         if(v.getId() == R.id.imbAnimalone && view.getId() == R.id.imbAnimalquestionone){
+                            timesDrop();
                             imbAnimalQuestionOne.clearColorFilter();
                             imbAnimalQuestionOne.setImageBitmap(listBitMapAnswer.get(0));
                             getResult(1);
@@ -385,6 +403,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             Voice();
                             imbAnimalOne.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimaltwo && view.getId() == R.id.imbAnimalquestiontwo){
+                            timesDrop();
                             imbAnimalQuestionTwo.clearColorFilter();
                             imbAnimalQuestionTwo.setImageBitmap(listBitMapAnswer.get(1));
                             getResult(2);
@@ -392,6 +411,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             Voice();
                             imbAnimalTwo.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimalthree && view.getId() == R.id.imbAnimalquestionthree){
+                            timesDrop();
                             imbAnimalQuestionThree.clearColorFilter();
                             imbAnimalQuestionThree.setImageBitmap(listBitMapAnswer.get(2));
                             getResult(3);
@@ -399,6 +419,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             Voice();
                             imbAnimalThree.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimlafour && view.getId() == R.id.imbAnimalquestionfour){
+                            timesDrop();
                             imbAnimalQuestionFour.clearColorFilter();
                             imbAnimalQuestionFour.setImageBitmap(listBitMapAnswer.get(3));
                             getResult(4);
@@ -406,6 +427,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             Voice();
                             imbAnimalFour.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimalfive && view.getId() == R.id.imbAnimalquestionfive){
+                            timesDrop();
                             imbAnimalQuestionFive.clearColorFilter();
                             imbAnimalQuestionFive.setImageBitmap(listBitMapAnswer.get(4));
                             getResult(5);
@@ -413,6 +435,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             Voice();
                             imbAnimalFive.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimalsix && view.getId() == R.id.imbAnimalquestionsix){
+                            timesDrop();
                             imbAnimalQuestionSix.clearColorFilter();
 
                             imbAnimalQuestionSix.setImageBitmap(listBitMapAnswer.get(5));
@@ -424,10 +447,52 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             flagVoice = false;
                             Voice();
                             break;
+                    case DragEvent.ACTION_DRAG_ENDED:
+                        if(timesDrop == 6)
+                        {
+                            timer.cancel();
+                            EventWin();
+                            dialogWin.show();
+                        }
                 }
                 return true;
             }
         };
+
+        private void EventWin()
+        {
+            txtScoreWin.setText(String.valueOf(SCORE_ALL));
+
+            imbNextGameWin.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            mService.playMusic(mClick);
+                            imbNextGameWin.setSelected(!imbNextGameWin.isSelected());
+                            imbNextGameWin.isSelected();
+                            return true;
+                        case MotionEvent.ACTION_UP:
+                            mService.playMusic(mClick);
+                            imbNextGameWin.setSelected(false);
+                            return true;
+                    }
+                    return false;
+                }
+            });
+        }
+
+        private void timesDrop() {
+            if(timesDrop == 6)
+            {
+                timesDrop = 0;
+            }
+            else
+            {
+                timesDrop++;
+            }
+        }
 
     //Save Score
     private void doSaveScore() {
@@ -448,9 +513,6 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         }
     }
 
-    private void winGame(int win) {
-
-    }
 
     //Check Result
     private void getResult(int choose) {

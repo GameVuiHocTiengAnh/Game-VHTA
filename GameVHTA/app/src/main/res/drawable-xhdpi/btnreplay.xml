@@ -3,7 +3,7 @@
     <!-- NOTE: order is important (the first matching state(s) is what is rendered) -->
     <item
         android:state_selected="true"
-        android:drawable="@drawable/next_game_click" />
+        android:drawable="@drawable/replay_click" />
     <item
-        android:drawable="@drawable/next_game" />
+        android:drawable="@drawable/repeat" />
 </selector>
