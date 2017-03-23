@@ -34,8 +34,7 @@ import java.util.TimerTask;
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.TopisChoosingActivity;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
-import blackcore.tdc.edu.com.gamevhta.data_models.DbScoreHelper;
-import blackcore.tdc.edu.com.gamevhta.data_models.DbWordHelper;
+import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
@@ -55,6 +54,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
     private EditText lblPlayerNameGameOver;
 
     private String OBJECT = "";
+    private int IMAGE_X = 0;
     private int TURN = 0;
     private int SCORE = 0;
     private int RESULT_FAILED = 0;
@@ -64,8 +64,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
 
     private Dialog dialogBack;
     private Dialog dialogGameOver;
-    private DbWordHelper dbWordHelper;
-    private DbScoreHelper dbScoreHelper;
+    private DbAccessHelper dbAccessHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,8 +119,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
 
     private void initialize() {
         //database
-        dbWordHelper = new DbWordHelper(this);
-        dbScoreHelper = new DbScoreHelper(this);
+        dbAccessHelper = new DbAccessHelper(this);
 
         btnImage1 = (ImageButton) findViewById(R.id.btnImage1);
         btnImage2 = (ImageButton) findViewById(R.id.btnImage2);
@@ -195,37 +193,48 @@ public class ImageGuessingActivity extends AppCompatActivity {
         }, 1000, 1000);
 
         listImageLevelO = new ArrayList<>();
+        Log.d("ImageSizeBefore", String.valueOf(listImageFromDataO.size()));
         Random rd = new Random();
         for (int j = 0; j < 6; j++) {
-            int x = rd.nextInt(listImageFromDataO.size());
-            listImageLevelO.add(j, listImageFromDataO.get(x));
-            Log.d("ImageSize", String.valueOf(listImageLevelO.size()) + "-Object: " + listImageFromDataO.get(j).getwEng()+":"+listImageFromDataO.get(j).getwPathImage());
+            int n = listImageFromDataO.size()-1;
+            int x = rd.nextInt(n);
+            listImageLevelO.add(listImageFromDataO.get(x));
+            listImageFromDataO.remove(x);
+
+            //Log.d("ImageSizeSV","Index:"+j+"-X:"+ String.valueOf(x) + "-Object: " + listImageFromDataO.get(x).getwEng()+":"+listImageFromDataO.get(x).getwPathImage());
+            //Log.d("ImageSizeLC","Index:"+j+"-X:"+ String.valueOf(x) + "-Object: " + listImageLevelO.get(j).getwEng()+":"+listImageLevelO.get(j).getwPathImage());
         }
-        Log.d("ImageSize", String.valueOf(listImageFromDataO.size()));
+        Log.d("ImageSizeAfter", String.valueOf(listImageFromDataO.size()));
         RESULT_CHOSEN = rd.nextInt(listImageLevelO.size());
-        listImageFromDataO.remove(RESULT_CHOSEN);
         lblWord.setText(listImageLevelO.get(RESULT_CHOSEN).getwEng().toString());
         Log.d("ImageSizeResult", String.valueOf(RESULT_CHOSEN));
 
         btnImage1.setBackground(getBitmapResource(listImageLevelO.get(0).getwPathImage()));
+        Log.d("Image0", String.valueOf(listImageLevelO.get(0).getwPathImage()));
         btnImage2.setBackground(getBitmapResource(listImageLevelO.get(1).getwPathImage()));
+        Log.d("Image1", String.valueOf(listImageLevelO.get(1).getwPathImage()));
         btnImage3.setBackground(getBitmapResource(listImageLevelO.get(2).getwPathImage()));
+        Log.d("Image2", String.valueOf(listImageLevelO.get(2).getwPathImage()));
         btnImage4.setBackground(getBitmapResource(listImageLevelO.get(3).getwPathImage()));
+        Log.d("Image3", String.valueOf(listImageLevelO.get(3).getwPathImage()));
         btnImage5.setBackground(getBitmapResource(listImageLevelO.get(4).getwPathImage()));
+        Log.d("Image4", String.valueOf(listImageLevelO.get(4).getwPathImage()));
         btnImage6.setBackground(getBitmapResource(listImageLevelO.get(5).getwPathImage()));
+        Log.d("Image5", String.valueOf(listImageLevelO.get(5).getwPathImage()));
 
     }
 
     //List Image was loaded from database
     private void addDataList() {
         listImageFromDataO = new ArrayList<>();
-        listImageFromDataO = dbWordHelper.getWordObject(ConfigApplication.OBJECT_ANIMALS);
+        listImageFromDataO = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_ANIMALS);
         //Log.d("ImageSize", String.valueOf(listImageFromDataO.size()) + "-Object: " + listImageFromDataO.get(0).getwEng());
     }
 
     //Add image from resource to ImageButton
     private Drawable getBitmapResource(String name) {
         int id = getResources().getIdentifier(name, "drawable", getApplicationContext().getPackageName());
+        Log.d("ImageID", String.valueOf(id));
         Drawable dr;
         if(id != 0)
             dr =getApplicationContext().getResources().getDrawable(id);
@@ -453,7 +462,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
             scoreObject.setsScore(SCORE);
             Log.d("ScoreSave", String.valueOf(SCORE));
             Log.d("ScoreSavePlayer", playerName);
-            dbScoreHelper.doInsertScore(scoreObject);
+            dbAccessHelper.doInsertScore(scoreObject);
             lblPlayerNameGameOver.setText("");
             Toast.makeText(getApplicationContext(), "Saving Score", Toast.LENGTH_SHORT).show();
         }

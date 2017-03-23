@@ -16,10 +16,15 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
+import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
 import static blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication.DATABASE_NAME;
 import static blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication.DATABASE_VERSION;
+import static blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication.S_COLUMN_ID_PLAYER;
+import static blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication.S_COLUMN_PLAYER_NAME;
+import static blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication.S_COLUMN_PLAYER_SCORE;
+import static blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication.TABLE_SCORE;
 import static blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication.TABLE_WORD;
 import static blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication.W_COLUMN_ID_WORD;
 import static blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication.W_COLUMN_LEVEL;
@@ -33,15 +38,15 @@ import static blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication.W_COLU
  * Created by Hoang on 3/20/2017.
  */
 
-public class DbWordHelper extends SQLiteOpenHelper {
+public class DbAccessHelper extends SQLiteOpenHelper {
 
     private Context myContext;
     private SQLiteDatabase myDatabase;
     //private String dbPath = "/data/data/" + BuildConfig.APPLICATION_ID + "/databases/";
     private String dbPath = "/data/data/blackcore.tdc.edu.com.gamevhta/databases/";
-    private static DbWordHelper sInstance;
+    private static DbAccessHelper sInstance;
 
-    public DbWordHelper(Context context) {
+    public DbAccessHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.myContext = context;
         boolean db_exist = checkdatabase();
@@ -58,9 +63,9 @@ public class DbWordHelper extends SQLiteOpenHelper {
         }
     }
 
-    public static DbWordHelper getInstance(Context context) throws IOException {
+    public static DbAccessHelper getInstance(Context context) throws IOException {
         if (sInstance == null) {
-            sInstance = new DbWordHelper(context.getApplicationContext());
+            sInstance = new DbAccessHelper(context.getApplicationContext());
         }
         return sInstance;
     }
@@ -259,6 +264,61 @@ public class DbWordHelper extends SQLiteOpenHelper {
             wordObject.setwObject(res.getString(res.getColumnIndex(W_COLUMN_OBJECT)));
             wordObject.setưLevel(res.getString(res.getColumnIndex(W_COLUMN_LEVEL)));
             arrWord.add(wordObject);
+            res.moveToNext();
+        }
+        return arrWord;
+    }
+
+    //Table Score
+    public boolean doInsertScore(ScoreObject scoreObject) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(S_COLUMN_PLAYER_NAME, scoreObject.getsPlayer());
+        contentValues.put(S_COLUMN_PLAYER_SCORE, scoreObject.getsScore());
+        db.insert(TABLE_SCORE, null, contentValues);
+        return true;
+    }
+
+    public boolean doUpdateScore(ScoreObject scoreObject) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(S_COLUMN_PLAYER_NAME, scoreObject.getsPlayer());
+        contentValues.put(S_COLUMN_PLAYER_SCORE, scoreObject.getsScore());
+
+        db.update(TABLE_SCORE, contentValues, S_COLUMN_ID_PLAYER + " = ?", new String[]{scoreObject.getsID()});
+        return true;
+    }
+
+    public Integer doDeleteScore(String wID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_SCORE, S_COLUMN_ID_PLAYER + " = ? ", new String[]{wID});
+    }
+
+    public ArrayList<ScoreObject> getAllScore() {
+        ArrayList<ScoreObject> arrWord = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + TABLE_SCORE + " ORDER BY " + S_COLUMN_PLAYER_SCORE + " DESC", null);
+        res.moveToFirst();
+        while (res.isAfterLast() == false) {
+            ScoreObject scoreObject = new ScoreObject();
+            scoreObject.setsPlayer(res.getString(res.getColumnIndex(S_COLUMN_PLAYER_NAME)));
+            scoreObject.setsScore(res.getColumnIndex(S_COLUMN_PLAYER_SCORE));
+            arrWord.add(scoreObject);
+        }
+        return arrWord;
+    }
+
+    public ArrayList<ScoreObject> getScoreObject(int topScore) {
+        ArrayList<ScoreObject> arrWord = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + TABLE_SCORE + "  ORDER BY " + S_COLUMN_PLAYER_SCORE + " DESC LIMIT " + topScore, null);
+        res.moveToFirst();
+        while (res.isAfterLast() == false) {
+            ScoreObject scoreObject = new ScoreObject();
+            scoreObject.setsID(res.getString(res.getColumnIndex(S_COLUMN_ID_PLAYER)));
+            scoreObject.setsPlayer(res.getString(res.getColumnIndex(S_COLUMN_PLAYER_NAME)));
+            scoreObject.setsScore(Integer.parseInt(res.getString(res.getColumnIndex(S_COLUMN_PLAYER_SCORE))));
+            arrWord.add(scoreObject);
             res.moveToNext();
         }
         return arrWord;
