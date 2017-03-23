@@ -79,6 +79,8 @@ public class ScoresActivity extends AppCompatActivity {
 
         mScore = MediaPlayer.create(getApplicationContext(),R.raw.score);
 
+        musicScore();
+
 
     }
 

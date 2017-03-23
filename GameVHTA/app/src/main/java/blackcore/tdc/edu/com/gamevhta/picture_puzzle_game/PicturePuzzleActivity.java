@@ -54,8 +54,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
 
     final int color = Color.parseColor("#FFFFFF");
     private boolean flagVoice = true, flagWin = true;
-
-    private MediaPlayer mCorrect,mWrong,mClick,mTickTac;
+    private MediaPlayer mCorrect,mWrong,mClick,mTickTac,mWin,mMusicMainGame;
     private MusicService mService = new MusicService();
     PauseButton imgBackGame;
     private int timeCount;
@@ -98,6 +97,8 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         mWrong = MediaPlayer.create(PicturePuzzleActivity.this,R.raw.sai);
         mClick = MediaPlayer.create(PicturePuzzleActivity.this, R.raw.click);
         mTickTac = MediaPlayer.create(PicturePuzzleActivity.this, R.raw.time);
+        mWin = MediaPlayer.create(PicturePuzzleActivity.this, R.raw.wingame);
+        mMusicMainGame = MediaPlayer.create(PicturePuzzleActivity.this, R.raw.picturepuzzle);
 
         txtTime = (TextView) findViewById(R.id.txtTime);
         txtScore = (TextView) findViewById(R.id.txtScore);
@@ -196,6 +197,9 @@ public class PicturePuzzleActivity extends AppCompatActivity {
             //listImageFromData = dbWordHelper.getWordObject(OBJECT, 30);
         }
 
+        mService.playMusic(mMusicMainGame);
+        mMusicMainGame.setLooping(true);
+        mMusicMainGame.setVolume(0.15f,0.15f);
         moveActivity();
         setFont();
         Answer();
@@ -348,11 +352,13 @@ public class PicturePuzzleActivity extends AppCompatActivity {
     protected void onPause() {
         // TODO Auto-generated method stub
         timer.cancel();
+        mService.pauseMusic(mMusicMainGame);
         super.onPause();
     }
 
     protected void onResume(){
         // TODO Auto-generated method stub
+        mService.playMusic(mMusicMainGame);
         super.onResume();
     }
 
@@ -451,6 +457,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                         if(timesDrop == 6)
                         {
                             timer.cancel();
+                            mService.playMusic(mWin);
                             EventWin();
                             dialogWin.show();
                         }
@@ -476,6 +483,10 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_UP:
                             mService.playMusic(mClick);
                             imbNextGameWin.setSelected(false);
+                            Intent intent = new Intent(getApplicationContext(),LoadingGoInGameActivity.class);
+                            Bundle sendScore = new Bundle();
+                            sendScore.putInt("score",SCORE_ALL);
+                            intent.putExtra("pictutepuzzle",sendScore);
                             return true;
                     }
                     return false;

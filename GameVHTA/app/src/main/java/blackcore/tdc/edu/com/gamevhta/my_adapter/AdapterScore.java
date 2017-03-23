@@ -34,20 +34,20 @@ public class AdapterScore extends ArrayAdapter<ScoreObject> {
             imvMedal.setImageResource(R.drawable.medal);
             txtName.setTextColor(context.getResources().getColor(R.color.FirstScore));
             txtScore.setTextColor(context.getResources().getColor(R.color.FirstScore));
-            txtName.setTextSize(40);
-            txtScore.setTextSize(40);
+            txtName.setTextSize(35);
+            txtScore.setTextSize(35);
         }else if(position == 1){
             imvMedal.setImageResource(R.drawable.medal2);
             txtName.setTextColor(context.getResources().getColor(R.color.SecondScore));
             txtScore.setTextColor(context.getResources().getColor(R.color.SecondScore));
-            txtName.setTextSize(35);
-            txtScore.setTextSize(35);
+            txtName.setTextSize(30);
+            txtScore.setTextSize(30);
         }else if(position == 2){
             imvMedal.setImageResource(R.drawable.medal3);
             txtName.setTextColor(context.getResources().getColor(R.color.ThreeScore));
             txtScore.setTextColor(context.getResources().getColor(R.color.ThreeScore));
-            txtName.setTextSize(30);
-            txtScore.setTextSize(30);
+            txtName.setTextSize(25);
+            txtScore.setTextSize(25);
         }
         else
             imvMedal = null;
