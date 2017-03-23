@@ -10,6 +10,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -94,13 +95,22 @@ public class FragmentTopics extends android.support.v4.app.Fragment{
                 btnMemory = (ImageView) dialog.findViewById(R.id.btnMemory);
                 btnPractice = (ImageView) dialog.findViewById(R.id.btnPractice);
 
-                btnCancel.setOnClickListener(new View.OnClickListener() {
+                btnCancel.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onClick(View view) {
-                        btnCancel.startAnimation(alpha4);
-                        btnChoosemap.startAnimation(toPicUp);
-                        mService.playMusic(mClick);
-                        dialog.cancel();
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        switch (motionEvent.getAction()){
+                            case MotionEvent.ACTION_DOWN:
+                                btnCancel.setSelected(!btnCancel.isSelected());
+                                btnCancel.isSelected();
+                                mService.playMusic(mClick);
+                                return true;
+                            case MotionEvent.ACTION_UP:
+                                btnChoosemap.startAnimation(toPicUp);
+                                mService.playMusic(mClick);
+                                dialog.dismiss();
+                                return true;
+                        }
+                        return false;
                     }
                 });
 

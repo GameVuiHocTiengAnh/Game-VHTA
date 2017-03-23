@@ -127,7 +127,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
         btnImage4 = (ImageButton) findViewById(R.id.btnImage4);
         btnImage5 = (ImageButton) findViewById(R.id.btnImage5);
         btnImage6 = (ImageButton) findViewById(R.id.btnImage6);
-        btnPauseGame5 = (ImageButton) findViewById(R.id.btnPauseGame5);
+        //btnPauseGame5 = (ImageButton) findViewById(R.id.btnPauseGame5);
         lblTimer = (TextView) findViewById(R.id.lblTimer);
         lblWord = (TextView) findViewById(R.id.lblWord);
         lblScore = (TextView) findViewById(R.id.lblScore);

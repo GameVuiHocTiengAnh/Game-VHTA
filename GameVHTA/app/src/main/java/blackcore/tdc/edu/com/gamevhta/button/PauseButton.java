@@ -31,7 +31,7 @@ import blackcore.tdc.edu.com.gamevhta.service.MusicService;
  * Modified by Shiro on 22/3/207
  */
 
-public class PauseButton extends android.support.v7.widget.AppCompatImageView implements View.OnTouchListener , View.OnClickListener{
+public class PauseButton extends android.support.v7.widget.AppCompatImageView implements View.OnTouchListener,View.OnClickListener{
 
     private Dialog dialog;
     private ImageView imgList,imgReplay,imgResume;

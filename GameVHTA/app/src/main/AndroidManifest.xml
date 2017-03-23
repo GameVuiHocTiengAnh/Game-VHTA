@@ -13,16 +13,20 @@
         <activity
             android:name=".SplashScreenActivity"
             android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".MainMenuActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".GuideActivity"
+            android:name=".ScoresActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".ScoresActivity"
+            android:name=".GuideActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".TopisChoosingActivity"
@@ -42,11 +46,6 @@
         <!--game catching words-->
         <activity android:name=".catching_words_game.CatchingWordsActivity"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
         </activity>
 

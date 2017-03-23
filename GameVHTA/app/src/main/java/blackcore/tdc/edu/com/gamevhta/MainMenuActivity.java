@@ -17,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import blackcore.tdc.edu.com.gamevhta.data_models.DbScoreHelper;
 import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 public class MainMenuActivity extends AppCompatActivity {
@@ -112,7 +113,7 @@ public class MainMenuActivity extends AppCompatActivity {
                         mService.playMusic(mClick);
                         flagMain = true;
                         playMusicMain();
-                        Intent intent = new Intent(getApplicationContext(),ScoresActivity.class);
+                        Intent intent = new Intent(MainMenuActivity.this,ScoresActivity.class);
                         startActivity(intent);
                         finish();
                         return true;
@@ -163,20 +164,39 @@ public class MainMenuActivity extends AppCompatActivity {
                         final ImageView btnYes = (ImageView) dialog.findViewById(R.id.btnYes);
                         final ImageView btnNo = (ImageView) dialog.findViewById(R.id.btnNo);
 
-                        btnYes.setOnClickListener(new View.OnClickListener() {
+                        btnYes.setOnTouchListener(new View.OnTouchListener() {
                             @Override
-                            public void onClick(View view) {
-                                flagMain = false;
-                                playMusicMain();
-                                finish();
+                            public boolean onTouch(View view, MotionEvent motionEvent) {
+                                switch (motionEvent.getAction()){
+                                    case MotionEvent.ACTION_DOWN:
+                                        btnYes.setSelected(!btnYes.isSelected());
+                                        btnYes.isSelected();
+                                        mService.playMusic(mClick);
+                                        return true;
+                                    case MotionEvent.ACTION_UP:
+                                        playMusicMain();
+                                        finish();
+                                        return true;
+                                }
+                                return false;
                             }
                         });
 
-                        btnNo.setOnClickListener(new View.OnClickListener() {
+                        btnNo.setOnTouchListener(new View.OnTouchListener() {
                             @Override
-                            public void onClick(View view) {
-                                mService.playMusic(mClick);
-                                dialog.dismiss();
+                            public boolean onTouch(View view, MotionEvent motionEvent) {
+                                switch (motionEvent.getAction()){
+                                    case MotionEvent.ACTION_DOWN:
+                                        btnNo.setSelected(!btnNo.isSelected());
+                                        btnNo.isSelected();
+                                        mService.playMusic(mClick);
+                                        return true;
+                                    case MotionEvent.ACTION_UP:
+                                        mService.playMusic(mClick);
+                                        dialog.dismiss();
+                                        return true;
+                                }
+                                return false;
                             }
                         });
                 }
@@ -206,32 +226,48 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     public void onBackPressed(){
-
-        mService.playMusic(mClick);
         dialog = new Dialog(MainMenuActivity.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.activity_dialog_exit);
         dialog.getWindow().setBackgroundDrawableResource(R.color.tran);
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.show();
 
-        ImageView btnYes = (ImageView) dialog.findViewById(R.id.btnYes);
-        ImageView btnNo = (ImageView) dialog.findViewById(R.id.btnNo);
+        final ImageView btnYes = (ImageView) dialog.findViewById(R.id.btnYes);
+        final ImageView btnNo = (ImageView) dialog.findViewById(R.id.btnNo);
 
-        btnYes.setOnClickListener(new View.OnClickListener() {
+        btnYes.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                flagMain = false;
-                playMusicMain();
-                finish();
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        btnYes.setSelected(!btnYes.isSelected());
+                        btnYes.isSelected();
+                        mService.playMusic(mClick);
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        playMusicMain();
+                        finish();
+                        return true;
+                }
+                return false;
             }
         });
 
-        btnNo.setOnClickListener(new View.OnClickListener() {
+        btnNo.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                mService.playMusic(mClick);
-                dialog.dismiss();
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        btnNo.setSelected(!btnNo.isSelected());
+                        btnNo.isSelected();
+                        mService.playMusic(mClick);
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        mService.playMusic(mClick);
+                        dialog.dismiss();
+                        return true;
+                }
+                return false;
             }
         });
     }

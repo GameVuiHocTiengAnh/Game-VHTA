@@ -67,6 +67,7 @@ public class TopisChoosingActivity extends AppCompatActivity {
         Bitmap school = BitmapFactory.decodeResource(getResources(),R.drawable.school);
         Bitmap home = BitmapFactory.decodeResource(getResources(),R.drawable.home);
         Bitmap country = BitmapFactory.decodeResource(getResources(),R.drawable.country);
+        Bitmap plants = BitmapFactory.decodeResource(getResources(),R.drawable.plants);
 
         alpha1 = AnimationUtils.loadAnimation(this, R.anim.alpha);
         alpha2 = AnimationUtils.loadAnimation(this, R.anim.alpha);
@@ -76,6 +77,7 @@ public class TopisChoosingActivity extends AppCompatActivity {
         ImageTopics.add(new BitmapTopic("school",school));
         ImageTopics.add(new BitmapTopic("home",home));
         ImageTopics.add(new BitmapTopic("country",country));
+        ImageTopics.add(new BitmapTopic("plants",plants));
 
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,

@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -17,6 +18,7 @@ import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
+    Handler handler =  new Handler();
     private ImageView imvBus;
     private Animation trans;
     private MediaPlayer mpBus;
@@ -35,15 +37,23 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         }
     };
-
+    @Override
     protected void onPause(){
         mService.pauseMusic(mpBus);
+        SplashScreenActivity.this.finish();
         super.onPause();
 
     }
+    @Override
     protected  void onResume(){
         mService.playMusic(mpBus);
         super.onResume();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeMessages(0);
+        mService.stopMusic(mpBus);
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +72,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         goNextActivity();
     }
     public void goNextActivity(){
-        new Handler().postDelayed(new Runnable() {
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
@@ -71,5 +81,10 @@ public class SplashScreenActivity extends AppCompatActivity {
                 finish();
             }
         }, 8000);
+    }
+
+    @Override
+    public void onBackPressed() {
+        return;
     }
 }

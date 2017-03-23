@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:background="@color/tran"
-                android:src="@drawable/cancel" />
+                android:src="@drawable/btncancel" />
 
             <ImageView
                 android:id="@+id/btnLearn"

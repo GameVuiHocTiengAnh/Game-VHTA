@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,8 +23,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,20 +38,27 @@ import blackcore.tdc.edu.com.gamevhta.LoadingGoOutGameActivity;
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.button.PauseButton;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
+import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
+import blackcore.tdc.edu.com.gamevhta.data_models.DbScoreHelper;
+import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
+import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 public class PicturePuzzleActivity extends AppCompatActivity {
 
-    TextView txtTime,txtScore,txtAnswerOne,txtAnswerTwo,txtAnswerThree,txtAnswerFour,txtAnswerFive,txtAnswerSix;
+    TextView txtTime,txtScore,txtAnswerOne,txtAnswerTwo,txtAnswerThree,txtAnswerFour,txtAnswerFive,txtAnswerSix,lblScoreGameOver;
+    EditText lblPlayerNameGameOver;
 
     private Dialog dialogOver;
     private ArrayList<Bitmap> listBitMapAnswer = null;
 
     final int color = Color.parseColor("#FFFFFF");
-    private boolean flagVoice = true;
+    private boolean flagVoice = true, flagWin = true;
 
     private MediaPlayer mCorrect,mWrong,mClick,mTickTac;
     private MusicService mService = new MusicService();
+    PauseButton imgBackGame;
+    private int timeCount;
 
     ServiceConnection conn = new ServiceConnection() {
         @Override
@@ -69,6 +79,9 @@ public class PicturePuzzleActivity extends AppCompatActivity {
     private Handler handler;
     private Timer timer;
     private int SCORE_ONE = 0, SCORE_TWO = 0, SCORE_THREE = 0, SCORE_FOUR = 0, SCORE_FIVE = 0, SCORE_SIX = 0, SCORE_ALL = 0;
+    private DbAccessHelper dbWordHelper;
+    private DbScoreHelper dbScoreHelper;
+    private String OBJECT = "";
 
     ImageView imbAnimalOne,imbAnimalTwo,imbAnimalThree,imbAnimalFour,imbAnimalFive,imbAnimalSix;
     ImageView imbAnimalQuestionOne,imbAnimalQuestionTwo,imbAnimalQuestionThree,imbAnimalQuestionFour,imbAnimalQuestionFive,imbAnimalQuestionSix;
@@ -146,6 +159,29 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         listBitMapAnswer.add(goat);
         Collections.shuffle(listBitMapAnswer);
 
+        //database
+        dbWordHelper = new DbAccessHelper(this);
+        dbScoreHelper = new DbScoreHelper(this);
+
+        dialogOver = new Dialog(PicturePuzzleActivity.this);
+        dialogOver.setCancelable(false);
+        dialogOver.setCanceledOnTouchOutside(false);
+        dialogOver.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogOver.setContentView(R.layout.activity_dialog_game_over);
+        dialogOver.getWindow().setBackgroundDrawableResource(R.color.tran);
+        dialogOver.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+
+        imgListOver = (ImageView) dialogOver.findViewById(R.id.imgListOver);
+        imgReplayOver = (ImageView) dialogOver.findViewById(R.id.imgReplayOver);
+        lblPlayerNameGameOver = (EditText) dialogOver.findViewById(R.id.lblPlayerNameGameOver);
+        lblScoreGameOver = (TextView) dialogOver.findViewById(R.id.lblScoreGameOver);
+
+        //get Object selected at screen topic
+        if (getIntent().getExtras() != null) {
+            OBJECT = getIntent().getStringExtra(ConfigApplication.OBJECT_SELECTED);
+            //listImageFromData = dbWordHelper.getWordObject(OBJECT, 30);
+        }
+
         moveActivity();
         setFont();
         Answer();
@@ -153,7 +189,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         Timer();
     }
 
-    private void Timer(){
+    private void Timer() {
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -171,65 +207,16 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                     timer.cancel();
                     mService.stopMusic(mTickTac);
                     mService.playMusic(mWrong);
-                    dialogOver = new Dialog(PicturePuzzleActivity.this);
-                    dialogOver.setCancelable(false);
-                    dialogOver.setCanceledOnTouchOutside(false);
-                    dialogOver.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialogOver.setContentView(R.layout.activity_dialog_game_over);
-                    dialogOver.getWindow().setBackgroundDrawableResource(R.color.tran);
-                    dialogOver.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+                    Event();
                     dialogOver.show();
-
-
-                    imgListOver = (ImageView) dialogOver.findViewById(R.id.imgListOver);
-                    imgReplayOver = (ImageView) dialogOver.findViewById(R.id.imgReplayOver);
-
-                    imgListOver.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                            switch (motionEvent.getAction()) {
-                                case MotionEvent.ACTION_DOWN:
-                                    mService.playMusic(mClick);
-                                    imgListOver.setSelected(!imgListOver.isSelected());
-                                    imgListOver.isSelected();
-                                    return true;
-                                case MotionEvent.ACTION_UP:
-                                    mService.playMusic(mClick);
-                                    Intent intent = new Intent(PicturePuzzleActivity.this, LoadingGoOutGameActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                    return true;
-                            }
-                            return false;
-                        }
-                    });
-
-                    imgReplayOver.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View view, MotionEvent motionEvent) {
-                            switch (motionEvent.getAction()) {
-                                case MotionEvent.ACTION_DOWN:
-                                    imgReplayOver.setSelected(!imgReplayOver.isSelected());
-                                    imgReplayOver.isSelected();
-                                    mService.playMusic(mClick);
-                                    return true;
-                                case MotionEvent.ACTION_UP:
-                                    mService.playMusic(mClick);
-                                    Intent intent = new Intent(PicturePuzzleActivity.this, LoadingGoInGameActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                    return true;
-                            }
-                            return false;
-                        }
-                    });
                 }
             }
         };
         txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
         timer = new Timer();
-        timer.schedule(new TimerTask() {
+
+
+        TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
                 int t = Integer.parseInt(txtTime.getText().toString());
@@ -242,8 +229,62 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                     handler.sendMessage(message);
                 }
             }
-        }, 1000, 1000);
+        };
+        timer.schedule(timerTask,1000, 1000);
     }
+
+    private void Event(){
+
+        lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
+
+        imgListOver.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mService.playMusic(mClick);
+                        imgListOver.setSelected(!imgListOver.isSelected());
+                        imgListOver.isSelected();
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        mService.playMusic(mClick);
+                        imgListOver.setSelected(false);
+                        doSaveScore();
+                        SCORE_ALL = 0;
+                        Intent intent = new Intent(PicturePuzzleActivity.this, LoadingGoOutGameActivity.class);
+                        startActivity(intent);
+                        finish();
+                        return true;
+                }
+                return false;
+            }
+        });
+
+        imgReplayOver.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        imgReplayOver.setSelected(!imgReplayOver.isSelected());
+                        imgReplayOver.isSelected();
+                        mService.playMusic(mClick);
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        mService.playMusic(mClick);
+                        imgReplayOver.setSelected(false);
+                        doSaveScore();
+                        SCORE_ALL = 0;
+                        Intent intent = new Intent(PicturePuzzleActivity.this, LoadingGoInGameActivity.class);
+                        startActivity(intent);
+                        finish();
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
+
     private void Answer(){
         imbAnimalOne.setImageBitmap(listBitMapAnswer.get(0));
         imbAnimalTwo.setImageBitmap(listBitMapAnswer.get(1));
@@ -270,10 +311,12 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         txtAnswerFour.setTypeface(custom_font);
         txtAnswerFive.setTypeface(custom_font);
         txtAnswerSix.setTypeface(custom_font);
+        lblScoreGameOver.setTypeface(custom_font);
+        lblPlayerNameGameOver.setTypeface(custom_font);
     }
 
     public void moveActivity() {
-        PauseButton imgBackGame = (PauseButton) findViewById(R.id.btnBackGame);
+        imgBackGame = (PauseButton) findViewById(R.id.btnBackGame);
         Intent intent = new Intent(getApplicationContext(),LoadingGoOutGameActivity.class);
         imgBackGame.setMoveActivity(intent,this);
 
@@ -322,6 +365,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
             mService.playMusic(mWrong);
         }
     }
+
         View.OnDragListener dragListener = new View.OnDragListener() {
             @Override
             public boolean onDrag(View view, DragEvent event) {
@@ -378,8 +422,8 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             imbAnimalSix.setVisibility(View.INVISIBLE);
                         }else
                             flagVoice = false;
-                        Voice();
-                        break;
+                            Voice();
+                            break;
                 }
                 return true;
             }
@@ -387,6 +431,25 @@ public class PicturePuzzleActivity extends AppCompatActivity {
 
     //Save Score
     private void doSaveScore() {
+        if(SCORE_ALL>0) {
+            String playerName = lblPlayerNameGameOver.getText().toString();
+            if (playerName.equals(""))
+                playerName = "Unknown Player";
+            else {
+                ScoreObject scoreObject = new ScoreObject();
+                scoreObject.setsPlayer(playerName);
+                scoreObject.setsScore(SCORE_ALL);
+                Log.d("ScoreSave", String.valueOf(SCORE_ALL));
+                Log.d("ScoreSavePlayer", playerName);
+                dbScoreHelper.doInsertScore(scoreObject);
+                lblPlayerNameGameOver.setText("");
+                Toast.makeText(getApplicationContext(), "Saving Score", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void winGame(int win) {
+
     }
 
     //Check Result

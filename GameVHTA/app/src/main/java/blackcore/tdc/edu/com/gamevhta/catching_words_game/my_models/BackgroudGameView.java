@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.CatchingWordsActivity;
-import blackcore.tdc.edu.com.gamevhta.data_models.DbWordHelper;
+import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.SizeOfDevice;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 

@@ -93,7 +93,7 @@ public class CatchingWordsActivity extends AppCompatActivity {
         this.addTopBarView(frameGame);
         this.addProgressbarHelth(frameGame);
         this.playThemeMusic();
-        soundThrowShuriken = MediaPlayer.create(this,R.raw.shuriken_throw);
+        //soundThrowShuriken = MediaPlayer.create(this,R.raw.shuriken_throw);
     }
 
     @Override
@@ -223,7 +223,7 @@ public class CatchingWordsActivity extends AppCompatActivity {
     }
 
     private void playThemeMusic(){
-        songThemeMusic = MediaPlayer.create(getApplicationContext(),R.raw.eagle_rock);
+        songThemeMusic = MediaPlayer.create(getApplicationContext(),R.raw.blizzards);
         songThemeMusic.setVolume(0.25f,0.25f);
         songThemeMusic.setLooping(true);
         themeMusic.playMusic(this.songThemeMusic);
