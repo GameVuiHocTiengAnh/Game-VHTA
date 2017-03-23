@@ -48,6 +48,14 @@ public class ConfigApplication {
 
     /*------------- END HOANG -----------------*/
 
+
+    /*------------- START TRIEU -----------------*/
+
+    //Time left default
+    public static final int TIME_LEFT_GAME_MARKET = 60;
+
+    /*------------- END TRIEU -----------------*/
+
      /*------------- GAME CATCHING WORDS-----------------*/
      public  static final String SCREEN_USING_PAUSE_DIALOG_MH6 = "MH6";
      /*------------- END GAME CATCHING WORDS-----------------*/
