@@ -34,6 +34,7 @@ import java.util.TimerTask;
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.TopisChoosingActivity;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
+import blackcore.tdc.edu.com.gamevhta.custom_toask.CustomToask;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
@@ -49,7 +50,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
     private Timer timer = new Timer();
     private ImageButton btnImage1, btnImage2, btnImage3, btnImage4, btnImage5, btnImage6, btnPauseGame5;
     private TextView lblTimer, lblWord, lblScore, lblScoreGameOver,txtNameScoreWin,txtScoreWin;
-    private MediaPlayer mpClicked, mpSoundBackground;
+    private MediaPlayer mpClicked, mpSoundBackground, mpWingame;
     private ImageView imgListOver, imgReplayOver, imgList, imgReplay, imgResume,imvNextGame;
     private EditText lblPlayerNameGameOver;
 
@@ -115,6 +116,8 @@ public class ImageGuessingActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mpSoundBackground.stop();
+        mpWingame.stop();
+        mpClicked.stop();
     }
 
     private void initialize() {
@@ -168,7 +171,8 @@ public class ImageGuessingActivity extends AppCompatActivity {
         imvNextGame = (ImageView) dialogWinGame.findViewById(R.id.imvNextGame);
 
         mpClicked = MediaPlayer.create(getApplicationContext(), R.raw.game_5_sound_clicked);
-        mpSoundBackground = MediaPlayer.create(getApplicationContext(), R.raw.game_9_screen_background_sound);
+        mpWingame = MediaPlayer.create(getApplicationContext(),R.raw.wingame);
+        mpSoundBackground = MediaPlayer.create(getApplicationContext(), R.raw.game_5_screen_background_sound);
         mpSoundBackground.setLooping(true);
         mpSoundBackground.start();
 
@@ -347,6 +351,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialogWinGame.dismiss();
+                new CustomToask(ImageGuessingActivity.this,R.drawable.screen_5_icon_ani,"You are clicked NextGame");
             }
         });
     }
@@ -496,6 +501,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 timer.cancel();
                 txtScoreWin.setText(String.valueOf(SCORE));
                 dialogWinGame.show();
+                mpWingame.start();
                 Toast.makeText(getApplicationContext(), "You WIN", Toast.LENGTH_SHORT).show();
             } else {
                 timer.cancel();
@@ -505,7 +511,9 @@ public class ImageGuessingActivity extends AppCompatActivity {
             }
         } else {
             RESULT_FAILED++;
-            if (RESULT_FAILED == 2) {
+            if(RESULT_FAILED == 1){
+                new CustomToask(ImageGuessingActivity.this,R.drawable.screen_5_icon_ani,"Try one more time!");
+            }else if (RESULT_FAILED == 2) {
                 lblScoreGameOver.setText(String.valueOf(SCORE));
                 timer.cancel();
                 dialogGameOver.show();
