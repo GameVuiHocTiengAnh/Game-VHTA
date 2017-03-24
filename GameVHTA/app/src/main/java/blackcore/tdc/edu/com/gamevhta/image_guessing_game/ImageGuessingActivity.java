@@ -48,13 +48,12 @@ public class ImageGuessingActivity extends AppCompatActivity {
     private Animation animation;
     private Timer timer = new Timer();
     private ImageButton btnImage1, btnImage2, btnImage3, btnImage4, btnImage5, btnImage6, btnPauseGame5;
-    private TextView lblTimer, lblWord, lblScore, lblScoreGameOver;
+    private TextView lblTimer, lblWord, lblScore, lblScoreGameOver,txtNameScoreWin,txtScoreWin;
     private MediaPlayer mpClicked, mpSoundBackground;
-    private ImageView imgListOver, imgReplayOver, imgList, imgReplay, imgResume;
+    private ImageView imgListOver, imgReplayOver, imgList, imgReplay, imgResume,imvNextGame;
     private EditText lblPlayerNameGameOver;
 
     private String OBJECT = "";
-    private int IMAGE_X = 0;
     private int TURN = 0;
     private int SCORE = 0;
     private int RESULT_FAILED = 0;
@@ -64,6 +63,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
 
     private Dialog dialogBack;
     private Dialog dialogGameOver;
+    private Dialog dialogWinGame;
     private DbAccessHelper dbAccessHelper;
 
     @Override
@@ -127,7 +127,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
         btnImage4 = (ImageButton) findViewById(R.id.btnImage4);
         btnImage5 = (ImageButton) findViewById(R.id.btnImage5);
         btnImage6 = (ImageButton) findViewById(R.id.btnImage6);
-        //btnPauseGame5 = (ImageButton) findViewById(R.id.btnPauseGame5);
+        btnPauseGame5 = (ImageButton) findViewById(R.id.btnPauseGame5);
         lblTimer = (TextView) findViewById(R.id.lblTimer);
         lblWord = (TextView) findViewById(R.id.lblWord);
         lblScore = (TextView) findViewById(R.id.lblScore);
@@ -139,6 +139,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
         dialogGameOver.setCancelable(false);
         dialogGameOver.setContentView(R.layout.activity_dialog_game_over);
         dialogGameOver.getWindow().setBackgroundDrawableResource(R.color.tran);
+        dialogGameOver.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         imgListOver = (ImageView) dialogGameOver.findViewById(R.id.imgListOver);
         imgReplayOver = (ImageView) dialogGameOver.findViewById(R.id.imgReplayOver);
         lblScoreGameOver = (TextView) dialogGameOver.findViewById(R.id.lblScoreGameOver);
@@ -150,9 +151,21 @@ public class ImageGuessingActivity extends AppCompatActivity {
         dialogBack.setCancelable(false);
         dialogBack.setContentView(R.layout.activity_dialog_back_game);
         dialogBack.getWindow().setBackgroundDrawableResource(R.color.tran);
+        dialogBack.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         imgResume = (ImageView) dialogBack.findViewById(R.id.imgResume);
         imgList = (ImageView) dialogBack.findViewById(R.id.imgList);
         imgReplay = (ImageView) dialogBack.findViewById(R.id.imgReplay);
+
+        //dialog win game
+        dialogWinGame = new Dialog(ImageGuessingActivity.this);
+        dialogWinGame.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogWinGame.setCancelable(false);
+        dialogWinGame.setContentView(R.layout.activity_dialog_win_game);
+        dialogWinGame.getWindow().setBackgroundDrawableResource(R.color.tran);
+        dialogWinGame.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        txtNameScoreWin = (TextView) dialogWinGame.findViewById(R.id.txtNameScoreWin);
+        txtScoreWin = (TextView) dialogWinGame.findViewById(R.id.txtScoreWin);
+        imvNextGame = (ImageView) dialogWinGame.findViewById(R.id.imvNextGame);
 
         mpClicked = MediaPlayer.create(getApplicationContext(), R.raw.game_5_sound_clicked);
         mpSoundBackground = MediaPlayer.create(getApplicationContext(), R.raw.game_9_screen_background_sound);
@@ -196,11 +209,10 @@ public class ImageGuessingActivity extends AppCompatActivity {
         Log.d("ImageSizeBefore", String.valueOf(listImageFromDataO.size()));
         Random rd = new Random();
         for (int j = 0; j < 6; j++) {
-            int n = listImageFromDataO.size()-1;
+            int n = listImageFromDataO.size();
             int x = rd.nextInt(n);
             listImageLevelO.add(listImageFromDataO.get(x));
             listImageFromDataO.remove(x);
-
             //Log.d("ImageSizeSV","Index:"+j+"-X:"+ String.valueOf(x) + "-Object: " + listImageFromDataO.get(x).getwEng()+":"+listImageFromDataO.get(x).getwPathImage());
             //Log.d("ImageSizeLC","Index:"+j+"-X:"+ String.valueOf(x) + "-Object: " + listImageLevelO.get(j).getwEng()+":"+listImageLevelO.get(j).getwPathImage());
         }
@@ -236,11 +248,11 @@ public class ImageGuessingActivity extends AppCompatActivity {
         int id = getResources().getIdentifier(name, "drawable", getApplicationContext().getPackageName());
         Log.d("ImageID", String.valueOf(id));
         Drawable dr;
-        if(id != 0)
-            dr =getApplicationContext().getResources().getDrawable(id);
+        if (id != 0)
+            dr = getApplicationContext().getResources().getDrawable(id);
         else
-            dr =getApplicationContext().getResources().getDrawable(R.drawable.screen_5_dv);
-        return  dr;
+            dr = getApplicationContext().getResources().getDrawable(R.drawable.screen_5_dv);
+        return dr;
     }
 
     //Add image from sdcard to ImageButton
@@ -329,6 +341,12 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 SCORE = 0;
                 loadGame();
                 dialogBack.dismiss();
+            }
+        });
+        imvNextGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogWinGame.dismiss();
             }
         });
     }
@@ -473,15 +491,17 @@ public class ImageGuessingActivity extends AppCompatActivity {
         if (choose == RESULT_CHOSEN) {
             Log.d("Size", String.valueOf(listImageFromDataO.size()));
             TURN++;
-            Log.d("SizeTurn", String.valueOf(TURN));
-            if (TURN >= 5) {
+            Log.d("ImSizeTurn", String.valueOf(TURN));
+            if (TURN >= 4) {
+                timer.cancel();
+                txtScoreWin.setText(String.valueOf(SCORE));
+                dialogWinGame.show();
                 Toast.makeText(getApplicationContext(), "You WIN", Toast.LENGTH_SHORT).show();
             } else {
                 timer.cancel();
                 SCORE += lblWord.getText().length() * 10 * Integer.parseInt(lblTimer.getText().toString());
                 lblScore.setText(String.valueOf(SCORE));
                 loadGame();
-
             }
         } else {
             RESULT_FAILED++;
