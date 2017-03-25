@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -30,7 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -520,6 +518,8 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             Bundle sendScore = new Bundle();
                             sendScore.putInt("score",SCORE_ALL);
                             intent.putExtra("pictutepuzzle",sendScore);
+                            startActivity(intent);
+                            finish();
                             return true;
                     }
                     return false;

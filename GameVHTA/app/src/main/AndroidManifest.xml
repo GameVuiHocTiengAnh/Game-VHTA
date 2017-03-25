@@ -15,7 +15,10 @@
         <activity
             android:name=".SplashScreenActivity"
             android:screenOrientation="landscape">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".MainMenuActivity"
@@ -30,18 +33,18 @@
             android:name=".TopisChoosingActivity"
             android:screenOrientation="landscape" />
         <activity
+            android:name=".LoadingGoInGameActivity"
+            android:screenOrientation="landscape" />
+        <activity
             android:name=".LoadingGoOutGameActivity"
             android:screenOrientation="landscape" />
         <!-- game picture puzzle game-->
+        <activity
+            android:screenOrientation="landscape"
+            android:name=".picture_puzzle_game.PicturePuzzleActivity"/>
         <!--game catching words-->
         <activity android:name=".catching_words_game.CatchingWordsActivity"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
         </activity>
 
         <!--Game Screen 5 -->
@@ -58,8 +61,6 @@
             android:screenOrientation="landscape">
 
         </activity>
-        <activity android:name=".LoadingGoInGameActivity"/>
-        <activity android:name=".picture_puzzle_game.PicturePuzzleActivity"/>
 
     </application>
 
