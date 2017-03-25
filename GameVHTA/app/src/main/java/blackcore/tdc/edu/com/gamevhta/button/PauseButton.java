@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -17,9 +16,7 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import blackcore.tdc.edu.com.gamevhta.LoadingGoInGameActivity;
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.CatchingWordsActivity;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models.BackgroudGameView;
@@ -99,9 +96,9 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
     }
 
     private void buildDialog(final Context context){
-        Typeface custom_font = Typeface.createFromAsset(context.getAssets(), getResources().getString(R.string.fontPath));
-        TextView txtpause = (TextView) dialog.findViewById(R.id.txtpause);
-        txtpause.setTypeface(custom_font);
+//        Typeface custom_font = Typeface.createFromAsset(context.getAssets(), getResources().getString(R.string.fontPath));
+//        TextView txtpause = (TextView) dialog.findViewById(R.id.txtP);
+//        txtpause.setTypeface(custom_font);
 
         imgList = (ImageView) dialog.findViewById(R.id.imgList);
         imgReplay = (ImageView) dialog.findViewById(R.id.imgReplay);

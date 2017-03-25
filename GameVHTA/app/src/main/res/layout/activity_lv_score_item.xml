@@ -36,6 +36,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:text="fgfdcgcdbcb"
+                                android:lines="1"
+                            android:ellipsize="end"
                             android:id="@+id/txtName" />
                 </LinearLayout>
                 <LinearLayout

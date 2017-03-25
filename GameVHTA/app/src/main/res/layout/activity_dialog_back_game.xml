@@ -22,21 +22,18 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="horizontal">
-            <TextView
-                android:gravity="center"
-                android:id="@+id/txtpause"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/txtdialogbackgame"
-                android:textSize="@dimen/txtDialogBackgame"
-                android:textColor="@android:color/holo_blue_light"/>
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingTop="@dimen/DialogBackGamePanddingGameOver">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/image_pause_game"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -83,8 +80,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/imageBottomBackGame"
-                    android:background="@color/tran"
-                    android:src="@drawable/btnresume" />
+                    android:background="@drawable/btnresume"
+                   />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

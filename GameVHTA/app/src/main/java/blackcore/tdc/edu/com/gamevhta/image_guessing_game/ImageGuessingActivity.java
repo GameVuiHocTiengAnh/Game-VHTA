@@ -37,6 +37,7 @@ import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.custom_toask.CustomToask;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
+import blackcore.tdc.edu.com.gamevhta.models.SizeOfDevice;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
 
@@ -46,12 +47,12 @@ import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
 public class ImageGuessingActivity extends AppCompatActivity {
     private Handler handler;
-    private Animation animation;
+    private Animation animation,animationTimer;
     private Timer timer = new Timer();
     private ImageButton btnImage1, btnImage2, btnImage3, btnImage4, btnImage5, btnImage6, btnPauseGame5;
-    private TextView lblTimer, lblWord, lblScore, lblScoreGameOver,txtNameScoreWin,txtScoreWin;
-    private MediaPlayer mpClicked, mpSoundBackground, mpWingame;
-    private ImageView imgListOver, imgReplayOver, imgList, imgReplay, imgResume,imvNextGame;
+    private TextView lblTimer, lblWord, lblScore, lblScoreGameOver, txtNameScoreWin, txtScoreWin;
+    private MediaPlayer mpClicked, mpSoundBackground, mpWingame,mpGameOver;
+    private ImageView imgListOver, imgReplayOver, imgList, imgReplay, imgResume, imvNextGame;
     private EditText lblPlayerNameGameOver;
 
     private String OBJECT = "";
@@ -84,9 +85,14 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 lblTimer.setText(time);
                 int t = Integer.parseInt(time);
                 if (t > 0 && t <= 10) {
-                    lblTimer.startAnimation(animation);
+                    lblTimer.startAnimation(animationTimer);
                 } else if (t == 0) {
+                    if(SCORE==0)
+                        lblPlayerNameGameOver.setVisibility(View.GONE);
+                    else
+                        lblPlayerNameGameOver.setVisibility(View.VISIBLE);
                     timer.cancel();
+                    lblTimer.clearAnimation();
                     lblScoreGameOver.setText(String.valueOf(SCORE));
                     dialogGameOver.show();
                     Toast.makeText(getApplicationContext(), "Game Over", Toast.LENGTH_SHORT).show();
@@ -98,18 +104,30 @@ public class ImageGuessingActivity extends AppCompatActivity {
             OBJECT = getIntent().getStringExtra(ConfigApplication.OBJECT_SELECTED);
             addDataList();
         }
+        Log.d("Guessing", SizeOfDevice.getScreenWidth() + "x" + SizeOfDevice.getScreenHeight());
+    }
+
+    @Override
+    public void onBackPressed() {
+        timer.cancel();
+        dialogBack.show();
+        return;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mpSoundBackground.start();
+        Log.d("Guessing","OnResume");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mpSoundBackground.pause();
+        timer.cancel();
+        dialogBack.show();
+        Log.d("Guessing","OnPause");
     }
 
     @Override
@@ -135,7 +153,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
         lblWord = (TextView) findViewById(R.id.lblWord);
         lblScore = (TextView) findViewById(R.id.lblScore);
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_in);
-
+        animationTimer= AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_anim_trieu);
         //dialog game over
         dialogGameOver = new Dialog(ImageGuessingActivity.this);
         dialogGameOver.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -159,6 +177,8 @@ public class ImageGuessingActivity extends AppCompatActivity {
         imgList = (ImageView) dialogBack.findViewById(R.id.imgList);
         imgReplay = (ImageView) dialogBack.findViewById(R.id.imgReplay);
 
+
+
         //dialog win game
         dialogWinGame = new Dialog(ImageGuessingActivity.this);
         dialogWinGame.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -170,8 +190,10 @@ public class ImageGuessingActivity extends AppCompatActivity {
         txtScoreWin = (TextView) dialogWinGame.findViewById(R.id.txtScoreWin);
         imvNextGame = (ImageView) dialogWinGame.findViewById(R.id.imvNextGame);
 
+
+        mpGameOver= MediaPlayer.create(getApplicationContext(), R.raw.sai);
         mpClicked = MediaPlayer.create(getApplicationContext(), R.raw.game_5_sound_clicked);
-        mpWingame = MediaPlayer.create(getApplicationContext(),R.raw.wingame);
+        mpWingame = MediaPlayer.create(getApplicationContext(), R.raw.wingame);
         mpSoundBackground = MediaPlayer.create(getApplicationContext(), R.raw.game_5_screen_background_sound);
         mpSoundBackground.setLooping(true);
         mpSoundBackground.start();
@@ -187,12 +209,8 @@ public class ImageGuessingActivity extends AppCompatActivity {
         loadGame();
     }
 
-    //play game
-    private void loadGame() {
-        lblTimer.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-        lblScore.setText(String.valueOf(SCORE));
-        RESULT_FAILED = 0;
-        RESULT_CHOSEN = -1;
+    //play timer
+    private void playTimer(){
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -208,7 +226,14 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 }
             }
         }, 1000, 1000);
-
+    }
+    //play game
+    private void loadGame() {
+        lblTimer.clearAnimation();
+        lblTimer.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
+        lblScore.setText(String.valueOf(SCORE));
+        RESULT_FAILED = 0;
+        RESULT_CHOSEN = -1;
         listImageLevelO = new ArrayList<>();
         Log.d("ImageSizeBefore", String.valueOf(listImageFromDataO.size()));
         Random rd = new Random();
@@ -238,6 +263,8 @@ public class ImageGuessingActivity extends AppCompatActivity {
         btnImage6.setBackground(getBitmapResource(listImageLevelO.get(5).getwPathImage()));
         Log.d("Image5", String.valueOf(listImageLevelO.get(5).getwPathImage()));
 
+        timer = new Timer();
+        playTimer();
     }
 
     //List Image was loaded from database
@@ -311,21 +338,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
         imgResume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        int t = Integer.parseInt(lblTimer.getText().toString());
-                        if (t > 0) {
-                            t--;
-                            Message message = new Message();
-                            Bundle sendMsg = new Bundle();
-                            sendMsg.putString("time", String.valueOf(t));
-                            message.setData(sendMsg);
-                            handler.sendMessage(message);
-                        }
-                    }
-                }, 1000, 1000);
+                playTimer();
                 dialogBack.dismiss();
             }
         });
@@ -351,7 +364,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialogWinGame.dismiss();
-                new CustomToask(ImageGuessingActivity.this,R.drawable.screen_5_icon_ani,"You are clicked NextGame");
+                new CustomToask(ImageGuessingActivity.this, R.drawable.screen_5_icon_ani, "You are clicked NextGame");
             }
         });
     }
@@ -511,9 +524,14 @@ public class ImageGuessingActivity extends AppCompatActivity {
             }
         } else {
             RESULT_FAILED++;
-            if(RESULT_FAILED == 1){
-                new CustomToask(ImageGuessingActivity.this,R.drawable.screen_5_icon_ani,"Try one more time!");
-            }else if (RESULT_FAILED == 2) {
+            if (RESULT_FAILED == 1) {
+                new CustomToask(ImageGuessingActivity.this, R.drawable.screen_5_icon_ani, "Try one more time!");
+            } else if (RESULT_FAILED == 2) {
+                if(SCORE==0)
+                    lblPlayerNameGameOver.setVisibility(View.GONE);
+                else
+                    lblPlayerNameGameOver.setVisibility(View.VISIBLE);
+                mpGameOver.start();
                 lblScoreGameOver.setText(String.valueOf(SCORE));
                 timer.cancel();
                 dialogGameOver.show();
