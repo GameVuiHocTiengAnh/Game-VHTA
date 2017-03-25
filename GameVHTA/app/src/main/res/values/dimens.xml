@@ -11,6 +11,6 @@
     <dimen name="DialogBackGameLeftandRight">80dp</dimen>
     <dimen name="DialogBackGamePanddingGameOver">30dp</dimen>
     <!--Topic-->
-    <dimen name="TopicBottomandTop">40dp</dimen>
-    <dimen name="TopicLeftandRight">70dp</dimen>
+    <dimen name="TopicBottomandTop">20dp</dimen>
+    <dimen name="TopicLeftandRight">50dp</dimen>
 </resources>

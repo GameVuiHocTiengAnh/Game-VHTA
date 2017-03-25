@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.media.MediaPlayer;
@@ -35,7 +36,7 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
     private Intent intent;
     private Activity context;
     private MediaPlayer mClick;
-    private Animation zoomIn;
+    private Animation zoomIn,slide_down,slide_down_one,slide_down_two;
     private String returnIdBtn;
     private MusicService mService = new MusicService();
     private String screenUse = null;

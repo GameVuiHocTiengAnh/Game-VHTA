@@ -28,8 +28,7 @@
                     android:id="@+id/btnBackGame"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/backGame"
-                    android:layout_marginTop="@dimen/backGame" />
+                    android:layout_marginLeft="@dimen/backGame"/>
             </LinearLayout>
 
             <LinearLayout

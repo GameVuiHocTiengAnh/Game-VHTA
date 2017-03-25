@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +31,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,9 +41,8 @@ import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.button.PauseButton;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
-import blackcore.tdc.edu.com.gamevhta.data_models.DbScoreHelper;
-import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
+import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 public class PicturePuzzleActivity extends AppCompatActivity {
@@ -50,7 +51,10 @@ public class PicturePuzzleActivity extends AppCompatActivity {
     EditText lblPlayerNameGameOver;
 
     private Dialog dialogOver,dialogWin;
-    private ArrayList<Bitmap> listBitMapAnswer = null;
+    private ArrayList<WordObject> listImageGame = null;
+    private ArrayList<WordObject> listImageData = null;
+    private ArrayList<Bitmap> listImage;
+    private ArrayList<String> listText;
 
     final int color = Color.parseColor("#FFFFFF");
     private boolean flagVoice = true, flagWin = true;
@@ -79,8 +83,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
     private Timer timer;
     private int SCORE_ONE = 0, SCORE_TWO = 0, SCORE_THREE = 0, SCORE_FOUR = 0, SCORE_FIVE = 0, SCORE_SIX = 0, SCORE_ALL = 0;
     private int timesDrop = 0;
-    private DbAccessHelper dbWordHelper;
-    private DbScoreHelper dbScoreHelper;
+    private DbAccessHelper dbAccessHelper;
     private String OBJECT = "";
 
     ImageView imbAnimalOne,imbAnimalTwo,imbAnimalThree,imbAnimalFour,imbAnimalFive,imbAnimalSix,imbNextGameWin;
@@ -92,6 +95,9 @@ public class PicturePuzzleActivity extends AppCompatActivity {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        listImageGame = new ArrayList<>();
+        listImageData = new ArrayList<>();
 
         mCorrect = MediaPlayer.create(PicturePuzzleActivity.this,R.raw.dung);
         mWrong = MediaPlayer.create(PicturePuzzleActivity.this,R.raw.sai);
@@ -146,24 +152,9 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         imbAnimalQuestionFive.setOnDragListener(dragListener);
         imbAnimalQuestionSix.setOnDragListener(dragListener);
 
-        listBitMapAnswer = new ArrayList<>();
-        Bitmap cat = BitmapFactory.decodeResource(getResources(),R.drawable.cat_answer);
-        Bitmap cow = BitmapFactory.decodeResource(getResources(),R.drawable.cow_answer);
-        Bitmap dog = BitmapFactory.decodeResource(getResources(),R.drawable.dog_answer);
-        Bitmap buffalo = BitmapFactory.decodeResource(getResources(),R.drawable.buffalo_answer);
-        Bitmap rabbit = BitmapFactory.decodeResource(getResources(),R.drawable.bunny_answer);
-        Bitmap goat = BitmapFactory.decodeResource(getResources(),R.drawable.goat_answer);
-        listBitMapAnswer.add(cat);
-        listBitMapAnswer.add(cow);
-        listBitMapAnswer.add(dog);
-        listBitMapAnswer.add(buffalo);
-        listBitMapAnswer.add(rabbit);
-        listBitMapAnswer.add(goat);
-        Collections.shuffle(listBitMapAnswer);
 
         //database
-        dbWordHelper = new DbAccessHelper(this);
-        dbScoreHelper = new DbScoreHelper(this);
+        dbAccessHelper = new DbAccessHelper(this);
 
         dialogOver = new Dialog(PicturePuzzleActivity.this);
         dialogOver.setCancelable(false);
@@ -199,12 +190,44 @@ public class PicturePuzzleActivity extends AppCompatActivity {
 
         mService.playMusic(mMusicMainGame);
         mMusicMainGame.setLooping(true);
-        mMusicMainGame.setVolume(0.15f,0.15f);
+        mMusicMainGame.setVolume(0.5f,0.5f);
+        addDataList();
+        randomImage();
         moveActivity();
         setFont();
+        Text();
         Answer();
         Question();
         Timer();
+    }
+
+    //List Image was loaded from database
+    private void addDataList() {
+        listImageData = new ArrayList<>();
+        listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_ANIMALS);
+    }
+
+    public void randomImage(){
+        listImageGame = new ArrayList<>();
+        Random random = new Random();
+        for(int i = 0 ; i < 6 ; i++){
+            int x = listImageData.size()-1;
+            int n = random.nextInt(x);
+            listImageGame.add(listImageData.get(n));
+            listImageData.remove(n);
+        }
+    }
+
+    //Add image from resource to ImageButton
+    private Drawable getBitmapResource(String name) {
+        int id = getResources().getIdentifier(name, "drawable", getApplicationContext().getPackageName());
+        Log.d("ImageID", String.valueOf(id));
+        Drawable dr;
+        if(id != 0)
+            dr =getApplicationContext().getResources().getDrawable(id);
+        else
+            dr =getApplicationContext().getResources().getDrawable(R.drawable.screen_5_dv);
+        return  dr;
     }
 
     private void Timer() {
@@ -303,21 +326,30 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         });
     }
 
+    private void Text(){
+        txtAnswerOne.setText(listImageGame.get(0).getwEng());
+        txtAnswerTwo.setText(listImageGame.get(1).getwEng());
+        txtAnswerThree.setText(listImageGame.get(2).getwEng());
+        txtAnswerFour.setText(listImageGame.get(3).getwEng());
+        txtAnswerFive.setText(listImageGame.get(4).getwEng());
+        txtAnswerSix.setText(listImageGame.get(5).getwEng());
+    }
+
     private void Answer(){
-        imbAnimalOne.setImageBitmap(listBitMapAnswer.get(0));
-        imbAnimalTwo.setImageBitmap(listBitMapAnswer.get(1));
-        imbAnimalThree.setImageBitmap(listBitMapAnswer.get(2));
-        imbAnimalFour.setImageBitmap(listBitMapAnswer.get(3));
-        imbAnimalFive.setImageBitmap(listBitMapAnswer.get(4));
-        imbAnimalSix.setImageBitmap(listBitMapAnswer.get(5));
+        imbAnimalOne.setImageDrawable(getBitmapResource(listImageGame.get(0).getwPathImage()));
+        imbAnimalTwo.setImageDrawable(getBitmapResource(listImageGame.get(1).getwPathImage()));
+        imbAnimalThree.setImageDrawable(getBitmapResource(listImageGame.get(2).getwPathImage()));
+        imbAnimalFour.setImageDrawable(getBitmapResource(listImageGame.get(3).getwPathImage()));
+        imbAnimalFive.setImageDrawable(getBitmapResource(listImageGame.get(4).getwPathImage()));
+        imbAnimalSix.setImageDrawable(getBitmapResource(listImageGame.get(5).getwPathImage()));
     }
     private void Question(){
-        imbAnimalQuestionOne.setImageBitmap(listBitMapAnswer.get(0));
-        imbAnimalQuestionTwo.setImageBitmap(listBitMapAnswer.get(1));
-        imbAnimalQuestionThree.setImageBitmap(listBitMapAnswer.get(2));
-        imbAnimalQuestionFour.setImageBitmap(listBitMapAnswer.get(3));
-        imbAnimalQuestionFive.setImageBitmap(listBitMapAnswer.get(4));
-        imbAnimalQuestionSix.setImageBitmap(listBitMapAnswer.get(5));
+        imbAnimalQuestionOne.setImageDrawable(getBitmapResource(listImageGame.get(0).getwPathImage()));
+        imbAnimalQuestionTwo.setImageDrawable(getBitmapResource(listImageGame.get(1).getwPathImage()));
+        imbAnimalQuestionThree.setImageDrawable(getBitmapResource(listImageGame.get(2).getwPathImage()));
+        imbAnimalQuestionFour.setImageDrawable(getBitmapResource(listImageGame.get(3).getwPathImage()));
+        imbAnimalQuestionFive.setImageDrawable(getBitmapResource(listImageGame.get(4).getwPathImage()));
+        imbAnimalQuestionSix.setImageDrawable(getBitmapResource(listImageGame.get(5).getwPathImage()));
     }
     private void setFont() {
         Typeface custom_font = Typeface.createFromAsset(getApplicationContext().getAssets(), getResources().getString(R.string.fontPath));
@@ -352,6 +384,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
     protected void onPause() {
         // TODO Auto-generated method stub
         timer.cancel();
+        mService.pauseMusic(mTickTac);
         mService.pauseMusic(mMusicMainGame);
         super.onPause();
     }
@@ -403,7 +436,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                         if(v.getId() == R.id.imbAnimalone && view.getId() == R.id.imbAnimalquestionone){
                             timesDrop();
                             imbAnimalQuestionOne.clearColorFilter();
-                            imbAnimalQuestionOne.setImageBitmap(listBitMapAnswer.get(0));
+                            imbAnimalQuestionOne.setImageDrawable(getBitmapResource(listImageGame.get(0).getwPathImage()));
                             getResult(1);
                             flagVoice = true;
                             Voice();
@@ -411,7 +444,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                         }else if(v.getId() == R.id.imbAnimaltwo && view.getId() == R.id.imbAnimalquestiontwo){
                             timesDrop();
                             imbAnimalQuestionTwo.clearColorFilter();
-                            imbAnimalQuestionTwo.setImageBitmap(listBitMapAnswer.get(1));
+                            imbAnimalQuestionTwo.setImageDrawable(getBitmapResource(listImageGame.get(1).getwPathImage()));
                             getResult(2);
                             flagVoice = true;
                             Voice();
@@ -419,7 +452,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                         }else if(v.getId() == R.id.imbAnimalthree && view.getId() == R.id.imbAnimalquestionthree){
                             timesDrop();
                             imbAnimalQuestionThree.clearColorFilter();
-                            imbAnimalQuestionThree.setImageBitmap(listBitMapAnswer.get(2));
+                            imbAnimalQuestionThree.setImageDrawable(getBitmapResource(listImageGame.get(2).getwPathImage()));
                             getResult(3);
                             flagVoice = true;
                             Voice();
@@ -427,7 +460,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                         }else if(v.getId() == R.id.imbAnimlafour && view.getId() == R.id.imbAnimalquestionfour){
                             timesDrop();
                             imbAnimalQuestionFour.clearColorFilter();
-                            imbAnimalQuestionFour.setImageBitmap(listBitMapAnswer.get(3));
+                            imbAnimalQuestionFour.setImageDrawable(getBitmapResource(listImageGame.get(3).getwPathImage()));
                             getResult(4);
                             flagVoice = true;
                             Voice();
@@ -435,7 +468,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                         }else if(v.getId() == R.id.imbAnimalfive && view.getId() == R.id.imbAnimalquestionfive){
                             timesDrop();
                             imbAnimalQuestionFive.clearColorFilter();
-                            imbAnimalQuestionFive.setImageBitmap(listBitMapAnswer.get(4));
+                            imbAnimalQuestionFive.setImageDrawable(getBitmapResource(listImageGame.get(4).getwPathImage()));
                             getResult(5);
                             flagVoice = true;
                             Voice();
@@ -444,7 +477,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             timesDrop();
                             imbAnimalQuestionSix.clearColorFilter();
 
-                            imbAnimalQuestionSix.setImageBitmap(listBitMapAnswer.get(5));
+                            imbAnimalQuestionSix.setImageDrawable(getBitmapResource(listImageGame.get(5).getwPathImage()));
                             getResult(6);
                             flagVoice = true;
                             Voice();
@@ -517,7 +550,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                 scoreObject.setsScore(SCORE_ALL);
                 Log.d("ScoreSave", String.valueOf(SCORE_ALL));
                 Log.d("ScoreSavePlayer", playerName);
-                dbScoreHelper.doInsertScore(scoreObject);
+                dbAccessHelper.doInsertScore(scoreObject);
                 lblPlayerNameGameOver.setText("");
                 Toast.makeText(getApplicationContext(), "Saving Score", Toast.LENGTH_SHORT).show();
             }

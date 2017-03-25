@@ -31,6 +31,14 @@
             android:name=".LoadingGoOutGameActivity"
             android:screenOrientation="landscape" />
         <!-- game picture puzzle game-->
+        <activity
+            android:name=".picture_puzzle_game.PicturePuzzleActivity"
+            android:screenOrientation="landscape" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <!--game catching words-->
         <activity android:name=".catching_words_game.CatchingWordsActivity"
             android:screenOrientation="landscape">
@@ -45,10 +53,6 @@
 
         <activity android:name=".choosing_objects_game.ChoosingObjectActivity"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity android:name=".market_game.Market_game"

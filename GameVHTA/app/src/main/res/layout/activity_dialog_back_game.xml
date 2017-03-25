@@ -5,29 +5,26 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="@dimen/DialogBackGameBottomandTop"
     android:layout_marginLeft="@dimen/DialogBackGameLeftandRight"
     android:layout_marginRight="@dimen/DialogBackGameLeftandRight"
-    android:layout_marginTop="@dimen/DialogTopicBottomandTop"
+    android:layout_marginTop="30dp"
     android:orientation="horizontal"
     tools:context="blackcore.tdc.edu.com.gamevhta.MainMenuActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/dialogchoosetheme"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:paddingTop="@dimen/DialogBackGamePanddingGameOver">
+            android:gravity="center_vertical|center_horizontal">
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/image_pause_game"/>
+                android:background="@drawable/background_name_pause"/>
         </LinearLayout>
 
         <LinearLayout
@@ -80,7 +77,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/imageBottomBackGame"
-                    android:background="@drawable/btnresume"
+                    android:background="@color/tran"
+                    android:src="@drawable/btnresume"
                    />
             </LinearLayout>
         </LinearLayout>

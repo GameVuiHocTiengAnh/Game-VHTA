@@ -29,6 +29,10 @@
                     android:orientation="vertical">
 
                         <TextView
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:lines="1"
+                            android:ellipsize="end"
                             android:textColor="#000000"
                             android:textSize="25dp"
                             android:fontFamily="casual"
@@ -36,8 +40,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:text="fgfdcgcdbcb"
-                                android:lines="1"
-                            android:ellipsize="end"
                             android:id="@+id/txtName" />
                 </LinearLayout>
                 <LinearLayout

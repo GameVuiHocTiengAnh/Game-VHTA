@@ -80,7 +80,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 mService.stopMusic(mpBus);
                 finish();
             }
-        }, 8000);
+        }, 7000);
     }
 
     @Override

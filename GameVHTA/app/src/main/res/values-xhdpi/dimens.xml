@@ -23,7 +23,7 @@
     <!--Topic-->
     <dimen name="btnBackTopicTop">10dp</dimen>
     <dimen name="btnBackTopicLeft">10dp</dimen>
-    <dimen name="btnPrev">70dp</dimen>
+    <dimen name="btnPrevNext">30dp</dimen>
     <!--dialog Exit-->
     <dimen name="btnYesBottom">40dp</dimen>
     <dimen name="btnYesRight">10dp</dimen>
