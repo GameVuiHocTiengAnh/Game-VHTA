@@ -13,6 +13,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -27,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Random;
 
 import blackcore.tdc.edu.com.gamevhta.LoadingGoInGameActivity;
@@ -43,7 +45,7 @@ import blackcore.tdc.edu.com.gamevhta.models.SizeOfDevice;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
-public class CatchingWordsActivity extends AppCompatActivity {
+public class CatchingWordsActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     private BackgroudGameView backgroudGameView;
     private CharacterGameView ninja;
@@ -67,12 +69,15 @@ public class CatchingWordsActivity extends AppCompatActivity {
     private int scores;
     private int characterHeight;
 
-    private Bitmap imgUsing;
-    private String wordUsing;
+    private Bitmap imgUsing = null;
+    private String wordUsing = null;
 
     private Dialog dialogCatchingWords = null;
     private ImageView imvDialogCatching;
     private TextView txtDialogCatching;
+
+    private MediaPlayer catchingSound;
+    private TextToSpeech textToSpeech = null;
 
     ServiceConnection conn = new ServiceConnection() {
         @Override
@@ -95,6 +100,7 @@ public class CatchingWordsActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        textToSpeech = new TextToSpeech(this,this);
         countComplete = 0;
         scores = 0;
         //get objects from db
@@ -142,7 +148,16 @@ public class CatchingWordsActivity extends AppCompatActivity {
 
         this.soundThrowShuriken = MediaPlayer.create(getApplicationContext(),R.raw.shuriken_throw);
         this.playThemeMusic();
+        catchingSound = MediaPlayer.create(getApplicationContext(),R.raw.catching_words);
 
+        imvVocalubary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(textToSpeech != null && wordUsing != null){
+                    textToSpeech.speak(wordUsing,TextToSpeech.QUEUE_FLUSH,null);
+                }
+            }
+        });
         this.initDialogCatchingWords();
 //        Log.d("Tagtest",SizeOfDevice.getScreenWidth() +"=============="+ SizeOfDevice.getScreenHeight());
 
@@ -309,8 +324,14 @@ public class CatchingWordsActivity extends AppCompatActivity {
         }
         countComplete++;
         if(countComplete == listWordsUsing.size()){
-            levelComplete();
-            countComplete = 0;
+            boolean handlerDayley = new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    levelComplete();
+                    countComplete = 0;
+                }
+            },2000);
+
         }
     }
 
@@ -385,6 +406,10 @@ public class CatchingWordsActivity extends AppCompatActivity {
         imvDialogCatching.setImageBitmap(image);
         txtDialogCatching.setText(text);
         dialogCatchingWords.show();
+        catchingSound.seekTo(0);
+        catchingSound.start();
+        if(textToSpeech != null)
+            textToSpeech.speak(text,TextToSpeech.QUEUE_FLUSH,null);
         boolean hanlerDaylay = new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -393,5 +418,28 @@ public class CatchingWordsActivity extends AppCompatActivity {
                 txtVocalubary.setText(text);
             }
         },2000);
+    }
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            int result = textToSpeech.setLanguage(Locale.US);
+
+            if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "This Language is not supported");
+            }
+        } else {
+            Log.e("TTS", "Initilization Failed!");
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onDestroy();
     }
 }
