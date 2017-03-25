@@ -8,5 +8,4 @@
         android:repeatMode="restart"
         android:repeatCount="infinite"
         android:interpolator="@android:anim/cycle_interpolator"/>
-
 </set>

@@ -15,5 +15,9 @@
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
+    <style name="CatchingWordsDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up_dialog_catching_words</item>
+        <item name="android:windowExitAnimation">@anim/slide_down_dialog_catching_words</item>
+    </style>
 
 </resources>

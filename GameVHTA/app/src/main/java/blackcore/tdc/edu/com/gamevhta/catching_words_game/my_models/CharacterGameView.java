@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.media.MediaPlayer;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.SurfaceHolder;
@@ -16,6 +18,7 @@ import java.util.Random;
 
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.models.ConfigCWGame;
+import blackcore.tdc.edu.com.gamevhta.models.SizeOfDevice;
 
 /**
  * Created by Shiro on 3/16/2017.
@@ -32,13 +35,10 @@ public class CharacterGameView extends SurfaceView implements Runnable{
     private boolean isNinjaFighting;
     private int countDrawNinjaFighting;
 
-    private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    Random random;
 
     public CharacterGameView(Context context) {
         super(context);
         surfaceHolder = getHolder();
-        random = new Random();
         running = true;
         isNinjaFighting = false;
         Bitmap rootCharacter = BitmapFactory.decodeResource(getResources(), R.drawable.mh6_character_ninja);
@@ -49,7 +49,8 @@ public class CharacterGameView extends SurfaceView implements Runnable{
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ninja.getWidthSubImg(),ninja.getHeightSubImg(),
                 Gravity.BOTTOM
                 );
-        layoutParams.setMargins(300,0,0,50);
+        layoutParams.setMargins(250,0,0,ConfigCWGame.maginBotOfCharacter());
+        ConfigCWGame.WIDTH_SUB_CHARACTER = ninja.getWidthSubImg();
         this.setLayoutParams(layoutParams);
     }
 
@@ -98,6 +99,7 @@ public class CharacterGameView extends SurfaceView implements Runnable{
                     e.printStackTrace();
                 }
         }while(running);
+
     }
     public void setRunning(boolean running){
         this.running = running;
@@ -118,4 +120,38 @@ public class CharacterGameView extends SurfaceView implements Runnable{
         return running;
     }
 
+    public void ninjaSpeak(){
+        Random ran = new Random();
+        MediaPlayer ninjaSpeak = null;
+        int dom = ran.nextInt(4);
+        switch (dom){
+            case 0:
+                ninjaSpeak = MediaPlayer.create(getContext(),R.raw.ninja_speak1);
+                break;
+            case 1:
+                ninjaSpeak = MediaPlayer.create(getContext(),R.raw.ninja_speak2);
+                break;
+            case 2:
+                ninjaSpeak = MediaPlayer.create(getContext(),R.raw.ninja_speak3);
+                break;
+            case 3:
+                ninjaSpeak = MediaPlayer.create(getContext(),R.raw.ninja_speak4);
+                break;
+        }
+
+        if(ninjaSpeak != null){
+            ninjaSpeak.setVolume(0.4f,0.4f);
+            ninjaSpeak.seekTo(0);
+            ninjaSpeak.start();
+        }
+    }
+
+    public void ninjaLaugh(){
+//        MediaPlayer ninjaLaugh = MediaPlayer.create(getContext(),R.raw.ninja_laugh);
+//        ninjaLaugh.start();
+    }
+
+    public int getCharacHeight(){
+        return  ninja.getHeightSubImg();
+    }
 }

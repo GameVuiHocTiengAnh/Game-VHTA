@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -97,9 +98,6 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
     }
 
     private void buildDialog(final Context context){
-//        Typeface custom_font = Typeface.createFromAsset(context.getAssets(), getResources().getString(R.string.fontPath));
-//        TextView txtpause = (TextView) dialog.findViewById(R.id.txtP);
-//        txtpause.setTypeface(custom_font);
 
         imgList = (ImageView) dialog.findViewById(R.id.imgList);
         imgReplay = (ImageView) dialog.findViewById(R.id.imgReplay);

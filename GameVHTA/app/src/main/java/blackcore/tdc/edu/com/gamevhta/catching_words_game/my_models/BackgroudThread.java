@@ -16,10 +16,12 @@ public class BackgroudThread extends Thread {
     private CatchingWordsActivity activity = null;
     private CharacterGameView charac= null;
     private volatile boolean canPauseGame;
+    private boolean isNinjaSpeak;
     public BackgroudThread(BackgroudGameView backgroudGameView, CharacterGameView charac, CatchingWordsActivity activity) {
         this.backgroudGameView = backgroudGameView;
         this.activity = activity;
         this.charac = charac;
+        this.isNinjaSpeak = false;
     }
 
     @Override
@@ -37,25 +39,19 @@ public class BackgroudThread extends Thread {
                     @Override
                     public void run() {
                         backgroudGameView.moveBgWithXleft(-3);
+
                         backgroudGameView.invalidate();
-                        if(backgroudGameView.getxLeftBGClone() >= -499){
-                            canPauseGame = true;
-                        }
-                        if(backgroudGameView.getxLeftBGClone() <= -500 && canPauseGame){
+
+                        if(backgroudGameView.isPauseGame()){
                             gameRunning = false;
                             activity.showHelthbar();
                             charac.onPauseMySurfaceView();
-                            backgroudGameView.setPauseGame(true);
-                            canPauseGame = false;
+
                         }
                     }
                 });
             }
         }
-    }
-
-    public void setCanPauseGame(boolean canPauseGame) {
-        this.canPauseGame = canPauseGame;
     }
 
     public void setGameRunning(Boolean gameRunning) {
