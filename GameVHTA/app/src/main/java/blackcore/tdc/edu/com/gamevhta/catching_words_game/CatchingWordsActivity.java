@@ -21,6 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -141,19 +143,25 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         frameGame.addView(backgroudGameView);
         frameGame.addView(ninja);
         frameGame.addView(throwShuriken);
+
+        //add TopActionBar
         this.addTopBarView(frameGame);
         this.addProgressbarHelth(frameGame);
 
 
 
+        //add theme sound and create sound when character is throwing shuriken
         this.soundThrowShuriken = MediaPlayer.create(getApplicationContext(),R.raw.shuriken_throw);
         this.playThemeMusic();
         catchingSound = MediaPlayer.create(getApplicationContext(),R.raw.catching_words);
 
+        //set effect for image show on top action bar
+        final Animation animScaleImage = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.scale_anim);
         imvVocalubary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(textToSpeech != null && wordUsing != null){
+                    imvVocalubary.startAnimation(animScaleImage);
                     textToSpeech.speak(wordUsing,TextToSpeech.QUEUE_FLUSH,null);
                 }
             }
