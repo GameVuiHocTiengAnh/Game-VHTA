@@ -157,6 +157,7 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
 
         //set effect for image show on top action bar
         final Animation animScaleImage = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.scale_anim);
+        final Animation foreverScale = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.forever_scale);
         imvVocalubary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,6 +167,8 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
                 }
             }
         });
+
+        txtVocalubary.startAnimation(foreverScale);
         this.initDialogCatchingWords();
 //        Log.d("Tagtest",SizeOfDevice.getScreenWidth() +"=============="+ SizeOfDevice.getScreenHeight());
 
