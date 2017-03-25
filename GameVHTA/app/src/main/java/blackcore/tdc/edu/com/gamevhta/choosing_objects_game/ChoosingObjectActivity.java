@@ -1,12 +1,10 @@
 package blackcore.tdc.edu.com.gamevhta.choosing_objects_game;
 
 import android.app.Dialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -17,13 +15,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Locale;
+import java.util.Random;
 
 import blackcore.tdc.edu.com.gamevhta.R;
+import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
@@ -35,18 +33,16 @@ import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 public class ChoosingObjectActivity extends AppCompatActivity  {
 
     private Animation animation;
-
     private ImageView imgAnimalOne, imgAnimalTwo, imgAnimalThree, imgAnimalFour, imgAnimalFive, imgAnimalSix, imgAnimalDialog, imbNextGameWin;
-    private TextView txtScore, txtWorddialog, txtNameScoreWin,txtScoreWin;
+    private TextView txtScore, txtWorddialog, txtScoreWin;
     private Dialog dialogGame, dialogWin;
-    //private DbScoreHelper dbScoreHelper;
+    private DbAccessHelper dbAccessHelper;
+    TextToSpeech txtWord;
 
     private int SCORE_ONE = 0, SCORE_TWO = 0, SCORE_THREE = 0, SCORE_FOUR = 0, SCORE_FIVE = 0, SCORE_SIX = 0, SCORE_ALL = 0;
     private int check_finish = 0;
-    private ArrayList<Bitmap> listBitMapAnswer = null;
-    private ArrayList<WordObject> listImageFromDataO;
-    private ArrayList<WordObject> listImageLevelO;
-    private DbAccessHelper dbAccessHelper;
+    private ArrayList<WordObject> listImageGame = null;
+    private ArrayList<WordObject> listImageData = null;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +51,13 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_game_creen_mh7);
-
         initialize();
-
     }
 
     private void initialize() {
-
         dbAccessHelper = new DbAccessHelper(this);
-
+        listImageData= new ArrayList<>();
+        listImageGame= new ArrayList<>();
         imgAnimalOne = (ImageView) findViewById(R.id.imgAnimalOne);
         imgAnimalTwo = (ImageView) findViewById(R.id.imgAnimalTwo);
         imgAnimalThree = (ImageView) findViewById(R.id.imgAnimalThree);
@@ -71,15 +65,12 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
         imgAnimalFive = (ImageView) findViewById(R.id.imgAnimalFive);
         imgAnimalSix = (ImageView) findViewById(R.id.imgAnimalSix);
         txtScore = (TextView) findViewById(R.id.txtScore);
-        txtWorddialog = (TextView) findViewById(R.id.txtWorddialog);
-
-        //txtNameScoreWin = (TextView) dialogWin.findViewById(R.id.txtNameScoreWin);
-       // txtScoreWin = (TextView) dialogWin.findViewById(R.id.txtScoreWin);
-        //imbNextGameWin = (ImageView) dialogWin.findViewById(R.id.imvNextGame);
 
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_in);
 
-        //dialog game over
+        //imbNextGameWin = (ImageView) dialogWin.findViewById(R.id.imvNextGame);
+
+        //dialog win game
         dialogWin = new Dialog(ChoosingObjectActivity.this);
         dialogWin.setCancelable(false);
         dialogWin.setCanceledOnTouchOutside(false);
@@ -87,80 +78,78 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
         dialogWin.setContentView(R.layout.activity_dialog_win_game);
         dialogWin.getWindow().setBackgroundDrawableResource(R.color.tran);
         dialogWin.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        txtScoreWin = (TextView) dialogWin.findViewById(R.id.txtScoreWin);
 
-
-        listBitMapAnswer = new ArrayList<>();
-        Bitmap monkey = BitmapFactory.decodeResource(getResources(),R.drawable.screen_3_monkey);
-        Bitmap caw = BitmapFactory.decodeResource(getResources(),R.drawable.screen_3_caw);
-        Bitmap panda = BitmapFactory.decodeResource(getResources(),R.drawable.screen_3_panda);
-        Bitmap pig = BitmapFactory.decodeResource(getResources(),R.drawable.screen_3_pig);
-        Bitmap rabbit = BitmapFactory.decodeResource(getResources(),R.drawable.screen_3_rabbit);
-        Bitmap tiger = BitmapFactory.decodeResource(getResources(),R.drawable.screen_3_tiger);
-
-        listBitMapAnswer.add(monkey);
-        listBitMapAnswer.add(caw);
-        listBitMapAnswer.add(panda);
-        listBitMapAnswer.add(pig);
-        listBitMapAnswer.add(rabbit);
-        listBitMapAnswer.add(tiger);
-        Collections.shuffle(listBitMapAnswer);
-
-        getAnimationImageButton();
+        addDataList();
+        createDataGame();
         Answer();
+        getAnimationImageButton();
     }
     private void Answer(){
-
-        imgAnimalOne.setImageBitmap(listBitMapAnswer.get(0));
-        imgAnimalTwo.setImageBitmap(listBitMapAnswer.get(1));
-        imgAnimalThree.setImageBitmap(listBitMapAnswer.get(2));
-        imgAnimalFour.setImageBitmap(listBitMapAnswer.get(3));
-        imgAnimalFive.setImageBitmap(listBitMapAnswer.get(4));
-        imgAnimalSix.setImageBitmap(listBitMapAnswer.get(5));
+        imgAnimalOne.setImageDrawable(getBitmapResource(listImageGame.get(0).getwPathImage()));
+        imgAnimalTwo.setImageDrawable(getBitmapResource(listImageGame.get(1).getwPathImage()));
+        imgAnimalThree.setImageDrawable(getBitmapResource(listImageGame.get(2).getwPathImage()));
+        imgAnimalFour.setImageDrawable(getBitmapResource(listImageGame.get(3).getwPathImage()));
+        imgAnimalFive.setImageDrawable(getBitmapResource(listImageGame.get(4).getwPathImage()));
+        imgAnimalSix.setImageDrawable(getBitmapResource(listImageGame.get(5).getwPathImage()));
     }
+    //Add image from resource to ImageButton
     private Drawable getBitmapResource(String name) {
         int id = getResources().getIdentifier(name, "drawable", getApplicationContext().getPackageName());
-        Log.d("ImageID", "dkm id dau"+ String.valueOf(id));
+        Log.d("ImageID", String.valueOf(id));
         Drawable dr;
-        if(id != 0)
-            dr =getApplicationContext().getResources().getDrawable(id);
+        if (id != 0)
+            dr = getApplicationContext().getResources().getDrawable(id);
         else
-            dr =getApplicationContext().getResources().getDrawable(R.drawable.screen_3_caw);
-        return  dr;
+            dr = getApplicationContext().getResources().getDrawable(R.drawable.screen_5_dv);
+        return dr;
     }
-
-    private Bitmap getImageBitmap(String imageName) {
-        String path = Environment.getExternalStorageDirectory().toString() + "" + imageName + ".jpg";
-        File fileImage = new File(path);
-        Bitmap bitmap = null;
-        if (fileImage.exists()) {
-            bitmap = BitmapFactory.decodeFile(fileImage.getAbsolutePath());
+    private void addDataList(){
+        listImageData = new ArrayList<>();
+        listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_ANIMALS);
+    }
+    private void createDataGame(){
+        listImageGame = new ArrayList<>();
+        Random random = new Random();
+        for (int i = 0; i < 6; i++){
+            int x = listImageData.size();
+            int n = random.nextInt(x);
+            listImageGame.add(listImageData.get(n));
+            listImageData.remove(n);
         }
-        return bitmap;
     }
+//    private void setImageVocalubary(){
+//        for (int j = 0; j < 6; j++){
+//            String txtText = listImageGame.get(j).getwEng();
+//            String pathName = listImageGame.get(j).getwPathImage();
+//            int idImg = getResources().getIdentifier(pathName, "drawble", getApplication().getPackageName());
+//            Bitmap imvVorca = BitmapFactory.decodeResource(getResources(), idImg);
+//            lisText.add(txtText);
+//            listImage.add(imvVorca);
+//        }
+//    }
 
+    public void onResumeGame() {
+        super.onResume();
+    }
 
     private void setFont() {
         Typeface custom_font = Typeface.createFromAsset(getAssets(), getResources().getString(R.string.fontPath));
         txtScore.setTypeface(custom_font);
         txtWorddialog.setTypeface(custom_font);
-        txtNameScoreWin.setTypeface(custom_font);
+        //txtNameScoreWin.setTypeface(custom_font);
         txtScoreWin.setTypeface(custom_font);
     }
-
     public void getAnimationImageButton() {
         imgAnimalOne.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        // PRESSED
                         imgAnimalOne.startAnimation(animation);
-                        dialogGame = new Dialog(ChoosingObjectActivity.this);
-                        dialogGame.setContentView(R.layout.activity_game_mh7_dialog);
-                        dialogGame.getWindow().setBackgroundDrawableResource(R.color.tran);
-                        dialogGame.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-                        imgAnimalDialog = (ImageView) dialogGame.findViewById(R.id.imgAnimalDialog);
-                        imgAnimalDialog.setImageBitmap(listBitMapAnswer.get(0));
+                        dialogGame();
+                        imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(0).getwPathImage()));
+                        txtWorddialog.setText(listImageGame.get(0).getwEng());
 
                         dialogGame.show();
                         final ImageView imgCal = (ImageView) dialogGame.findViewById(R.id.imgCal);
@@ -171,8 +160,8 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
                                 ktcheck_finish();
                                 getResult(1);
                                 if(check_finish == 6) {
+                                    EventWin();
                                     dialogWin.show();
-                                   // EventWin();
                                 }
                             }
                         });
@@ -195,15 +184,10 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        // PRESSED
                         imgAnimalTwo.startAnimation(animation);
-                        dialogGame = new Dialog(ChoosingObjectActivity.this);
-                        dialogGame.setContentView(R.layout.activity_game_mh7_dialog);
-                        dialogGame.getWindow().setBackgroundDrawableResource(R.color.tran);
-                        dialogGame.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-                        imgAnimalDialog = (ImageView) dialogGame.findViewById(R.id.imgAnimalDialog);
-                        imgAnimalDialog.setImageBitmap(listBitMapAnswer.get(1));
-
+                        dialogGame();
+                        imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(1).getwPathImage()));
+                        txtWorddialog.setText(listImageGame.get(1).getwEng());
 
                         dialogGame.show();
                         final ImageView imgCal = (ImageView) dialogGame.findViewById(R.id.imgCal);
@@ -214,8 +198,8 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
                                 ktcheck_finish ();
                                 getResult(2);
                                 if(check_finish == 6) {
+                                    EventWin();
                                     dialogWin.show();
-                                   // EventWin();
                                 }
                             }
                         });
@@ -238,12 +222,9 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
                         imgAnimalThree.startAnimation(animation);
-                        dialogGame = new Dialog(ChoosingObjectActivity.this);
-                        dialogGame.setContentView(R.layout.activity_game_mh7_dialog);
-                        dialogGame.getWindow().setBackgroundDrawableResource(R.color.tran);
-                        dialogGame.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-                        imgAnimalDialog = (ImageView) dialogGame.findViewById(R.id.imgAnimalDialog);
-                        imgAnimalDialog.setImageBitmap(listBitMapAnswer.get(2));
+                        dialogGame();
+                        imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(2).getwPathImage()));
+                        txtWorddialog.setText(listImageGame.get(2).getwEng());
 
                         dialogGame.show();
                         final ImageView imgCal = (ImageView) dialogGame.findViewById(R.id.imgCal);
@@ -254,8 +235,8 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
                                 ktcheck_finish ();
                                 getResult(3);
                                 if(check_finish == 6) {
+                                    EventWin();
                                     dialogWin.show();
-                                   // EventWin();
                                 }
                             }
                         });
@@ -278,12 +259,9 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         imgAnimalFour.startAnimation(animation);
-                        dialogGame = new Dialog(ChoosingObjectActivity.this);
-                        dialogGame.setContentView(R.layout.activity_game_mh7_dialog);
-                        dialogGame.getWindow().setBackgroundDrawableResource(R.color.tran);
-                        dialogGame.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-                        imgAnimalDialog = (ImageView) dialogGame.findViewById(R.id.imgAnimalDialog);
-                        imgAnimalDialog.setImageBitmap(listBitMapAnswer.get(3));
+                        dialogGame();
+                        imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(3).getwPathImage()));
+                        txtWorddialog.setText(listImageGame.get(3).getwEng());
 
                         dialogGame.show();
                         final ImageView imgCal = (ImageView) dialogGame.findViewById(R.id.imgCal);
@@ -294,8 +272,8 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
                                 ktcheck_finish ();
                                 getResult(4);
                                 if(check_finish == 6) {
+                                    EventWin();
                                     dialogWin.show();
-                                    //EventWin();
                                 }
                             }
                         });
@@ -319,12 +297,9 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
                         imgAnimalFive.startAnimation(animation);
-                        dialogGame = new Dialog(ChoosingObjectActivity.this);
-                        dialogGame.setContentView(R.layout.activity_game_mh7_dialog);
-                        dialogGame.getWindow().setBackgroundDrawableResource(R.color.tran);
-                        dialogGame.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-                        imgAnimalDialog = (ImageView) dialogGame.findViewById(R.id.imgAnimalDialog);
-                        imgAnimalDialog.setImageBitmap(listBitMapAnswer.get(4));
+                        dialogGame();
+                        imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(4).getwPathImage()));
+                        txtWorddialog.setText(listImageGame.get(4).getwEng());
 
                         dialogGame.show();
                         final ImageView imgCal = (ImageView) dialogGame.findViewById(R.id.imgCal);
@@ -336,8 +311,8 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
                                 getResult(5);
                                 if(check_finish == 6)
                                 {
+                                    EventWin();
                                     dialogWin.show();
-                                    //EventWin();
                                 }
                             }
                         });
@@ -362,12 +337,9 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
                         imgAnimalSix.startAnimation(animation);
-                        dialogGame = new Dialog(ChoosingObjectActivity.this);
-                        dialogGame.setContentView(R.layout.activity_game_mh7_dialog);
-                        dialogGame.getWindow().setBackgroundDrawableResource(R.color.tran);
-                        dialogGame.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-                        imgAnimalDialog = (ImageView) dialogGame.findViewById(R.id.imgAnimalDialog);
-                        imgAnimalDialog.setImageBitmap(listBitMapAnswer.get(5));
+                        dialogGame();
+                        imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(5).getwPathImage()));
+                        txtWorddialog.setText(listImageGame.get(5).getwEng());
 
                         dialogGame.show();
                         final ImageView imgCal = (ImageView) dialogGame.findViewById(R.id.imgCal);
@@ -378,8 +350,8 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
                                 ktcheck_finish ();
                                 getResult(6);
                                 if(check_finish == 6) {
+                                    EventWin();
                                     dialogWin.show();
-                                    //EventWin();
                                 }
                             }
                         });
@@ -398,36 +370,55 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
             }
         });
     }
-    private void EventWin() {
-        txtScoreWin.setText(String.valueOf(SCORE_ALL));
-        imbNextGameWin.setOnTouchListener(new View.OnTouchListener() {
+    private void dialogGame(){
+        dialogGame = new Dialog(ChoosingObjectActivity.this);
+        dialogGame.setContentView(R.layout.activity_game_mh7_dialog);
+        dialogGame.getWindow().setBackgroundDrawableResource(R.color.tran);
+        dialogGame.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        imgAnimalDialog = (ImageView) dialogGame.findViewById(R.id.imgAnimalDialog);
+        txtWorddialog = (TextView) dialogGame.findViewById(R.id.txtWorddialog);
+    }
+    private  void Speech(){
+        txtWord = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        imbNextGameWin.setSelected(!imbNextGameWin.isSelected());
-                        imbNextGameWin.isSelected();
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        imbNextGameWin.setSelected(false);
-                        //Intent intent = new Intent(getApplicationContext(),LoadingGoInGameActivity.class);
-                        Bundle sendScore = new Bundle();
-                        sendScore.putInt("score",SCORE_ALL);
-                        //intent.putExtra("pictutepuzzle",sendScore);
-                        return true;
-                }
-                return false;
+            public void onInit(int status) {
+                    if(status != TextToSpeech.ERROR) {
+                        txtWord.setLanguage(Locale.UK);
+                    }
             }
         });
     }
+    private void EventWin() {
+        txtScoreWin.setText(String.valueOf(SCORE_ALL));
+//        imbNextGameWin.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                switch (motionEvent.getAction()) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        imbNextGameWin.setSelected(!imbNextGameWin.isSelected());
+//                        imbNextGameWin.isSelected();
+//                        return true;
+//                    case MotionEvent.ACTION_UP:
+//                        imbNextGameWin.setSelected(false);
+//                        Intent intent = new Intent(getApplicationContext(),LoadingGoInGameActivity.class);
+//                        Bundle sendScore = new Bundle();
+//                        sendScore.putInt("score",SCORE_ALL);
+//                        intent.putExtra("pictutepuzzle",sendScore);
+//                        return true;
+//                }
+//                return false;
+//            }
+//        });
+    }
+
     private void ktcheck_finish() {
         if (check_finish == 6){
             check_finish = 0;
-            Toast.makeText(getApplicationContext(), "Dc 6 lan: " + check_finish, Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "Dc 6 lan: " + check_finish, Toast.LENGTH_LONG).show();
         }
         else{
             check_finish++;
-            Toast.makeText(getApplicationContext(), "so lan click" + check_finish, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "so lan click" + check_finish, Toast.LENGTH_SHORT).show();
         }
     }
     private void doSaveScore() {
@@ -452,4 +443,5 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
         txtScore.setText(String.valueOf(SCORE_ALL));
         doSaveScore();
     }
+
 }
