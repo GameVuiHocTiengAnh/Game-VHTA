@@ -12,6 +12,7 @@ import java.util.Random;
 
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.CatchingWordsActivity;
 import blackcore.tdc.edu.com.gamevhta.choosing_objects_game.ChoosingObjectActivity;
+import blackcore.tdc.edu.com.gamevhta.image_guessing_game.ImageGuessingActivity;
 import blackcore.tdc.edu.com.gamevhta.picture_puzzle_game.PicturePuzzleActivity;
 
 /**
@@ -25,6 +26,7 @@ public class LoadingGoInGameActivity extends AppCompatActivity {
     private final int  PICTURE_PUZZLE_GAME = 0;
     private final int MH6_CATCHING_WORDS_GAME = 1;
     private final int CHOOSE_IMAGE_OBJECT_GAME= 2;
+    private final int IMAGE_GUESSING_GAME= 3;
     private ArrayList<Integer> screenGame;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class LoadingGoInGameActivity extends AppCompatActivity {
         screenGame.add(PICTURE_PUZZLE_GAME);
         screenGame.add(MH6_CATCHING_WORDS_GAME);
         screenGame.add(CHOOSE_IMAGE_OBJECT_GAME);
+        screenGame.add(IMAGE_GUESSING_GAME);
 
         Random ran = new Random();
         int dom = ran.nextInt(screenGame.size());
@@ -58,6 +61,8 @@ public class LoadingGoInGameActivity extends AppCompatActivity {
                         break;
                     case CHOOSE_IMAGE_OBJECT_GAME:
                         intent = new Intent(LoadingGoInGameActivity.this,ChoosingObjectActivity.class);break;
+                    case IMAGE_GUESSING_GAME:
+                        intent = new Intent(LoadingGoInGameActivity.this,ImageGuessingActivity.class);break;
                 }
                 startActivity(intent);
                 finish();

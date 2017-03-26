@@ -25,12 +25,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.podcopic.animationlib.library.AnimationType;
+import com.podcopic.animationlib.library.StartSmartAnimation;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import blackcore.tdc.edu.com.gamevhta.LoadingGoInGameActivity;
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.TopisChoosingActivity;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
@@ -47,12 +51,12 @@ import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
 public class ImageGuessingActivity extends AppCompatActivity {
     private Handler handler;
-    private Animation animation,animationTimer;
+    private Animation animation, animationTimer;
     private Timer timer = new Timer();
     private ImageButton btnImage1, btnImage2, btnImage3, btnImage4, btnImage5, btnImage6, btnPauseGame5;
     private TextView lblTimer, lblWord, lblScore, lblScoreGameOver, txtNameScoreWin, txtScoreWin;
-    private MediaPlayer mpClicked, mpSoundBackground, mpWingame,mpGameOver;
-    private ImageView imgListOver, imgReplayOver, imgList, imgReplay, imgResume, imvNextGame;
+    private MediaPlayer mpClicked, mpSoundBackground, mpWingame, mpGameOver, mpOK;
+    private ImageView imgListOver, imgReplayOver, imgList, imgReplay, imgResume, imvNextGame,mh9_bgImage1;
     private EditText lblPlayerNameGameOver;
 
     private String OBJECT = "";
@@ -87,7 +91,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 if (t > 0 && t <= 10) {
                     lblTimer.startAnimation(animationTimer);
                 } else if (t == 0) {
-                    if(SCORE==0)
+                    if (SCORE == 0)
                         lblPlayerNameGameOver.setVisibility(View.GONE);
                     else
                         lblPlayerNameGameOver.setVisibility(View.VISIBLE);
@@ -118,7 +122,6 @@ public class ImageGuessingActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mpSoundBackground.start();
-        Log.d("Guessing","OnResume");
     }
 
     @Override
@@ -127,7 +130,6 @@ public class ImageGuessingActivity extends AppCompatActivity {
         mpSoundBackground.pause();
         timer.cancel();
         dialogBack.show();
-        Log.d("Guessing","OnPause");
     }
 
     @Override
@@ -149,11 +151,12 @@ public class ImageGuessingActivity extends AppCompatActivity {
         btnImage5 = (ImageButton) findViewById(R.id.btnImage5);
         btnImage6 = (ImageButton) findViewById(R.id.btnImage6);
         btnPauseGame5 = (ImageButton) findViewById(R.id.btnPauseGame5);
+        btnPauseGame5.setVisibility(View.GONE);
         lblTimer = (TextView) findViewById(R.id.lblTimer);
         lblWord = (TextView) findViewById(R.id.lblWord);
         lblScore = (TextView) findViewById(R.id.lblScore);
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_in);
-        animationTimer= AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_anim_trieu);
+        animationTimer = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_anim_trieu);
         //dialog game over
         dialogGameOver = new Dialog(ImageGuessingActivity.this);
         dialogGameOver.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -178,7 +181,6 @@ public class ImageGuessingActivity extends AppCompatActivity {
         imgReplay = (ImageView) dialogBack.findViewById(R.id.imgReplay);
 
 
-
         //dialog win game
         dialogWinGame = new Dialog(ImageGuessingActivity.this);
         dialogWinGame.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -190,8 +192,8 @@ public class ImageGuessingActivity extends AppCompatActivity {
         txtScoreWin = (TextView) dialogWinGame.findViewById(R.id.txtScoreWin);
         imvNextGame = (ImageView) dialogWinGame.findViewById(R.id.imvNextGame);
 
-
-        mpGameOver= MediaPlayer.create(getApplicationContext(), R.raw.sai);
+        mpOK = MediaPlayer.create(getApplicationContext(), R.raw.dung);
+        mpGameOver = MediaPlayer.create(getApplicationContext(), R.raw.sai);
         mpClicked = MediaPlayer.create(getApplicationContext(), R.raw.game_5_sound_clicked);
         mpWingame = MediaPlayer.create(getApplicationContext(), R.raw.wingame);
         mpSoundBackground = MediaPlayer.create(getApplicationContext(), R.raw.game_5_screen_background_sound);
@@ -200,6 +202,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
 
         //set time left default
         lblTimer.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
+        mh9_bgImage1 = (ImageView) findViewById(R.id.mh9_bgImage1);
 
         getEvents();
         setFont();
@@ -210,7 +213,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
     }
 
     //play timer
-    private void playTimer(){
+    private void playTimer() {
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -227,13 +230,24 @@ public class ImageGuessingActivity extends AppCompatActivity {
             }
         }, 1000, 1000);
     }
+
     //play game
     private void loadGame() {
+        //StartSmartAnimation.startAnimation(mh9_bgImage1,AnimationType.RotateInDownLeft,25000,0,true);
         lblTimer.clearAnimation();
         lblTimer.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
         lblScore.setText(String.valueOf(SCORE));
         RESULT_FAILED = 0;
         RESULT_CHOSEN = -1;
+
+        StartSmartAnimation.startAnimation(btnImage1, AnimationType.Pulse, 1500, 0, true);
+        StartSmartAnimation.startAnimation(btnImage2, AnimationType.Pulse, 1500, 0, true);
+        StartSmartAnimation.startAnimation(btnImage3, AnimationType.Pulse, 1500, 0, true);
+        StartSmartAnimation.startAnimation(btnImage4, AnimationType.Pulse, 1500, 0, true);
+        StartSmartAnimation.startAnimation(btnImage5, AnimationType.Pulse, 1500, 0, true);
+        StartSmartAnimation.startAnimation(btnImage6, AnimationType.Pulse, 1500, 0, true);
+        StartSmartAnimation.startAnimation(lblWord, AnimationType.BounceIn, 2000, 0, true);
+
         listImageLevelO = new ArrayList<>();
         Log.d("ImageSizeBefore", String.valueOf(listImageFromDataO.size()));
         Random rd = new Random();
@@ -245,23 +259,16 @@ public class ImageGuessingActivity extends AppCompatActivity {
             //Log.d("ImageSizeSV","Index:"+j+"-X:"+ String.valueOf(x) + "-Object: " + listImageFromDataO.get(x).getwEng()+":"+listImageFromDataO.get(x).getwPathImage());
             //Log.d("ImageSizeLC","Index:"+j+"-X:"+ String.valueOf(x) + "-Object: " + listImageLevelO.get(j).getwEng()+":"+listImageLevelO.get(j).getwPathImage());
         }
-        Log.d("ImageSizeAfter", String.valueOf(listImageFromDataO.size()));
         RESULT_CHOSEN = rd.nextInt(listImageLevelO.size());
         lblWord.setText(listImageLevelO.get(RESULT_CHOSEN).getwEng().toString());
         Log.d("ImageSizeResult", String.valueOf(RESULT_CHOSEN));
 
         btnImage1.setBackground(getBitmapResource(listImageLevelO.get(0).getwPathImage()));
-        Log.d("Image0", String.valueOf(listImageLevelO.get(0).getwPathImage()));
         btnImage2.setBackground(getBitmapResource(listImageLevelO.get(1).getwPathImage()));
-        Log.d("Image1", String.valueOf(listImageLevelO.get(1).getwPathImage()));
         btnImage3.setBackground(getBitmapResource(listImageLevelO.get(2).getwPathImage()));
-        Log.d("Image2", String.valueOf(listImageLevelO.get(2).getwPathImage()));
         btnImage4.setBackground(getBitmapResource(listImageLevelO.get(3).getwPathImage()));
-        Log.d("Image3", String.valueOf(listImageLevelO.get(3).getwPathImage()));
         btnImage5.setBackground(getBitmapResource(listImageLevelO.get(4).getwPathImage()));
-        Log.d("Image4", String.valueOf(listImageLevelO.get(4).getwPathImage()));
         btnImage6.setBackground(getBitmapResource(listImageLevelO.get(5).getwPathImage()));
-        Log.d("Image5", String.valueOf(listImageLevelO.get(5).getwPathImage()));
 
         timer = new Timer();
         playTimer();
@@ -364,7 +371,8 @@ public class ImageGuessingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialogWinGame.dismiss();
-                new CustomToask(ImageGuessingActivity.this, R.drawable.screen_5_icon_ani, "You are clicked NextGame");
+                startActivity(new Intent(ImageGuessingActivity.this, LoadingGoInGameActivity.class));
+                finish();
             }
         });
     }
@@ -507,6 +515,10 @@ public class ImageGuessingActivity extends AppCompatActivity {
     //Check Result
     private void getResult(int choose) {
         if (choose == RESULT_CHOSEN) {
+            SCORE += lblWord.getText().length() * 10 * Integer.parseInt(lblTimer.getText().toString());
+            lblScore.setText(String.valueOf(SCORE));
+            StartSmartAnimation.startAnimation(lblScore,AnimationType.StandUp,1000,0,true);
+            mpOK.start();
             Log.d("Size", String.valueOf(listImageFromDataO.size()));
             TURN++;
             Log.d("ImSizeTurn", String.valueOf(TURN));
@@ -518,8 +530,6 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "You WIN", Toast.LENGTH_SHORT).show();
             } else {
                 timer.cancel();
-                SCORE += lblWord.getText().length() * 10 * Integer.parseInt(lblTimer.getText().toString());
-                lblScore.setText(String.valueOf(SCORE));
                 loadGame();
             }
         } else {
@@ -527,7 +537,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
             if (RESULT_FAILED == 1) {
                 new CustomToask(ImageGuessingActivity.this, R.drawable.screen_5_icon_ani, "Try one more time!");
             } else if (RESULT_FAILED == 2) {
-                if(SCORE==0)
+                if (SCORE == 0)
                     lblPlayerNameGameOver.setVisibility(View.GONE);
                 else
                     lblPlayerNameGameOver.setVisibility(View.VISIBLE);

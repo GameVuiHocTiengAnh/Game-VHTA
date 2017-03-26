@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/toast_layout_root"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/screen_5_background_custom_toask"
+    android:background="@drawable/customtoast"
     android:orientation="horizontal"
     android:padding="2dp">
 
@@ -11,7 +11,8 @@
         android:id="@+id/image"
         android:layout_gravity="left|center_vertical"
         android:layout_width="40dp"
-        android:layout_height="40dp" />
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"/>
 
     <TextView
         android:id="@+id/text"
@@ -21,7 +22,9 @@
         android:text="hello!"
         android:lines="2"
         android:ellipsize="end"
-        android:textColor="#fff"
+        android:textColor="#000"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="10dp"
+        android:textStyle="bold"
+        android:textSize="20sp"/>
 </LinearLayout>
