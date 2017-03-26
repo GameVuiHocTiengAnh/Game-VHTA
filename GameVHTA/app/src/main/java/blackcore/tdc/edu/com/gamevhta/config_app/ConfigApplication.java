@@ -60,4 +60,7 @@ public class ConfigApplication {
      public  static final String SCREEN_USING_PAUSE_DIALOG_MH6 = "MH6";
      /*------------- END GAME CATCHING WORDS-----------------*/
 
+     public  static final String NAME_DATA_LIST = "dataListUsing";
+    public  static final String SCORES_BEFOR_GAME = "scores";
+
 }

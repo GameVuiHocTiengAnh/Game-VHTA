@@ -42,7 +42,9 @@ import java.util.TimerTask;
 import blackcore.tdc.edu.com.gamevhta.LoadingGoInGameActivity;
 import blackcore.tdc.edu.com.gamevhta.LoadingGoOutGameActivity;
 import blackcore.tdc.edu.com.gamevhta.R;
+import blackcore.tdc.edu.com.gamevhta.RandomGameMemoryChallengeActivity;
 import blackcore.tdc.edu.com.gamevhta.button.PauseButton;
+import blackcore.tdc.edu.com.gamevhta.catching_words_game.CatchingWordsActivity;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
@@ -614,10 +616,10 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_UP:
                             mService.playMusic(mClick);
                             imbNextGameWin.setSelected(false);
-                            Intent intent = new Intent(getApplicationContext(),LoadingGoInGameActivity.class);
-                            Bundle sendScore = new Bundle();
-                            sendScore.putInt("score",SCORE_ALL);
-                            intent.putExtra("pictutepuzzle",sendScore);
+                            Intent intent = new Intent(PicturePuzzleActivity.this,RandomGameMemoryChallengeActivity.class);
+                            Bundle data = new Bundle();
+                            data.putSerializable(ConfigApplication.NAME_DATA_LIST,listImageGame);
+                            intent.putExtras(data);
                             startActivity(intent);
                             finish();
                             return true;

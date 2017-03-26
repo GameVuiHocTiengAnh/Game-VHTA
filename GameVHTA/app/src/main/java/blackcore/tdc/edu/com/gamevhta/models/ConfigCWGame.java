@@ -108,7 +108,7 @@ public class ConfigCWGame {
             if(device > 1204 &&  device <= 1820){
                 size = 35;
             }else {
-                size = 50;
+                size = 60;
             }
         }
         return size;

@@ -31,7 +31,7 @@ public class Backgroud {
         this.xleft += x;
         if (Math.abs(this.xleft) >= WIDTH) {
             // Log.d("testx",String.valueOf(SizeOfDevice.getScreenWidth()));
-            this.xleft = this.WIDTH - 5;
+            this.xleft = this.WIDTH - 8;
         }
     }
 

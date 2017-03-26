@@ -13,10 +13,12 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -29,12 +31,16 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.podcopic.animationlib.library.AnimationType;
+import com.podcopic.animationlib.library.StartSmartAnimation;
+
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
 
 import blackcore.tdc.edu.com.gamevhta.LoadingGoInGameActivity;
 import blackcore.tdc.edu.com.gamevhta.R;
+import blackcore.tdc.edu.com.gamevhta.RandomGameMemoryChallengeActivity;
 import blackcore.tdc.edu.com.gamevhta.TopisChoosingActivity;
 import blackcore.tdc.edu.com.gamevhta.button.PauseButton;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models.BackgroudGameView;
@@ -60,7 +66,6 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
     private MusicService themeMusic = new MusicService();
     private MediaPlayer songThemeMusic;
     private PauseButton btnPause;
-    private MediaPlayer soundThrowShuriken;
     private ShurikenView throwShuriken;
 
     private DbAccessHelper db;
@@ -80,6 +85,8 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
 
     private MediaPlayer catchingSound;
     private TextToSpeech textToSpeech = null;
+    private MediaPlayer dialogWinSound = null;
+    private MediaPlayer mplClicked = null;
 
     ServiceConnection conn = new ServiceConnection() {
         @Override
@@ -123,6 +130,7 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         frameGame.setLayoutParams(lpframe);
         setContentView(frameGame);
 
+
         helth = new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
         // add charracter for game
         ninja = new CharacterGameView(this);
@@ -148,28 +156,20 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         this.addTopBarView(frameGame);
         this.addProgressbarHelth(frameGame);
 
-
-
-        //add theme sound and create sound when character is throwing shuriken
-        this.soundThrowShuriken = MediaPlayer.create(getApplicationContext(),R.raw.shuriken_throw);
         this.playThemeMusic();
         catchingSound = MediaPlayer.create(getApplicationContext(),R.raw.catching_words);
-
-        //set effect for image show on top action bar
-        final Animation animScaleImage = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.scale_anim);
-        final Animation foreverScale = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.forever_scale);
         imvVocalubary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(textToSpeech != null && wordUsing != null){
-                    imvVocalubary.startAnimation(animScaleImage);
+                    startAnimClickedOnImvVoca();
                     textToSpeech.speak(wordUsing,TextToSpeech.QUEUE_FLUSH,null);
                 }
             }
         });
-
-        txtVocalubary.startAnimation(foreverScale);
         this.initDialogCatchingWords();
+        this.dialogWinSound = MediaPlayer.create(getApplicationContext(),R.raw.wingame);
+        this.mplClicked = MediaPlayer.create(getApplicationContext(),R.raw.click);
 //        Log.d("Tagtest",SizeOfDevice.getScreenWidth() +"=============="+ SizeOfDevice.getScreenHeight());
 
 
@@ -315,11 +315,17 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
     }
 
     public void throwShuriken(){
-        soundThrowShuriken.seekTo(0);
+        final MediaPlayer  soundThrowShuriken = MediaPlayer.create(getApplicationContext(),R.raw.shuriken_throw);
+        soundThrowShuriken.setVolume(0.9f,0.9f);
         throwShuriken.setComplete(false);
         throwShuriken.onResumeMySurfaceView();
-        soundThrowShuriken.setVolume(0.9f,0.9f);
         soundThrowShuriken.start();
+        soundThrowShuriken.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                soundThrowShuriken.release();
+            }
+        });
     }
     public void setImvVocalubary(){
         scores += 100;
@@ -359,7 +365,7 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         dialogWin.getWindow().setBackgroundDrawableResource(R.color.tran);
         dialogWin.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
 
-        ImageView imbNextGameWin = (ImageView) dialogWin.findViewById(R.id.imvNextGame);
+        final ImageView imbNextGameWin = (ImageView) dialogWin.findViewById(R.id.imvNextGame);
         TextView txtNameScoreWin = (TextView) dialogWin.findViewById(R.id.txtNameScoreWin);
         txtNameScoreWin.setTypeface(gothic);
         txtNameScoreWin.setTextColor(Color.RED);
@@ -367,14 +373,30 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         txtScoreWin.setText(this.scores+"");
         txtScoreWin.setTypeface(gothic);
         txtScoreWin.setTextColor(Color.RED);
+        dialogWinSound.start();
         dialogWin.show();
         backgroudGameView.stopMoveBG();
 
-        imbNextGameWin.setOnClickListener(new View.OnClickListener() {
+        imbNextGameWin.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CatchingWordsActivity.this,LoadingGoInGameActivity.class);
-                startActivity(intent);
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mplClicked.start();
+                        imbNextGameWin.setSelected(!imbNextGameWin.isSelected());
+                        imbNextGameWin.isSelected();
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        imbNextGameWin.setSelected(false);
+                        Intent intent = new Intent(CatchingWordsActivity.this,RandomGameMemoryChallengeActivity.class);
+                        Bundle data = new Bundle();
+                        data.putSerializable(ConfigApplication.NAME_DATA_LIST,listWordsUsing);
+                        intent.putExtras(data);
+                        startActivity(intent);
+                        finish();
+                        return true;
+                }
+                return false;
             }
         });
     }
@@ -417,6 +439,7 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         imvDialogCatching.setImageBitmap(image);
         txtDialogCatching.setText(text);
         dialogCatchingWords.show();
+        this.starAnimationImageDialogCatching();
         catchingSound.seekTo(0);
         catchingSound.start();
         if(textToSpeech != null)
@@ -427,6 +450,7 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
                 dialogCatchingWords.dismiss();
                 imvVocalubary.setImageBitmap(image);
                 txtVocalubary.setText(text);
+                starAnimGroupVoca();
             }
         },2000);
     }
@@ -452,5 +476,18 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
             textToSpeech.shutdown();
         }
         super.onDestroy();
+    }
+
+    private void starAnimationImageDialogCatching(){
+        StartSmartAnimation.startAnimation(imvDialogCatching, AnimationType.StandUp,2000,0,true,600);
+        StartSmartAnimation.startAnimation(txtDialogCatching, AnimationType.Shake,2000,0,true,600);
+    }
+    private void starAnimGroupVoca(){
+        StartSmartAnimation.startAnimation(imvVocalubary,AnimationType.StandUp,2000,0,true,2000);
+        StartSmartAnimation.startAnimation(txtVocalubary,AnimationType.ShakeBand,2000,0,true,2000);
+    }
+
+    private void startAnimClickedOnImvVoca(){
+        StartSmartAnimation.startAnimation(imvVocalubary,AnimationType.Swing,2000,0,true,300);
     }
 }

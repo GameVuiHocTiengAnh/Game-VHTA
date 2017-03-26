@@ -187,15 +187,21 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
     }
     public void resumeGameMH6(){
         if(game != null){
-            CatchingWordsActivity activity = (CatchingWordsActivity)context;
-            activity.onResumeGame();
+            if(screenUse != null){
+                if(screenUse.equals(ConfigApplication.SCREEN_USING_PAUSE_DIALOG_MH6)) {
+                    CatchingWordsActivity activity = (CatchingWordsActivity) context;
+                    activity.onResumeGame();
+                }
+            }
         }
     }
 
     public void resumeChoosingGame(){
-        if(game != null){
-            ChoosingObjectActivity activity = (ChoosingObjectActivity)context;
-            activity.onResumeGame();
+        if(screenUse != null){
+            if(screenUse.equals("doituonggamechoosingcuaong")) {
+                ChoosingObjectActivity activity = (ChoosingObjectActivity) context;
+                activity.onResumeGame();
+            }
         }
     }
 

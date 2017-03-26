@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.CatchingWordsActivity;
@@ -55,9 +56,11 @@ public class BackgroudGameView extends View implements View.OnTouchListener{
         super(context);
         this.setFocusable(true);
         this.context = context;
-        Bitmap img = BitmapFactory.decodeResource(getResources(), R.drawable.mh6_backgroud_dark);
-        bitmapTrunk = BitmapFactory.decodeResource(getResources(), R.drawable.mh6_trunk);
-        imgRoot = Bitmap.createScaledBitmap(img, SizeOfDevice.getScreenWidth(), SizeOfDevice.getScreenHeight(), false);
+        Bitmap imgDark = BitmapFactory.decodeResource(getResources(), R.drawable.mh6_backgroud_dark);
+        Bitmap imgLight = BitmapFactory.decodeResource(getResources(),R.drawable.mh6_backgroud_light);
+        Random ran = new Random();
+        int dom = ran.nextInt(2);
+        randomBG(dom,imgDark,imgLight);
         backgroud = new Backgroud(imgRoot, xLeft, yTop);
         bitmapTrunk = BitmapFactory.decodeResource(getResources(), R.drawable.mh6_trunk);
         trunk = new Trunk(bitmapTrunk, SizeOfDevice.getScreenWidth() + 500, ConfigCWGame.yPositonOfTrunk());
@@ -168,6 +171,16 @@ public class BackgroudGameView extends View implements View.OnTouchListener{
 
     public boolean isPauseGame() {
         return trunk.isPause();
+    }
+
+    private void randomBG(int dom, Bitmap bg1, Bitmap bg2){
+        bitmapTrunk = BitmapFactory.decodeResource(getResources(), R.drawable.mh6_trunk);
+        switch (dom){
+            case 0: imgRoot = Bitmap.createScaledBitmap(bg1, SizeOfDevice.getScreenWidth(), SizeOfDevice.getScreenHeight(), false);
+                break;
+            case 1: imgRoot = Bitmap.createScaledBitmap(bg2, SizeOfDevice.getScreenWidth(), SizeOfDevice.getScreenHeight(), false);
+                break;
+        }
     }
 
 }

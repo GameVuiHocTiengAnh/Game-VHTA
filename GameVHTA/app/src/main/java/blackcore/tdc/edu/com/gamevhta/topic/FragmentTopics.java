@@ -21,6 +21,8 @@ import android.widget.TextView;
 
 import blackcore.tdc.edu.com.gamevhta.LoadingGoInGameActivity;
 import blackcore.tdc.edu.com.gamevhta.R;
+import blackcore.tdc.edu.com.gamevhta.RandomGameMemoryChallengeActivity;
+import blackcore.tdc.edu.com.gamevhta.RandomGamePracticeActivity;
 import blackcore.tdc.edu.com.gamevhta.models.BitmapTopic;
 import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
@@ -130,7 +132,7 @@ public class FragmentTopics extends android.support.v4.app.Fragment{
                     public void onClick(View view) {
                         mService.playMusic(mClick);
                         btnMemory.startAnimation(alpha2);
-                        Intent intent = new Intent(view.getContext(),LoadingGoInGameActivity.class);
+                        Intent intent = new Intent(view.getContext(),RandomGameMemoryChallengeActivity.class);
                         startActivity(intent);
                         getActivity().finish();
                     }
@@ -141,7 +143,7 @@ public class FragmentTopics extends android.support.v4.app.Fragment{
                     public void onClick(View view) {
                         mService.playMusic(mClick);
                         btnPractice.startAnimation(alpha3);
-                        Intent intent = new Intent(view.getContext(),LoadingGoInGameActivity.class);
+                        Intent intent = new Intent(view.getContext(),RandomGamePracticeActivity.class);
                         startActivity(intent);
                         getActivity().finish();
                     }

@@ -36,6 +36,7 @@ import java.util.TimerTask;
 
 import blackcore.tdc.edu.com.gamevhta.LoadingGoInGameActivity;
 import blackcore.tdc.edu.com.gamevhta.R;
+import blackcore.tdc.edu.com.gamevhta.RandomGamePracticeActivity;
 import blackcore.tdc.edu.com.gamevhta.TopisChoosingActivity;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.custom_toask.CustomToask;
@@ -202,7 +203,6 @@ public class ImageGuessingActivity extends AppCompatActivity {
 
         //set time left default
         lblTimer.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-        mh9_bgImage1 = (ImageView) findViewById(R.id.mh9_bgImage1);
 
         getEvents();
         setFont();
@@ -371,8 +371,15 @@ public class ImageGuessingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialogWinGame.dismiss();
-                startActivity(new Intent(ImageGuessingActivity.this, LoadingGoInGameActivity.class));
+                Intent intent = new Intent(ImageGuessingActivity.this,RandomGamePracticeActivity.class);
+                Bundle data = new Bundle();
+                data.putSerializable(ConfigApplication.NAME_DATA_LIST,listImageLevelO);
+                data.putInt(ConfigApplication.SCORES_BEFOR_GAME,SCORE);
+                intent.putExtras(data);
+                startActivity(intent);
                 finish();
+
+
             }
         });
     }

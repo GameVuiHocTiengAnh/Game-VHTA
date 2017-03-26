@@ -1,10 +1,12 @@
 package blackcore.tdc.edu.com.gamevhta.models;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 3/20/2017.
  */
 
-public class WordObject {
+public class WordObject implements Serializable{
     public String getwID() {
         return wID;
     }
