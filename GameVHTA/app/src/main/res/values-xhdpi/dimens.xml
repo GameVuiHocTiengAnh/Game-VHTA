@@ -43,11 +43,17 @@
     <dimen name="background_score_game_top">10dp</dimen>
     <dimen name="background_score_game_left">70dp</dimen>
     <dimen name="txtAnswer">20sp</dimen>
-    !-- dialog back game-->
-    <dimen name="imageBottomBackGame">50dp</dimen>
+    <!-- dialog back game-->
+    <dimen name="imageBottomBackGame">40dp</dimen>
     <dimen name="txtDialogBackgame">65sp</dimen>
     <!-- dialog over game -->
+    <dimen name="imagebottomOverGame">20dp</dimen>
     <dimen name="imageOverGame">30dp</dimen>
+    <dimen name="textNameOverGame">30sp</dimen>
+    <dimen name="textScoreOverGame">40sp</dimen>
+    <!-- dialog win game-->
+    <dimen name="txtScoreWingame">50sp</dimen>
+    <dimen name="txtNameWingame">30dp</dimen>
 
     <!--Screen 5-->
     <dimen name="layout_left">130dp</dimen>

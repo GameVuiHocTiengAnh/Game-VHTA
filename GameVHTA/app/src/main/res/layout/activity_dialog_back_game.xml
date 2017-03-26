@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="@dimen/DialogBackGameLeftandRight"
     android:layout_marginRight="@dimen/DialogBackGameLeftandRight"
-    android:layout_marginTop="30dp"
+    android:layout_marginTop="@dimen/DialogBackGameBottomandTop"
     android:orientation="horizontal"
     tools:context="blackcore.tdc.edu.com.gamevhta.MainMenuActivity">
 
@@ -19,18 +19,56 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginLeft="@dimen/imageOverGame"
+            android:layout_marginRight="@dimen/imageOverGame"
             android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal">
+            android:gravity="top|center_horizontal">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_name_pause"/>
+                android:background="@drawable/background_name_pause" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="1.2"
+            android:gravity="top|center_horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="top|center_horizontal">
+                    <ImageView
+                        android:id="@+id/sleep"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/sleep" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.2"
+                    android:gravity="top|center_horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/luoi" />
+                 </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -78,8 +116,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/imageBottomBackGame"
                     android:background="@color/tran"
-                    android:src="@drawable/btnresume"
-                   />
+                    android:src="@drawable/btnresume" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

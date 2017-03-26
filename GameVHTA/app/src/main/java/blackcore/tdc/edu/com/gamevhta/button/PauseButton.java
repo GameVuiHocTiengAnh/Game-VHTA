@@ -17,6 +17,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.podcopic.animationlib.library.AnimationType;
+import com.podcopic.animationlib.library.StartSmartAnimation;
+
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.CatchingWordsActivity;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models.BackgroudGameView;
@@ -32,11 +35,11 @@ import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 public class PauseButton extends android.support.v7.widget.AppCompatImageView implements View.OnTouchListener,View.OnClickListener{
 
     private Dialog dialog;
-    private ImageView imgList,imgReplay,imgResume;
+    private ImageView imgList,imgReplay,imgResume,sleep;
     private Intent intent;
     private Activity context;
     private MediaPlayer mClick;
-    private Animation zoomIn,slide_down,slide_down_one,slide_down_two;
+    private Animation zoomIn,rotate_crazy;
     private String returnIdBtn;
     private MusicService mService = new MusicService();
     private String screenUse = null;
@@ -82,11 +85,17 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
                 PauseButton.this.clearAnimation();
                 mService.playMusic(mClick);
                 callOnClick();
+                animationPause();
                 dialog.show();
         }
         return true;
     }
 
+    public void animationPause() {
+        rotate_crazy = AnimationUtils.loadAnimation(context.getApplicationContext(),R.anim.scale_anim_trieu);
+        sleep = (ImageView) dialog.findViewById(R.id.sleep);
+        sleep.startAnimation(rotate_crazy);
+    }
     public void setMoveActivity(Intent intent, Activity context){
         this.context =  context;
         this.intent = intent;
@@ -97,7 +106,6 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
     }
 
     private void buildDialog(final Context context){
-
         imgList = (ImageView) dialog.findViewById(R.id.imgList);
         imgReplay = (ImageView) dialog.findViewById(R.id.imgReplay);
         imgResume = (ImageView) dialog.findViewById(R.id.imgResume);

@@ -39,7 +39,7 @@
                 android:text="1000"
                 android:layout_marginLeft="@dimen/DialogBackGameLeftandRight"
                 android:layout_marginRight="@dimen/DialogBackGameLeftandRight"
-                android:textSize="40sp"
+                android:textSize="@dimen/textScoreOverGame"
                 android:textColor="#ffffff"
                 android:textColorHint="#ffffff"
                 android:gravity="center"
@@ -59,7 +59,7 @@
                 android:hint="Enter your name!"
                 android:gravity="center"
                 android:lines="1"
-                android:textSize="30sp"
+                android:textSize="@dimen/textNameOverGame"
                 android:background="@drawable/customtoast"/>
 
         </LinearLayout>
@@ -80,7 +80,7 @@
                     android:id="@+id/imgListOver"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="30dp"
+                    android:layout_marginBottom="@dimen/imagebottomOverGame"
                     android:layout_marginRight="@dimen/imageOverGame"
                     android:background="@color/tran"
                     android:src="@drawable/btnlist" />
@@ -97,7 +97,7 @@
                     android:id="@+id/imgReplayOver"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="30dp"
+                    android:layout_marginBottom="@dimen/imagebottomOverGame"
                     android:layout_marginLeft="@dimen/imageOverGame"
                     android:background="@color/tran"
                     android:src="@drawable/btnreplay" />
