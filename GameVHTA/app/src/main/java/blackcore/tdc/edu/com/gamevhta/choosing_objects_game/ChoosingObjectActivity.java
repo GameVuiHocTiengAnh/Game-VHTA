@@ -25,8 +25,10 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
 
-import blackcore.tdc.edu.com.gamevhta.LoadingGoInGameActivity;
+import blackcore.tdc.edu.com.gamevhta.LoadingGoOutGameActivity;
 import blackcore.tdc.edu.com.gamevhta.R;
+import blackcore.tdc.edu.com.gamevhta.RandomGameMemoryChallengeActivity;
+import blackcore.tdc.edu.com.gamevhta.button.PauseButton;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
@@ -42,11 +44,12 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
     private Animation animation, animationsacle;
     private ImageView imgAnimalOne, imgAnimalTwo, imgAnimalThree, imgAnimalFour, imgAnimalFive, imgAnimalSix, imgAnimalDialog, imbNextGameWin;
     private TextView txtScore, txtWorddialog, txtScoreWin;
-    private MediaPlayer mClick, mMusicMainGame;
+    private MediaPlayer mClick, mMusicMainGame, mGameWin;
     private MusicService mService = new MusicService();
     private Dialog dialogGame, dialogWin;
     private DbAccessHelper dbAccessHelper;
     private TextToSpeech textToSpeech = null;
+    PauseButton imgBackGame;
 
     private int SCORE_ONE = 0, SCORE_TWO = 0, SCORE_THREE = 0, SCORE_FOUR = 0, SCORE_FIVE = 0, SCORE_SIX = 0, SCORE_ALL = 0;
     private int check_finish = 0;
@@ -73,10 +76,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_game_creen_mh7);
-        initialize();
-    }
 
-    private void initialize() {
         dbAccessHelper = new DbAccessHelper(this);
         listImageData= new ArrayList<>();
         listImageGame= new ArrayList<>();
@@ -90,6 +90,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
 
         mClick = MediaPlayer.create(ChoosingObjectActivity.this, R.raw.chat_sound);
         mMusicMainGame = MediaPlayer.create(ChoosingObjectActivity.this, R.raw.log_cabin);
+        mGameWin = MediaPlayer.create(ChoosingObjectActivity.this, R.raw.wingame);
 
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_in);
         animationsacle = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_anim);
@@ -115,10 +116,12 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
 
         addDataList();
         createDataGame();
+        moveActivity();
         Answer();
         setFont();
         getAnimationImageButton();
     }
+
     private void Answer(){
         imgAnimalOne.setImageDrawable(getBitmapResource(listImageGame.get(0).getwPathImage()));
         imgAnimalTwo.setImageDrawable(getBitmapResource(listImageGame.get(1).getwPathImage()));
@@ -163,11 +166,26 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
         mService.playMusic(mMusicMainGame);
         super.onResume();
     }
+    private void dialogGame(){
+        dialogGame = new Dialog(ChoosingObjectActivity.this);
+        dialogGame.setContentView(R.layout.activity_game_mh7_dialog);
+        dialogGame.getWindow().setBackgroundDrawableResource(R.color.tran);
+        dialogGame.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        imgAnimalDialog = (ImageView) dialogGame.findViewById(R.id.imgAnimalDialog);
+        txtWorddialog = (TextView) dialogGame.findViewById(R.id.txtWorddialog);
+
+    }
+
     private void setFont() {
         Typeface custom_font = Typeface.createFromAsset(getAssets(), getResources().getString(R.string.fontPath));
         txtScore.setTypeface(custom_font);
         //txtWorddialog.setTypeface(custom_font);
         txtScoreWin.setTypeface(custom_font);
+    }
+    public void moveActivity() {
+        imgBackGame = (PauseButton) findViewById(R.id.btnPausegame);
+        Intent intent = new Intent(getApplicationContext(),LoadingGoOutGameActivity.class);
+        imgBackGame.setMoveActivity(intent,this);
     }
     public void getAnimationImageButton() {
         imgAnimalOne.setOnTouchListener(new View.OnTouchListener() {
@@ -177,6 +195,9 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                     case MotionEvent.ACTION_DOWN:
                         mService.playMusic(mClick);
                         imgAnimalOne.startAnimation(animation);
+                        if(textToSpeech != null && listImageGame.get(0).getwEng() != null){
+                            textToSpeech.speak(listImageGame.get(0).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                        }
                         dialogGame();
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(0).getwPathImage()));
                         txtWorddialog.setText(listImageGame.get(0).getwEng());
@@ -201,7 +222,9 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                                 getResult(1);
                                 if(check_finish == 6) {
                                     EventWin();
+                                    mService.playMusic(mGameWin);
                                     dialogWin.show();
+                                    onPause();
                                 }
                             }
                         });
@@ -226,6 +249,9 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                     case MotionEvent.ACTION_DOWN:
                         mService.playMusic(mClick);
                         imgAnimalTwo.startAnimation(animation);
+                        if(textToSpeech != null && listImageGame.get(1).getwEng() != null){
+                            textToSpeech.speak(listImageGame.get(1).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                        }
                         dialogGame();
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(1).getwPathImage()));
                         txtWorddialog.setText(listImageGame.get(1).getwEng());
@@ -250,7 +276,9 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                                 getResult(2);
                                 if(check_finish == 6) {
                                     EventWin();
+                                    mService.playMusic(mGameWin);
                                     dialogWin.show();
+                                    onPause();
                                 }
                             }
                         });
@@ -273,6 +301,9 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                     case MotionEvent.ACTION_DOWN:
                         mService.playMusic(mClick);
                         imgAnimalThree.startAnimation(animation);
+                        if(textToSpeech != null && listImageGame.get(2).getwEng() != null){
+                            textToSpeech.speak(listImageGame.get(2).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                        }
                         dialogGame();
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(2).getwPathImage()));
                         txtWorddialog.setText(listImageGame.get(2).getwEng());
@@ -296,7 +327,9 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                                 getResult(3);
                                 if(check_finish == 6) {
                                     EventWin();
+                                    mService.playMusic(mGameWin);
                                     dialogWin.show();
+                                    onPause();
                                 }
                             }
                         });
@@ -320,6 +353,9 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                     case MotionEvent.ACTION_DOWN:
                         mService.playMusic(mClick);
                         imgAnimalFour.startAnimation(animation);
+                        if(textToSpeech != null && listImageGame.get(3).getwEng() != null){
+                            textToSpeech.speak(listImageGame.get(3).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                        }
                         dialogGame();
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(3).getwPathImage()));
                         txtWorddialog.setText(listImageGame.get(3).getwEng());
@@ -345,7 +381,9 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                                 getResult(4);
                                 if(check_finish == 6) {
                                     EventWin();
+                                    mService.playMusic(mGameWin);
                                     dialogWin.show();
+                                    onPause();
                                 }
                             }
                         });
@@ -369,15 +407,10 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                     case MotionEvent.ACTION_DOWN:
                         mService.playMusic(mClick);
                         imgAnimalFive.startAnimation(animation);
+                        if(textToSpeech != null && listImageGame.get(4).getwEng() != null){
+                            textToSpeech.speak(listImageGame.get(4).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                        }
                         dialogGame();
-                        imgAnimalFive.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if(textToSpeech != null && listImageGame.get(4).getwEng() != null){
-                                    textToSpeech.speak(listImageGame.get(4).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
-                                }
-                            }
-                        });
 
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(4).getwPathImage()));
                         txtWorddialog.setText(listImageGame.get(4).getwEng());
@@ -402,7 +435,9 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                                 if(check_finish == 6)
                                 {
                                     EventWin();
+                                    mService.playMusic(mGameWin);
                                     dialogWin.show();
+                                    onPause();
                                 }
                             }
                         });
@@ -427,6 +462,9 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                     case MotionEvent.ACTION_DOWN:
                         mService.playMusic(mClick);
                         imgAnimalSix.startAnimation(animation);
+                        if(textToSpeech != null && listImageGame.get(5).getwEng() != null){
+                            textToSpeech.speak(listImageGame.get(5).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                        }
                         dialogGame();
 
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(5).getwPathImage()));
@@ -452,7 +490,9 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                                 getResult(6);
                                 if(check_finish == 6) {
                                     EventWin();
+                                    mService.playMusic(mGameWin);
                                     dialogWin.show();
+                                    onPause();
                                 }
                             }
                         });
@@ -471,15 +511,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
             }
         });
     }
-    private void dialogGame(){
-        dialogGame = new Dialog(ChoosingObjectActivity.this);
-        dialogGame.setContentView(R.layout.activity_game_mh7_dialog);
-        dialogGame.getWindow().setBackgroundDrawableResource(R.color.tran);
-        dialogGame.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        imgAnimalDialog = (ImageView) dialogGame.findViewById(R.id.imgAnimalDialog);
-        txtWorddialog = (TextView) dialogGame.findViewById(R.id.txtWorddialog);
 
-    }
     @Override
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
@@ -508,7 +540,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                     case MotionEvent.ACTION_UP:
                         mService.playMusic(mClick);
                         imbNextGameWin.setSelected(false);
-                        Intent intent = new Intent(getApplicationContext(),LoadingGoInGameActivity.class);
+                        Intent intent = new Intent(getApplicationContext(),RandomGameMemoryChallengeActivity.class);
                         Bundle sendScore = new Bundle();
                         sendScore.putInt("score",SCORE_ALL);
                         intent.putExtra("pictutepuzzle",sendScore);

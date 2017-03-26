@@ -17,13 +17,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-import com.podcopic.animationlib.library.AnimationType;
-import com.podcopic.animationlib.library.StartSmartAnimation;
-
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.CatchingWordsActivity;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models.BackgroudGameView;
-import blackcore.tdc.edu.com.gamevhta.choosing_objects_game.ChoosingObjectActivity;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
@@ -165,7 +161,7 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
                         mService.playMusic(mClick);
                         imgResume.setSelected(false);
                         resumeGameMH6();
-                        resumeChoosingGame();
+                        //resumeChoosingGame();
                         dialog.dismiss();
                         return true;
                 }
@@ -196,14 +192,14 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
         }
     }
 
-    public void resumeChoosingGame(){
-        if(screenUse != null){
-            if(screenUse.equals("doituonggamechoosingcuaong")) {
-                ChoosingObjectActivity activity = (ChoosingObjectActivity) context;
-                activity.onResumeGame();
-            }
-        }
-    }
+//    public void resumeChoosingGame(){
+//        if(screenUse != null){
+//            if(screenUse.equals("")) {
+//                ChoosingObjectActivity activity = (ChoosingObjectActivity) context;
+//                activity.onResumeGame();
+//            }
+//        }
+//    }
 
 
     public void init(Context context){
