@@ -62,7 +62,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
 
     final int color = Color.parseColor("#FFFFFF");
     private boolean flagVoice = true, flagWin = true;
-    private MediaPlayer mCorrect,mWrong,mClick,mTickTac,mWin,mMusicMainGame,mOver,mClickGame;
+    private MediaPlayer mCorrect,mWrong,mClick,mTickTac,mWin,mMusicMainGame,mOver,mClickGame,mCartoonImage;
     private MusicService mService = new MusicService();
     PauseButton imgBackGame;
     private int timeCount;
@@ -81,7 +81,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
 
         }
     };
-    private Animation animation;
+    private Animation scale,zoom_in;
     private ImageView imgListOver, imgReplayOver;
     private Handler handler;
     private Timer timer;
@@ -113,6 +113,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         mTickTac = MediaPlayer.create(PicturePuzzleActivity.this, R.raw.time);
         mWin = MediaPlayer.create(PicturePuzzleActivity.this, R.raw.wingame);
         mMusicMainGame = MediaPlayer.create(PicturePuzzleActivity.this, R.raw.picturepuzzle);
+        mCartoonImage = MediaPlayer.create(PicturePuzzleActivity.this, R.raw.cartoondown);
 
         txtTime = (TextView) findViewById(R.id.txtTime);
         txtScore = (TextView) findViewById(R.id.txtScore);
@@ -123,7 +124,8 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         txtAnswerFive = (TextView) findViewById(R.id.txtAnswerFive);
         txtAnswerSix = (TextView) findViewById(R.id.txtAnswerSix);
 
-        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_in);
+        zoom_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_in);
+        scale = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_anim_trieu);
 
         imbAnimalOne = (ImageView) findViewById(R.id.imbAnimalone);
         imbAnimalTwo = (ImageView) findViewById(R.id.imbAnimaltwo);
@@ -200,12 +202,17 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         mService.playMusic(mMusicMainGame);
         mMusicMainGame.setLooping(true);
         mMusicMainGame.setVolume(0.5f,0.5f);
+        mService.playMusic(mCartoonImage);
+        mCartoonImage.setVolume(1f,1f);
         randomBackgroundGame();
         addDataList();
         randomImage();
         moveActivity();
         setFont();
         Text();
+        effectText();
+        effectImageAnswer();
+        effectImageQuestion();
         Answer();
         Question();
         Timer();
@@ -259,7 +266,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                 txtTime.setText(time);
                 int t = Integer.parseInt(time);
                 if (t > 0 && t <= 10) {
-                    txtTime.startAnimation(animation);
+                    txtTime.startAnimation(zoom_in);
                     mService.playMusic(mTickTac);
                     mTickTac.setLooping(true);
 
@@ -267,7 +274,8 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                     timer.cancel();
                     mService.stopMusic(mTickTac);
                     mService.playMusic(mOver);
-                    Event();
+                    effectWin();
+                    EventOver();
                     dialogOver.show();
                 }
             }
@@ -293,57 +301,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         timer.schedule(timerTask,1000, 1000);
     }
 
-    private void Event(){
 
-        lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
-
-        imgListOver.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        mService.playMusic(mClick);
-                        imgListOver.setSelected(!imgListOver.isSelected());
-                        imgListOver.isSelected();
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        mService.playMusic(mClick);
-                        imgListOver.setSelected(false);
-                        doSaveScore();
-                        SCORE_ALL = 0;
-                        Intent intent = new Intent(PicturePuzzleActivity.this, LoadingGoOutGameActivity.class);
-                        startActivity(intent);
-                        finish();
-                        return true;
-                }
-                return false;
-            }
-        });
-
-        imgReplayOver.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        imgReplayOver.setSelected(!imgReplayOver.isSelected());
-                        imgReplayOver.isSelected();
-                        mService.playMusic(mClick);
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        mService.playMusic(mClick);
-                        imgReplayOver.setSelected(false);
-                        doSaveScore();
-                        SCORE_ALL = 0;
-                        Intent intent = new Intent(PicturePuzzleActivity.this, LoadingGoInGameActivity.class);
-                        startActivity(intent);
-                        finish();
-                        return true;
-                }
-                return false;
-            }
-        });
-    }
 
     private void Text(){
         txtAnswerOne.setText(listImageGame.get(0).getwEng());
@@ -414,7 +372,56 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         super.onResume();
     }
 
+    public void effectText(){
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerOne) , AnimationType.DropOut , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerTwo) , AnimationType.DropOut , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerThree) , AnimationType.DropOut , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerFour) , AnimationType.DropOut , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerFive) , AnimationType.DropOut , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerSix) , AnimationType.DropOut , 2000 , 0 , true , 300 );
+    }
 
+    public void effectImageAnswer(){
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalone) , AnimationType.DropOut , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimaltwo) , AnimationType.DropOut , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalthree) , AnimationType.DropOut , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimlafour) , AnimationType.DropOut , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalfive) , AnimationType.DropOut , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalsix) , AnimationType.DropOut , 2000 , 0 , true , 300 );
+    }
+
+    public void effectImageQuestion(){
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionone) , AnimationType.StandUp , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestiontwo) , AnimationType.StandUp , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionthree) , AnimationType.StandUp , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionfour) , AnimationType.StandUp , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionfive) , AnimationType.StandUp , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionsix) , AnimationType.StandUp , 2000 , 0 , true , 300 );
+    }
+
+    public void effectWin(){
+
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalone) , AnimationType.SlideOutDown , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimaltwo) , AnimationType.SlideOutDown , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalthree) , AnimationType.SlideOutDown , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimlafour) , AnimationType.SlideOutDown , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalfive) , AnimationType.SlideOutDown , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalsix) , AnimationType.SlideOutDown , 2000 , 0 , true , 300 );
+
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionone) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestiontwo) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionthree) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionfour) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionfive) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionsix) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
+
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerOne) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerTwo) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerThree) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerFour) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerFive) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerSix) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
+    }
 
     View.OnTouchListener touchListener = new View.OnTouchListener() {
         @Override
@@ -424,9 +431,11 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                     mService.playMusic(mClickGame);
                     ClipData data = ClipData.newPlainText("", "");
                     View.DragShadowBuilder myShadowBuilder = new View.DragShadowBuilder(v);
+                    v.startAnimation(scale);
                     v.startDrag(data, myShadowBuilder, v, 0);
                     return true;
                 case MotionEvent.ACTION_UP:
+                    v.clearAnimation();
                     mService.stopMusic(mClickGame);
                     return true;
             }
@@ -449,13 +458,16 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                 final View v = (View) event.getLocalState();
                 switch (dragEvent) {
                     case DragEvent.ACTION_DRAG_ENTERED:
-
                         break;
                     case DragEvent.ACTION_DRAG_EXITED:
                         break;
                     case DragEvent.ACTION_DROP:
+                        if (v != null) {
+                            v.clearAnimation();
+                        }
                         if(v.getId() == R.id.imbAnimalone && view.getId() == R.id.imbAnimalquestionone){
                             timesDrop();
+                            StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerOne) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
                             StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionone) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionOne.clearColorFilter();
                             imbAnimalQuestionOne.setImageDrawable(getBitmapResource(listImageGame.get(0).getwPathImage()));
@@ -465,6 +477,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             imbAnimalOne.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimaltwo && view.getId() == R.id.imbAnimalquestiontwo){
                             timesDrop();
+                            StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerTwo) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
                             StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestiontwo) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionTwo.clearColorFilter();
                             imbAnimalQuestionTwo.setImageDrawable(getBitmapResource(listImageGame.get(1).getwPathImage()));
@@ -474,6 +487,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             imbAnimalTwo.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimalthree && view.getId() == R.id.imbAnimalquestionthree){
                             timesDrop();
+                            StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerThree) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
                             StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionthree) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionThree.clearColorFilter();
                             imbAnimalQuestionThree.setImageDrawable(getBitmapResource(listImageGame.get(2).getwPathImage()));
@@ -483,6 +497,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             imbAnimalThree.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimlafour && view.getId() == R.id.imbAnimalquestionfour){
                             timesDrop();
+                            StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerFour) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
                             StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionfour) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionFour.clearColorFilter();
                             imbAnimalQuestionFour.setImageDrawable(getBitmapResource(listImageGame.get(3).getwPathImage()));
@@ -492,6 +507,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             imbAnimalFour.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimalfive && view.getId() == R.id.imbAnimalquestionfive){
                             timesDrop();
+                            StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerFive) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
                             StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionfive) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionFive.clearColorFilter();
                             imbAnimalQuestionFive.setImageDrawable(getBitmapResource(listImageGame.get(4).getwPathImage()));
@@ -501,6 +517,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             imbAnimalFive.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimalsix && view.getId() == R.id.imbAnimalquestionsix){
                             timesDrop();
+                            StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerSix) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
                             StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionsix) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionSix.clearColorFilter();
                             imbAnimalQuestionSix.setImageDrawable(getBitmapResource(listImageGame.get(5).getwPathImage()));
@@ -513,15 +530,13 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             Voice();
                             break;
                     case DragEvent.ACTION_DRAG_ENDED:
+                        if (v != null) {
+                            v.clearAnimation();
+                        }
                         if(timesDrop == 6)
                         {
+                            effectWin();
                             timer.cancel();
-                            imbAnimalQuestionOne.setVisibility(View.INVISIBLE);
-                            imbAnimalQuestionTwo.setVisibility(View.INVISIBLE);
-                            imbAnimalQuestionThree.setVisibility(View.INVISIBLE);
-                            imbAnimalQuestionFour.setVisibility(View.INVISIBLE);
-                            imbAnimalQuestionFive.setVisibility(View.INVISIBLE);
-                            imbAnimalQuestionSix.setVisibility(View.INVISIBLE);
                             mService.playMusic(mWin);
                             EventWin();
                             dialogWin.show();
@@ -531,6 +546,57 @@ public class PicturePuzzleActivity extends AppCompatActivity {
             }
         };
 
+        private void EventOver(){
+
+            lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
+
+            imgListOver.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            mService.playMusic(mClick);
+                            imgListOver.setSelected(!imgListOver.isSelected());
+                            imgListOver.isSelected();
+                            return true;
+                        case MotionEvent.ACTION_UP:
+                            mService.playMusic(mClick);
+                            imgListOver.setSelected(false);
+                            doSaveScore();
+                            SCORE_ALL = 0;
+                            Intent intent = new Intent(PicturePuzzleActivity.this, LoadingGoOutGameActivity.class);
+                            startActivity(intent);
+                            finish();
+                            return true;
+                    }
+                    return false;
+                }
+            });
+
+            imgReplayOver.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            imgReplayOver.setSelected(!imgReplayOver.isSelected());
+                            imgReplayOver.isSelected();
+                            mService.playMusic(mClick);
+                            return true;
+                        case MotionEvent.ACTION_UP:
+                            mService.playMusic(mClick);
+                            imgReplayOver.setSelected(false);
+                            doSaveScore();
+                            SCORE_ALL = 0;
+                            Intent intent = new Intent(PicturePuzzleActivity.this, LoadingGoInGameActivity.class);
+                            startActivity(intent);
+                            finish();
+                            return true;
+                    }
+                    return false;
+                }
+            });
+        }
         private void EventWin()
         {
             txtScoreWin.setText(String.valueOf(SCORE_ALL));

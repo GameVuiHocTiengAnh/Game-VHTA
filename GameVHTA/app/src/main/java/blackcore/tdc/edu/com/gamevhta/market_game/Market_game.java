@@ -281,7 +281,6 @@ public class Market_game extends AppCompatActivity {
                     txtvWord.startAnimation(animation);
                     v.startAnimation(animationRotate);
                     v.startDrag(data, myShadowBuilder, v, 0);
-
                     return true;
                 case MotionEvent.ACTION_UP:
                     v.clearAnimation();

@@ -249,7 +249,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
+            android:gravity="bottom"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -261,8 +262,8 @@
 
                 <ImageView
                     android:id="@+id/imbAnimalone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/widthandheight"
+                    android:layout_height="@dimen/widthandheight"
                     android:background="@android:color/transparent"
                     android:src="@drawable/buffalo_answer" />
             </LinearLayout>
@@ -276,8 +277,8 @@
 
                 <ImageView
                     android:id="@+id/imbAnimaltwo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/widthandheight"
+                    android:layout_height="@dimen/widthandheight"
                     android:background="@android:color/transparent"
                     android:src="@drawable/bunny_answer" />
             </LinearLayout>
@@ -291,8 +292,8 @@
 
                 <ImageView
                     android:id="@+id/imbAnimalthree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/widthandheight"
+                    android:layout_height="@dimen/widthandheight"
                     android:background="@android:color/transparent"
                     android:src="@drawable/cat_answer" />
             </LinearLayout>
@@ -306,8 +307,8 @@
 
                 <ImageView
                     android:id="@+id/imbAnimlafour"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/widthandheight"
+                    android:layout_height="@dimen/widthandheight"
                     android:background="@android:color/transparent"
                     android:src="@drawable/cow_answer" />
             </LinearLayout>
@@ -321,8 +322,8 @@
 
                 <ImageView
                     android:id="@+id/imbAnimalfive"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/widthandheight"
+                    android:layout_height="@dimen/widthandheight"
                     android:background="@android:color/transparent"
                     android:src="@drawable/goat_answer" />
             </LinearLayout>
@@ -336,8 +337,8 @@
 
                 <ImageView
                     android:id="@+id/imbAnimalsix"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/widthandheight"
+                    android:layout_height="@dimen/widthandheight"
                     android:background="@android:color/transparent"
                     android:src="@drawable/dog_answer" />
             </LinearLayout>
