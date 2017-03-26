@@ -5,6 +5,8 @@ import android.content.ClipData;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -25,8 +27,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.podcopic.animationlib.library.AnimationType;
+import com.podcopic.animationlib.library.StartSmartAnimation;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -56,7 +62,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
 
     final int color = Color.parseColor("#FFFFFF");
     private boolean flagVoice = true, flagWin = true;
-    private MediaPlayer mCorrect,mWrong,mClick,mTickTac,mWin,mMusicMainGame;
+    private MediaPlayer mCorrect,mWrong,mClick,mTickTac,mWin,mMusicMainGame,mOver,mClickGame;
     private MusicService mService = new MusicService();
     PauseButton imgBackGame;
     private int timeCount;
@@ -86,6 +92,8 @@ public class PicturePuzzleActivity extends AppCompatActivity {
 
     ImageView imbAnimalOne,imbAnimalTwo,imbAnimalThree,imbAnimalFour,imbAnimalFive,imbAnimalSix,imbNextGameWin;
     ImageView imbAnimalQuestionOne,imbAnimalQuestionTwo,imbAnimalQuestionThree,imbAnimalQuestionFour,imbAnimalQuestionFive,imbAnimalQuestionSix;
+    private LinearLayout background;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,8 +105,10 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         listImageGame = new ArrayList<>();
         listImageData = new ArrayList<>();
 
-        mCorrect = MediaPlayer.create(PicturePuzzleActivity.this,R.raw.dung);
+        mCorrect = MediaPlayer.create(PicturePuzzleActivity.this,R.raw.dung_market_game);
         mWrong = MediaPlayer.create(PicturePuzzleActivity.this,R.raw.sai);
+        mOver = MediaPlayer.create(PicturePuzzleActivity.this,R.raw.wrong_market_game);
+        mClickGame = MediaPlayer.create(PicturePuzzleActivity.this, R.raw.click_market_game);
         mClick = MediaPlayer.create(PicturePuzzleActivity.this, R.raw.click);
         mTickTac = MediaPlayer.create(PicturePuzzleActivity.this, R.raw.time);
         mWin = MediaPlayer.create(PicturePuzzleActivity.this, R.raw.wingame);
@@ -154,6 +164,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         //database
         dbAccessHelper = new DbAccessHelper(this);
 
+        //dialog overgame
         dialogOver = new Dialog(PicturePuzzleActivity.this);
         dialogOver.setCancelable(false);
         dialogOver.setCanceledOnTouchOutside(false);
@@ -167,6 +178,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         lblPlayerNameGameOver = (EditText) dialogOver.findViewById(R.id.lblPlayerNameGameOver);
         lblScoreGameOver = (TextView) dialogOver.findViewById(R.id.lblScoreGameOver);
 
+        //dialog win
         dialogWin = new Dialog(PicturePuzzleActivity.this);
         dialogWin.setCancelable(false);
         dialogWin.setCanceledOnTouchOutside(false);
@@ -179,7 +191,6 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         txtNameScoreWin = (TextView) dialogWin.findViewById(R.id.txtNameScoreWin);
         txtScoreWin = (TextView) dialogWin.findViewById(R.id.txtScoreWin);
 
-
         //get Object selected at screen topic
         if (getIntent().getExtras() != null) {
             OBJECT = getIntent().getStringExtra(ConfigApplication.OBJECT_SELECTED);
@@ -189,6 +200,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         mService.playMusic(mMusicMainGame);
         mMusicMainGame.setLooping(true);
         mMusicMainGame.setVolume(0.5f,0.5f);
+        randomBackgroundGame();
         addDataList();
         randomImage();
         moveActivity();
@@ -197,6 +209,15 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         Answer();
         Question();
         Timer();
+    }
+    public void randomBackgroundGame(){
+        background = (LinearLayout) findViewById(R.id.scene);
+        Resources res = getResources();
+        TypedArray myImages = res.obtainTypedArray(R.array.myImages);
+        Random random = new Random();
+        int r = random.nextInt(myImages.length());
+        int i = myImages.getResourceId(r, -1);
+        background.setBackgroundResource(i);
     }
 
     //List Image was loaded from database
@@ -245,7 +266,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                 } else if (t == 0) {
                     timer.cancel();
                     mService.stopMusic(mTickTac);
-                    mService.playMusic(mWrong);
+                    mService.playMusic(mOver);
                     Event();
                     dialogOver.show();
                 }
@@ -400,11 +421,13 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         public boolean onTouch(View v, MotionEvent motionEvent) {
             switch (motionEvent.getAction()){
                 case MotionEvent.ACTION_DOWN:
+                    mService.playMusic(mClickGame);
                     ClipData data = ClipData.newPlainText("", "");
                     View.DragShadowBuilder myShadowBuilder = new View.DragShadowBuilder(v);
                     v.startDrag(data, myShadowBuilder, v, 0);
                     return true;
                 case MotionEvent.ACTION_UP:
+                    mService.stopMusic(mClickGame);
                     return true;
             }
             return false;
@@ -433,6 +456,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                     case DragEvent.ACTION_DROP:
                         if(v.getId() == R.id.imbAnimalone && view.getId() == R.id.imbAnimalquestionone){
                             timesDrop();
+                            StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionone) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionOne.clearColorFilter();
                             imbAnimalQuestionOne.setImageDrawable(getBitmapResource(listImageGame.get(0).getwPathImage()));
                             getResult(1);
@@ -441,6 +465,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             imbAnimalOne.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimaltwo && view.getId() == R.id.imbAnimalquestiontwo){
                             timesDrop();
+                            StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestiontwo) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionTwo.clearColorFilter();
                             imbAnimalQuestionTwo.setImageDrawable(getBitmapResource(listImageGame.get(1).getwPathImage()));
                             getResult(2);
@@ -449,6 +474,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             imbAnimalTwo.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimalthree && view.getId() == R.id.imbAnimalquestionthree){
                             timesDrop();
+                            StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionthree) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionThree.clearColorFilter();
                             imbAnimalQuestionThree.setImageDrawable(getBitmapResource(listImageGame.get(2).getwPathImage()));
                             getResult(3);
@@ -457,6 +483,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             imbAnimalThree.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimlafour && view.getId() == R.id.imbAnimalquestionfour){
                             timesDrop();
+                            StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionfour) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionFour.clearColorFilter();
                             imbAnimalQuestionFour.setImageDrawable(getBitmapResource(listImageGame.get(3).getwPathImage()));
                             getResult(4);
@@ -465,6 +492,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             imbAnimalFour.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimalfive && view.getId() == R.id.imbAnimalquestionfive){
                             timesDrop();
+                            StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionfive) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionFive.clearColorFilter();
                             imbAnimalQuestionFive.setImageDrawable(getBitmapResource(listImageGame.get(4).getwPathImage()));
                             getResult(5);
@@ -473,8 +501,8 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             imbAnimalFive.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimalsix && view.getId() == R.id.imbAnimalquestionsix){
                             timesDrop();
+                            StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionsix) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionSix.clearColorFilter();
-
                             imbAnimalQuestionSix.setImageDrawable(getBitmapResource(listImageGame.get(5).getwPathImage()));
                             getResult(6);
                             flagVoice = true;
@@ -488,6 +516,12 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                         if(timesDrop == 6)
                         {
                             timer.cancel();
+                            imbAnimalQuestionOne.setVisibility(View.INVISIBLE);
+                            imbAnimalQuestionTwo.setVisibility(View.INVISIBLE);
+                            imbAnimalQuestionThree.setVisibility(View.INVISIBLE);
+                            imbAnimalQuestionFour.setVisibility(View.INVISIBLE);
+                            imbAnimalQuestionFive.setVisibility(View.INVISIBLE);
+                            imbAnimalQuestionSix.setVisibility(View.INVISIBLE);
                             mService.playMusic(mWin);
                             EventWin();
                             dialogWin.show();

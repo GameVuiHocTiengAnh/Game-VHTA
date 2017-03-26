@@ -5,4 +5,9 @@
     <string name="txtdialogovergame">Game Over</string>
     <string name="txtTime">60</string>
     <string name="txtScore">0</string>
+    <array name="myImages">
+        <item>@drawable/animal_two</item>
+        <item>@drawable/animal_three</item>
+        <item>@drawable/scene</item>
+    </array>
 </resources>
