@@ -1,9 +1,14 @@
 package blackcore.tdc.edu.com.gamevhta.choosing_objects_game;
 
 import android.app.Dialog;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,29 +25,46 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
 
+import blackcore.tdc.edu.com.gamevhta.LoadingGoInGameActivity;
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
+import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 
 /**
  * Created by Canh on 16/03/2017.
  */
 
-public class ChoosingObjectActivity extends AppCompatActivity  {
+public class ChoosingObjectActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
-    private Animation animation;
+    private Animation animation, animationsacle;
     private ImageView imgAnimalOne, imgAnimalTwo, imgAnimalThree, imgAnimalFour, imgAnimalFive, imgAnimalSix, imgAnimalDialog, imbNextGameWin;
     private TextView txtScore, txtWorddialog, txtScoreWin;
+    private MediaPlayer mClick, mMusicMainGame;
+    private MusicService mService = new MusicService();
     private Dialog dialogGame, dialogWin;
     private DbAccessHelper dbAccessHelper;
-    TextToSpeech txtWord;
+    private TextToSpeech textToSpeech = null;
 
     private int SCORE_ONE = 0, SCORE_TWO = 0, SCORE_THREE = 0, SCORE_FOUR = 0, SCORE_FIVE = 0, SCORE_SIX = 0, SCORE_ALL = 0;
     private int check_finish = 0;
     private ArrayList<WordObject> listImageGame = null;
     private ArrayList<WordObject> listImageData = null;
+
+
+    ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            MusicService.MyBinder mBinder = (MusicService.MyBinder) iBinder;
+            mService = mBinder.getService();
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mService = null;
+        }
+    };
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +88,12 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
         imgAnimalSix = (ImageView) findViewById(R.id.imgAnimalSix);
         txtScore = (TextView) findViewById(R.id.txtScore);
 
-        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_in);
+        mClick = MediaPlayer.create(ChoosingObjectActivity.this, R.raw.chat_sound);
+        mMusicMainGame = MediaPlayer.create(ChoosingObjectActivity.this, R.raw.log_cabin);
 
-        //imbNextGameWin = (ImageView) dialogWin.findViewById(R.id.imvNextGame);
+        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_in);
+        animationsacle = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_anim);
+
 
         //dialog win game
         dialogWin = new Dialog(ChoosingObjectActivity.this);
@@ -79,10 +104,19 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
         dialogWin.getWindow().setBackgroundDrawableResource(R.color.tran);
         dialogWin.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         txtScoreWin = (TextView) dialogWin.findViewById(R.id.txtScoreWin);
+        imbNextGameWin = (ImageView) dialogWin.findViewById(R.id.imvNextGame);
+
+        //Text to Speech
+        textToSpeech = new TextToSpeech(this,this);
+        mService.playMusic(mMusicMainGame);
+        mMusicMainGame.setLooping(true);
+        mMusicMainGame.setVolume(0.3f,0.3f);
+        mClick.setVolume(0.3f,0.3f);
 
         addDataList();
         createDataGame();
         Answer();
+        setFont();
         getAnimationImageButton();
     }
     private void Answer(){
@@ -118,26 +152,21 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
             listImageData.remove(n);
         }
     }
-//    private void setImageVocalubary(){
-//        for (int j = 0; j < 6; j++){
-//            String txtText = listImageGame.get(j).getwEng();
-//            String pathName = listImageGame.get(j).getwPathImage();
-//            int idImg = getResources().getIdentifier(pathName, "drawble", getApplication().getPackageName());
-//            Bitmap imvVorca = BitmapFactory.decodeResource(getResources(), idImg);
-//            lisText.add(txtText);
-//            listImage.add(imvVorca);
-//        }
-//    }
 
+    @Override
+    protected void onPause() {
+        // TODO Auto-generated method stub
+        mService.pauseMusic(mMusicMainGame);
+        super.onPause();
+    }
     public void onResumeGame() {
+        mService.playMusic(mMusicMainGame);
         super.onResume();
     }
-
     private void setFont() {
         Typeface custom_font = Typeface.createFromAsset(getAssets(), getResources().getString(R.string.fontPath));
         txtScore.setTypeface(custom_font);
-        txtWorddialog.setTypeface(custom_font);
-        //txtNameScoreWin.setTypeface(custom_font);
+        //txtWorddialog.setTypeface(custom_font);
         txtScoreWin.setTypeface(custom_font);
     }
     public void getAnimationImageButton() {
@@ -146,16 +175,27 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        mService.playMusic(mClick);
                         imgAnimalOne.startAnimation(animation);
                         dialogGame();
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(0).getwPathImage()));
                         txtWorddialog.setText(listImageGame.get(0).getwEng());
+                        imgAnimalDialog.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                imgAnimalDialog.startAnimation(animationsacle);
+                                if(textToSpeech != null && listImageGame.get(0).getwEng() != null){
+                                    textToSpeech.speak(listImageGame.get(0).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                                }
+                            }
+                        });
 
                         dialogGame.show();
                         final ImageView imgCal = (ImageView) dialogGame.findViewById(R.id.imgCal);
                         imgCal.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                mService.playMusic(mClick);
                                 dialogGame.dismiss();
                                 ktcheck_finish();
                                 getResult(1);
@@ -184,16 +224,27 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        mService.playMusic(mClick);
                         imgAnimalTwo.startAnimation(animation);
                         dialogGame();
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(1).getwPathImage()));
                         txtWorddialog.setText(listImageGame.get(1).getwEng());
+                        imgAnimalDialog.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                imgAnimalDialog.startAnimation(animationsacle);
+                                if(textToSpeech != null && listImageGame.get(1).getwEng() != null){
+                                    textToSpeech.speak(listImageGame.get(1).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                                }
+                            }
+                        });
 
                         dialogGame.show();
                         final ImageView imgCal = (ImageView) dialogGame.findViewById(R.id.imgCal);
                         imgCal.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                mService.playMusic(mClick);
                                 dialogGame.dismiss();
                                 ktcheck_finish ();
                                 getResult(2);
@@ -220,17 +271,26 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        // PRESSED
+                        mService.playMusic(mClick);
                         imgAnimalThree.startAnimation(animation);
                         dialogGame();
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(2).getwPathImage()));
                         txtWorddialog.setText(listImageGame.get(2).getwEng());
-
+                        imgAnimalDialog.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                imgAnimalDialog.startAnimation(animationsacle);
+                                if(textToSpeech != null && listImageGame.get(2).getwEng() != null){
+                                    textToSpeech.speak(listImageGame.get(2).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                                }
+                            }
+                        });
                         dialogGame.show();
                         final ImageView imgCal = (ImageView) dialogGame.findViewById(R.id.imgCal);
                         imgCal.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                mService.playMusic(mClick);
                                 dialogGame.dismiss();
                                 ktcheck_finish ();
                                 getResult(3);
@@ -258,16 +318,28 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        mService.playMusic(mClick);
                         imgAnimalFour.startAnimation(animation);
                         dialogGame();
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(3).getwPathImage()));
                         txtWorddialog.setText(listImageGame.get(3).getwEng());
+
+                        imgAnimalDialog.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                imgAnimalDialog.startAnimation(animationsacle);
+                                if(textToSpeech != null && listImageGame.get(3).getwEng() != null){
+                                    textToSpeech.speak(listImageGame.get(3).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                                }
+                            }
+                        });
 
                         dialogGame.show();
                         final ImageView imgCal = (ImageView) dialogGame.findViewById(R.id.imgCal);
                         imgCal.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                mService.playMusic(mClick);
                                 dialogGame.dismiss();
                                 ktcheck_finish ();
                                 getResult(4);
@@ -295,17 +367,35 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        // PRESSED
+                        mService.playMusic(mClick);
                         imgAnimalFive.startAnimation(animation);
                         dialogGame();
+                        imgAnimalFive.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(textToSpeech != null && listImageGame.get(4).getwEng() != null){
+                                    textToSpeech.speak(listImageGame.get(4).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                                }
+                            }
+                        });
+
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(4).getwPathImage()));
                         txtWorddialog.setText(listImageGame.get(4).getwEng());
-
+                        imgAnimalDialog.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                imgAnimalDialog.startAnimation(animationsacle);
+                                if(textToSpeech != null && listImageGame.get(4).getwEng() != null){
+                                    textToSpeech.speak(listImageGame.get(4).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                                }
+                            }
+                        });
                         dialogGame.show();
                         final ImageView imgCal = (ImageView) dialogGame.findViewById(R.id.imgCal);
                         imgCal.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                mService.playMusic(mClick);
                                 dialogGame.dismiss();
                                 ktcheck_finish ();
                                 getResult(5);
@@ -335,17 +425,28 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        // PRESSED
+                        mService.playMusic(mClick);
                         imgAnimalSix.startAnimation(animation);
                         dialogGame();
+
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(5).getwPathImage()));
                         txtWorddialog.setText(listImageGame.get(5).getwEng());
+                        imgAnimalDialog.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                imgAnimalDialog.startAnimation(animationsacle);
+                                if(textToSpeech != null && listImageGame.get(5).getwEng() != null){
+                                    textToSpeech.speak(listImageGame.get(5).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                                }
+                            }
+                        });
 
                         dialogGame.show();
                         final ImageView imgCal = (ImageView) dialogGame.findViewById(R.id.imgCal);
                         imgCal.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                mService.playMusic(mClick);
                                 dialogGame.dismiss();
                                 ktcheck_finish ();
                                 getResult(6);
@@ -377,51 +478,56 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
         dialogGame.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         imgAnimalDialog = (ImageView) dialogGame.findViewById(R.id.imgAnimalDialog);
         txtWorddialog = (TextView) dialogGame.findViewById(R.id.txtWorddialog);
+
     }
-    private  void Speech(){
-        txtWord = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            int result = textToSpeech.setLanguage(Locale.US);
+
+            if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+            }
+        } else {
+            Log.e("TTS", "Initilization Failed!");
+        }
+    }
+
+    private void EventWin()
+    {
+        txtScoreWin.setText(String.valueOf(SCORE_ALL));
+        imbNextGameWin.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onInit(int status) {
-                    if(status != TextToSpeech.ERROR) {
-                        txtWord.setLanguage(Locale.UK);
-                    }
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mService.playMusic(mClick);
+                        imbNextGameWin.setSelected(!imbNextGameWin.isSelected());
+                        imbNextGameWin.isSelected();
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        mService.playMusic(mClick);
+                        imbNextGameWin.setSelected(false);
+                        Intent intent = new Intent(getApplicationContext(),LoadingGoInGameActivity.class);
+                        Bundle sendScore = new Bundle();
+                        sendScore.putInt("score",SCORE_ALL);
+                        intent.putExtra("pictutepuzzle",sendScore);
+                        startActivity(intent);
+                        finish();
+                        return true;
+                }
+                return false;
             }
         });
-    }
-    private void EventWin() {
-        txtScoreWin.setText(String.valueOf(SCORE_ALL));
-//        imbNextGameWin.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                switch (motionEvent.getAction()) {
-//                    case MotionEvent.ACTION_DOWN:
-//                        imbNextGameWin.setSelected(!imbNextGameWin.isSelected());
-//                        imbNextGameWin.isSelected();
-//                        return true;
-//                    case MotionEvent.ACTION_UP:
-//                        imbNextGameWin.setSelected(false);
-//                        Intent intent = new Intent(getApplicationContext(),LoadingGoInGameActivity.class);
-//                        Bundle sendScore = new Bundle();
-//                        sendScore.putInt("score",SCORE_ALL);
-//                        intent.putExtra("pictutepuzzle",sendScore);
-//                        return true;
-//                }
-//                return false;
-//            }
-//        });
     }
 
     private void ktcheck_finish() {
         if (check_finish == 6){
             check_finish = 0;
-            //Toast.makeText(getApplicationContext(), "Dc 6 lan: " + check_finish, Toast.LENGTH_LONG).show();
         }
         else{
             check_finish++;
-            //Toast.makeText(getApplicationContext(), "so lan click" + check_finish, Toast.LENGTH_SHORT).show();
         }
-    }
-    private void doSaveScore() {
     }
 
     //Check Result
@@ -441,7 +547,5 @@ public class ChoosingObjectActivity extends AppCompatActivity  {
         }
         SCORE_ALL = SCORE_ONE + SCORE_TWO + SCORE_THREE + SCORE_FOUR + SCORE_FIVE + SCORE_SIX;
         txtScore.setText(String.valueOf(SCORE_ALL));
-        doSaveScore();
     }
-
 }
