@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="@dimen/DialogTopicBottomandTop"
+    android:layout_marginBottom="@dimen/DialogTopicBottomandTop"
+    android:orientation="horizontal"
+    tools:context="blackcore.tdc.edu.com.gamevhta.MainMenuActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.8"
+            android:gravity="center|bottom"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.3"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/background_score_win"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:gravity="center|right"
+                android:orientation="vertical"
+                android:weightSum="1">
+
+                <ImageView
+                    android:id="@+id/imgObjectNextTurn"
+                    android:layout_width="131dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="0.4" />
+            </LinearLayout>
+
+            <LinearLayout
+                        android:layout_width="0dp"
+                        android:orientation="vertical"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+                     <LinearLayout
+                         android:layout_width="match_parent"
+                         android:layout_height="0dp"
+                         android:layout_weight="0.6"
+                         android:gravity="left|bottom"
+                         android:orientation="horizontal">
+
+                         <TextView
+                             android:id="@+id/txtWordEngNextTurn"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:text="WordEng"
+                             android:textColor="#502618"
+                             android:textSize="40dp"
+                             android:textStyle="bold" />
+                     </LinearLayout>
+                03f5fd
+                     <LinearLayout
+                         android:layout_width="match_parent"
+                         android:layout_height="0dp"
+                         android:layout_weight="1"
+                         android:gravity="left"
+                         android:orientation="horizontal">
+
+                         <TextView
+                             android:id="@+id/txtWordVieNextTurn"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:text="WordVie"
+                             android:textColor="#03f5fd"
+                             android:textSize="40dp"
+                             android:textStyle="bold" />
+                     </LinearLayout>
+                 </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:gravity="center|top"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imvNextTurn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btnwinnext"
+                android:visibility="invisible"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
