@@ -44,7 +44,7 @@ public class CustomToask extends Toast {
         lblText.setText(text);
         toast = new Toast(activity.getApplicationContext());
         toast.setGravity(Gravity.BOTTOM, 10, 10);
-        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layout);
         toast.show();
     }
