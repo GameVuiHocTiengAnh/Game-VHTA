@@ -8,6 +8,8 @@ import android.view.WindowManager;
 
 import com.wang.avi.AVLoadingIndicatorView;
 
+import java.util.Random;
+
 /**
  * Created by phong on 2/27/2017.
  */
@@ -35,7 +37,7 @@ public class LoadingGoOutGameActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, 4000);
+        }, 1000);
     }
 
 }

@@ -65,7 +65,7 @@ public class RandomGamePracticeActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, 2000);
+        }, 500);
     }
 
 }

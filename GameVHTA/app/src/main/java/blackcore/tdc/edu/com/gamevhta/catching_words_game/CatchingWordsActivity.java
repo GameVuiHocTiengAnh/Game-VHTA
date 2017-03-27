@@ -368,11 +368,9 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         final ImageView imbNextGameWin = (ImageView) dialogWin.findViewById(R.id.imvNextGame);
         TextView txtNameScoreWin = (TextView) dialogWin.findViewById(R.id.txtNameScoreWin);
         txtNameScoreWin.setTypeface(gothic);
-        txtNameScoreWin.setTextColor(Color.RED);
         TextView txtScoreWin = (TextView) dialogWin.findViewById(R.id.txtScoreWin);
         txtScoreWin.setText(this.scores+"");
         txtScoreWin.setTypeface(gothic);
-        txtScoreWin.setTextColor(Color.RED);
         dialogWinSound.start();
         dialogWin.show();
         backgroudGameView.stopMoveBG();

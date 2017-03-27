@@ -60,8 +60,10 @@
             android:screenOrientation="landscape">
         </activity>
 
-        <activity android:name=".RandomGamePracticeActivity"/>
-        <activity android:name=".RandomGameMemoryChallengeActivity"/>
+        <activity android:name=".RandomGamePracticeActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".RandomGameMemoryChallengeActivity"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

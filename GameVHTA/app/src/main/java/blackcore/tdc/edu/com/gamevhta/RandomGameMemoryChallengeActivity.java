@@ -26,7 +26,7 @@ public class RandomGameMemoryChallengeActivity extends AppCompatActivity {
     private final int IMAGE_GUESING_GAME = 0;
     private ArrayList<Integer> screenGame;
     private Bundle listAndScores = null;
-    
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading_go_in);
@@ -65,7 +65,7 @@ public class RandomGameMemoryChallengeActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, 2000);
+        }, 500);
     }
 
 }
