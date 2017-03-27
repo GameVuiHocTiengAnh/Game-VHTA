@@ -99,25 +99,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/layout_right_top_word_margin_bottom"
             android:gravity="center">
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/layout_left_timer_padding_right"
-                android:background="@drawable/screen_5_background_show_word"
-                android:orientation="vertical"
-                android:layout_gravity="right">
+
+            <LinearLayout
+                android:layout_width="@dimen/layout_right_top_word_width"
+                android:layout_height="@dimen/layout_right_top_word_height"
+                android:background="@drawable/screen_5_background_show_word_o"
+                android:gravity="center_vertical|center_horizontal">
                 <TextView
                     android:id="@+id/lblWord"
-                    android:layout_gravity="center"
-                    android:layout_width="@dimen/layout_right_top_word_width"
-                    android:layout_height="@dimen/layout_right_top_word_height"
-                    android:gravity="center"
-                    android:paddingBottom="@dimen/layout_right_top_word_padding_bottom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="Elephen"
-                    android:textColor="#000"
+                    android:textStyle="bold"
+                    android:textColor="#fff"
                     android:textSize="@dimen/layout_right_top_word_text_size" />
-            </RelativeLayout>
+            </LinearLayout>
 
         </LinearLayout>
 

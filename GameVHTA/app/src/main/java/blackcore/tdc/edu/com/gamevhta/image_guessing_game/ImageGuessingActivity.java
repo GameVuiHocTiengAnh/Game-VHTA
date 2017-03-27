@@ -23,7 +23,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.podcopic.animationlib.library.AnimationType;
 import com.podcopic.animationlib.library.StartSmartAnimation;
@@ -51,14 +50,13 @@ import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
 public class ImageGuessingActivity extends AppCompatActivity {
     private Handler handler;
-    private Animation animation, animationTimer;
+    private Animation animation, animationTimer, animationOver;
     private Timer timer = new Timer();
     private ImageButton btnImage1, btnImage2, btnImage3, btnImage4, btnImage5, btnImage6, btnPauseGame5;
     private TextView lblTimer, lblWord, lblScore, lblScoreGameOver, txtNameScoreWin, txtScoreWin;
-    private MediaPlayer mpClicked, mpSoundBackground, mpWingame, mpGameOver, mpOK;
-    private ImageView imgListOver, imgReplayOver, imgList, imgReplay, imgResume, imvNextGame, mh9_bgImage1;
+    private MediaPlayer mpChoose, mpSoundBackground, mpWingame, mpGameOver, mpOK, mpClicked, mpLoadImage,mpWrong;
+    private ImageView imgListOver, imgReplayOver, imgList, imgReplay, imgResume, imvNextGame, imgSleep;
     private EditText lblPlayerNameGameOver;
-
     private String OBJECT = "";
     private int TURN = 0;
     private int SCORE = 0;
@@ -71,6 +69,8 @@ public class ImageGuessingActivity extends AppCompatActivity {
     private Dialog dialogGameOver;
     private Dialog dialogWinGame;
     private DbAccessHelper dbAccessHelper;
+
+    private boolean isTouchDown = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,11 +95,13 @@ public class ImageGuessingActivity extends AppCompatActivity {
                         lblPlayerNameGameOver.setVisibility(View.GONE);
                     else
                         lblPlayerNameGameOver.setVisibility(View.VISIBLE);
+                    mpGameOver.start();
                     timer.cancel();
+                    executeAnimation();
                     lblTimer.clearAnimation();
                     lblScoreGameOver.setText(String.valueOf(SCORE));
-                    dialogGameOver.show();
-                    Toast.makeText(getApplicationContext(), "Game Over", Toast.LENGTH_SHORT).show();
+                    if (!dialogGameOver.isShowing())
+                        dialogGameOver.show();
                 }
             }
         };
@@ -113,8 +115,11 @@ public class ImageGuessingActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        mpClicked.start();
+        imgSleep.startAnimation(animationTimer);
         timer.cancel();
-        dialogBack.show();
+        if (!dialogBack.isShowing())
+            dialogBack.show();
         return;
     }
 
@@ -122,6 +127,17 @@ public class ImageGuessingActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mpSoundBackground.start();
+        if (dialogWinGame.isShowing() || dialogGameOver.isShowing())
+            dialogBack.dismiss();
+        else {
+            if (dialogGameOver.isShowing())
+                dialogGameOver.dismiss();
+            if (dialogWinGame.isShowing())
+                dialogWinGame.dismiss();
+            if (dialogBack.isShowing())
+                imgSleep.startAnimation(animationTimer);
+        }
+
     }
 
     @Override
@@ -129,15 +145,21 @@ public class ImageGuessingActivity extends AppCompatActivity {
         super.onPause();
         mpSoundBackground.pause();
         timer.cancel();
-        dialogBack.show();
+        if (!dialogGameOver.isShowing() && !dialogWinGame.isShowing() && !dialogBack.isShowing()) {
+            dialogBack.show();
+            imgSleep.clearAnimation();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        clearAnimation();
         mpSoundBackground.stop();
         mpWingame.stop();
+        mpChoose.stop();
         mpClicked.stop();
+        mpLoadImage.stop();
     }
 
     private void initialize() {
@@ -155,8 +177,10 @@ public class ImageGuessingActivity extends AppCompatActivity {
         lblTimer = (TextView) findViewById(R.id.lblTimer);
         lblWord = (TextView) findViewById(R.id.lblWord);
         lblScore = (TextView) findViewById(R.id.lblScore);
+        //animation
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_in);
         animationTimer = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_anim_trieu);
+        animationOver = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_anim_screen_5);
         //dialog game over
         dialogGameOver = new Dialog(ImageGuessingActivity.this);
         dialogGameOver.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -179,7 +203,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
         imgResume = (ImageView) dialogBack.findViewById(R.id.imgResume);
         imgList = (ImageView) dialogBack.findViewById(R.id.imgList);
         imgReplay = (ImageView) dialogBack.findViewById(R.id.imgReplay);
-
+        imgSleep = (ImageView) dialogBack.findViewById(R.id.sleep);
 
         //dialog win game
         dialogWinGame = new Dialog(ImageGuessingActivity.this);
@@ -192,9 +216,12 @@ public class ImageGuessingActivity extends AppCompatActivity {
         txtScoreWin = (TextView) dialogWinGame.findViewById(R.id.txtScoreWin);
         imvNextGame = (ImageView) dialogWinGame.findViewById(R.id.imvNextGame);
 
+        mpWrong  = MediaPlayer.create(getApplicationContext(), R.raw.game_5_ohoh);
+        mpLoadImage = MediaPlayer.create(getApplicationContext(), R.raw.game_5_load_image);
+        mpClicked = MediaPlayer.create(getApplicationContext(), R.raw.click);
         mpOK = MediaPlayer.create(getApplicationContext(), R.raw.dung);
         mpGameOver = MediaPlayer.create(getApplicationContext(), R.raw.sai);
-        mpClicked = MediaPlayer.create(getApplicationContext(), R.raw.game_5_sound_clicked);
+        mpChoose = MediaPlayer.create(getApplicationContext(), R.raw.game_5_sound_clicked);
         mpWingame = MediaPlayer.create(getApplicationContext(), R.raw.wingame);
         mpSoundBackground = MediaPlayer.create(getApplicationContext(), R.raw.game_5_screen_background_sound);
         mpSoundBackground.setLooping(true);
@@ -232,22 +259,21 @@ public class ImageGuessingActivity extends AppCompatActivity {
 
     //play game
     private void loadGame() {
-        lblTimer.clearAnimation();
+        clearAnimation();
         lblTimer.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
         lblScore.setText(String.valueOf(SCORE));
         RESULT_FAILED = 0;
         RESULT_CHOSEN = -1;
-
-        StartSmartAnimation.startAnimation(btnImage1, AnimationType.Pulse, 1500, 0, true);
-        StartSmartAnimation.startAnimation(btnImage2, AnimationType.Pulse, 1500, 0, true);
-        StartSmartAnimation.startAnimation(btnImage3, AnimationType.Pulse, 1500, 0, true);
-        StartSmartAnimation.startAnimation(btnImage4, AnimationType.Pulse, 1500, 0, true);
-        StartSmartAnimation.startAnimation(btnImage5, AnimationType.Pulse, 1500, 0, true);
-        StartSmartAnimation.startAnimation(btnImage6, AnimationType.Pulse, 1500, 0, true);
-        StartSmartAnimation.startAnimation(lblWord, AnimationType.BounceIn, 2000, 0, true);
+        mpLoadImage.start();
+        StartSmartAnimation.startAnimation(btnImage1, AnimationType.FlipInX, 2500, 0, true);
+        StartSmartAnimation.startAnimation(btnImage2, AnimationType.FlipInX, 2000, 0, true);
+        StartSmartAnimation.startAnimation(btnImage3, AnimationType.FlipInX, 2300, 0, true);
+        StartSmartAnimation.startAnimation(btnImage4, AnimationType.FlipInX, 2200, 0, true);
+        StartSmartAnimation.startAnimation(btnImage5, AnimationType.FlipInX, 2100, 0, true);
+        StartSmartAnimation.startAnimation(btnImage6, AnimationType.FlipInX, 2400, 0, true);
+        StartSmartAnimation.startAnimation(lblWord, AnimationType.ZoomInRubberBand, 2000, 0, true);
 
         listImageLevelO = new ArrayList<>();
-        Log.d("ImageSizeBefore", String.valueOf(listImageFromDataO.size()));
         Random rd = new Random();
         for (int j = 0; j < 6; j++) {
             int n = listImageFromDataO.size();
@@ -313,70 +339,163 @@ public class ImageGuessingActivity extends AppCompatActivity {
 
     //Event
     private void getEvents() {
-        imgListOver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ImageGuessingActivity.this, TopisChoosingActivity.class));
-                finish();
-            }
-        });
-        imgReplayOver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addDataList();
-                doSaveScore();
-                TURN = 0;
-                SCORE = 0;
-                loadGame();
-                dialogGameOver.dismiss();
-            }
-        });
-        btnPauseGame5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btnPauseGame5.startAnimation(animation);
-                timer.cancel();
-                dialogBack.show();
-            }
-        });
-        imgResume.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playTimer();
-                dialogBack.dismiss();
-            }
-        });
-        imgList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ImageGuessingActivity.this, TopisChoosingActivity.class));
-                finish();
-            }
-        });
-        imgReplay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addDataList();
-                doSaveScore();
-                TURN = 0;
-                SCORE = 0;
-                loadGame();
-                dialogBack.dismiss();
-            }
-        });
-        imvNextGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogWinGame.dismiss();
-                Intent intent = new Intent(ImageGuessingActivity.this, RandomGamePracticeActivity.class);
-                Bundle data = new Bundle();
-                data.putSerializable(ConfigApplication.NAME_DATA_LIST, listImageLevelO);
-                data.putInt(ConfigApplication.SCORES_BEFOR_GAME, SCORE);
-                intent.putExtras(data);
-                startActivity(intent);
-                finish();
 
+        imgListOver.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // PRESSED
+                        imgListOver.setSelected(!imgListOver.isSelected());
+                        imgListOver.isSelected();
+                        mpClicked.start();
+                        return true; // if you want to handle the touch event
+                    case MotionEvent.ACTION_UP:
+                        // RELEASED
+                        doSaveScore();
+                        imgListOver.setSelected(false);
+                        startActivity(new Intent(ImageGuessingActivity.this, TopisChoosingActivity.class));
+                        finish();
+                        return true; // if you want to handle the touch event
+                }
+                return false;
+            }
+        });
+        imgReplayOver.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // PRESSED
+                        imgReplayOver.setSelected(!imgReplayOver.isSelected());
+                        imgReplayOver.isSelected();
+                        mpClicked.start();
+                        return true; // if you want to handle the touch event
+                    case MotionEvent.ACTION_UP:
+                        // RELEASED
+                        addDataList();
+                        imgReplayOver.setSelected(false);
+                        doSaveScore();
+                        TURN = 0;
+                        SCORE = 0;
+                        loadGame();
+                        dialogGameOver.dismiss();
+                        return true; // if you want to handle the touch event
+                }
+                return false;
+            }
+        });
+        btnPauseGame5.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // PRESSED
+                        btnPauseGame5.setSelected(!btnPauseGame5.isSelected());
+                        btnPauseGame5.isSelected();
+                        mpClicked.start();
+                        return true; // if you want to handle the touch event
+                    case MotionEvent.ACTION_UP:
+                        // RELEASED
+                        btnPauseGame5.setSelected(false);
+                        btnPauseGame5.startAnimation(animation);
+                        timer.cancel();
+                        dialogBack.show();
+                        return true; // if you want to handle the touch event
+                }
+                return false;
+            }
+        });
 
+        imgResume.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // PRESSED
+                        imgResume.setSelected(!imgResume.isSelected());
+                        imgResume.isSelected();
+                        mpClicked.start();
+                        return true; // if you want to handle the touch event
+                    case MotionEvent.ACTION_UP:
+                        // RELEASED
+                        imgResume.setSelected(false);
+                        playTimer();
+                        dialogBack.dismiss();
+                        imgSleep.clearAnimation();
+                        return true; // if you want to handle the touch event
+                }
+                return false;
+            }
+        });
+        imgList.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // PRESSED
+                        imgList.setSelected(!imgList.isSelected());
+                        imgList.isSelected();
+                        mpClicked.start();
+                        return true; // if you want to handle the touch event
+                    case MotionEvent.ACTION_UP:
+                        // RELEASED
+                        imgList.setSelected(false);
+                        startActivity(new Intent(ImageGuessingActivity.this, TopisChoosingActivity.class));
+                        finish();
+                        return true; // if you want to handle the touch event
+                }
+                return false;
+            }
+        });
+        imgReplay.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // PRESSED
+                        imgReplay.setSelected(!imgReplay.isSelected());
+                        imgReplay.isSelected();
+                        mpClicked.start();
+                        return true; // if you want to handle the touch event
+                    case MotionEvent.ACTION_UP:
+                        // RELEASED
+                        imgReplay.setSelected(false);
+                        addDataList();
+                        TURN = 0;
+                        SCORE = 0;
+                        loadGame();
+                        dialogBack.dismiss();
+                        imgSleep.clearAnimation();
+                        return true; // if you want to handle the touch event
+                }
+                return false;
+            }
+        });
+        imvNextGame.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // PRESSED
+                        imvNextGame.setSelected(!imvNextGame.isSelected());
+                        imvNextGame.isSelected();
+                        mpClicked.start();
+                        return true; // if you want to handle the touch event
+                    case MotionEvent.ACTION_UP:
+                        // RELEASED
+                        imvNextGame.setSelected(false);
+                        dialogWinGame.dismiss();
+                        Intent intent = new Intent(ImageGuessingActivity.this, RandomGamePracticeActivity.class);
+                        Bundle data = new Bundle();
+                        data.putSerializable(ConfigApplication.NAME_DATA_LIST, listImageLevelO);
+                        data.putInt(ConfigApplication.SCORES_BEFOR_GAME, SCORE);
+                        intent.putExtras(data);
+                        startActivity(intent);
+                        finish();
+                        return true; // if you want to handle the touch event
+                }
+                return false;
             }
         });
     }
@@ -390,7 +509,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
                         // PRESSED
                         btnImage6.startAnimation(animation);
                         getResult(5);
-                        mpClicked.start();
+                        mpChoose.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
@@ -409,7 +528,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
                         // PRESSED
                         btnImage5.startAnimation(animation);
                         getResult(4);
-                        mpClicked.start();
+                        mpChoose.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
@@ -428,7 +547,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
                         // PRESSED
                         btnImage4.startAnimation(animation);
                         getResult(3);
-                        mpClicked.start();
+                        mpChoose.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
@@ -445,13 +564,19 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
-                        btnImage3.startAnimation(animation);
-                        getResult(2);
-                        mpClicked.start();
+                        if (!isTouchDown) {
+                            isTouchDown = true;
+                            btnImage3.startAnimation(animation);
+                            mpChoose.start();
+                        }
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
-                        btnImage3.clearAnimation();
+                        if (isTouchDown) {
+                            isTouchDown = false;
+                            getResult(2);
+                            btnImage3.clearAnimation();
+                        }
                         return true; // if you want to handle the touch event
                 }
                 return false;
@@ -464,13 +589,19 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
-                        btnImage2.startAnimation(animation);
-                        getResult(1);
-                        mpClicked.start();
+                        if (!isTouchDown) {
+                            isTouchDown = true;
+                            btnImage2.startAnimation(animation);
+                            mpChoose.start();
+                        }
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
-                        btnImage2.clearAnimation();
+                        if (isTouchDown) {
+                            isTouchDown = false;
+                            getResult(1);
+                            btnImage2.clearAnimation();
+                        }
                         return true; // if you want to handle the touch event
                 }
                 return false;
@@ -484,13 +615,20 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
-                        btnImage1.startAnimation(animation);
-                        getResult(0);
-                        mpClicked.start();
-                        return true; // if you want to handle the touch event
+                        if (!isTouchDown) {
+                            isTouchDown = true;
+                            btnImage1.startAnimation(animation);
+                            mpChoose.start();
+                        }
+                        return true;
+                    // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
-                        btnImage1.clearAnimation();
+                        if (isTouchDown) {
+                            isTouchDown = false;
+                            getResult(0);
+                            btnImage1.clearAnimation();
+                        }
                         return true; // if you want to handle the touch event
                 }
                 return false;
@@ -508,11 +646,8 @@ public class ImageGuessingActivity extends AppCompatActivity {
             ScoreObject scoreObject = new ScoreObject();
             scoreObject.setsPlayer(playerName);
             scoreObject.setsScore(SCORE);
-            Log.d("ScoreSave", String.valueOf(SCORE));
-            Log.d("ScoreSavePlayer", playerName);
             dbAccessHelper.doInsertScore(scoreObject);
             lblPlayerNameGameOver.setText("");
-            Toast.makeText(getApplicationContext(), "Saving Score", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -524,15 +659,13 @@ public class ImageGuessingActivity extends AppCompatActivity {
             lblScore.setText(String.valueOf(SCORE));
             StartSmartAnimation.startAnimation(lblScore, AnimationType.StandUp, 1000, 0, true);
             mpOK.start();
-            Log.d("Size", String.valueOf(listImageFromDataO.size()));
             TURN++;
-            Log.d("ImSizeTurn", String.valueOf(TURN));
             if (TURN >= 4) {
                 timer.cancel();
+                executeAnimation();
                 txtScoreWin.setText(String.valueOf(SCORE));
                 dialogWinGame.show();
                 mpWingame.start();
-                Toast.makeText(getApplicationContext(), "You WIN", Toast.LENGTH_SHORT).show();
             } else {
                 timer.cancel();
                 loadGame();
@@ -540,13 +673,15 @@ public class ImageGuessingActivity extends AppCompatActivity {
         } else {
             RESULT_FAILED++;
             if (RESULT_FAILED == 1) {
-                new CustomToask(ImageGuessingActivity.this, R.drawable.screen_5_icon_ani, "Try one more time!");
+                mpWrong.start();
+                new CustomToask(ImageGuessingActivity.this, R.drawable.screen_5_icon_ani, "SAI rồi! Chọn thêm 1 lần nữa nhé...");
             } else if (RESULT_FAILED == 2) {
+                executeAnimation();
+                mpGameOver.start();
                 if (SCORE == 0)
                     lblPlayerNameGameOver.setVisibility(View.GONE);
                 else
                     lblPlayerNameGameOver.setVisibility(View.VISIBLE);
-                mpGameOver.start();
                 lblScoreGameOver.setText(String.valueOf(SCORE));
                 timer.cancel();
                 dialogGameOver.show();
@@ -554,4 +689,27 @@ public class ImageGuessingActivity extends AppCompatActivity {
         }
     }
 
+    private void clearAnimation() {
+        lblTimer.clearAnimation();
+        lblScore.clearAnimation();
+        lblWord.clearAnimation();
+        btnImage1.clearAnimation();
+        btnImage2.clearAnimation();
+        btnImage3.clearAnimation();
+        btnImage4.clearAnimation();
+        btnImage5.clearAnimation();
+        btnImage6.clearAnimation();
+
+    }
+
+    //Animation Wingame for Image
+    private void executeAnimation() {
+        clearAnimation();
+        btnImage1.startAnimation(animationOver);
+        btnImage2.startAnimation(animationOver);
+        btnImage3.startAnimation(animationOver);
+        btnImage4.startAnimation(animationOver);
+        btnImage5.startAnimation(animationOver);
+        btnImage6.startAnimation(animationOver);
+    }
 }
