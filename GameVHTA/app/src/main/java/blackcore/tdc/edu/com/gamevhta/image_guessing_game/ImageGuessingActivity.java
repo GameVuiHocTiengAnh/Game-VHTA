@@ -34,7 +34,6 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import blackcore.tdc.edu.com.gamevhta.LoadingGoInGameActivity;
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.RandomGamePracticeActivity;
 import blackcore.tdc.edu.com.gamevhta.TopisChoosingActivity;
@@ -57,7 +56,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
     private ImageButton btnImage1, btnImage2, btnImage3, btnImage4, btnImage5, btnImage6, btnPauseGame5;
     private TextView lblTimer, lblWord, lblScore, lblScoreGameOver, txtNameScoreWin, txtScoreWin;
     private MediaPlayer mpClicked, mpSoundBackground, mpWingame, mpGameOver, mpOK;
-    private ImageView imgListOver, imgReplayOver, imgList, imgReplay, imgResume, imvNextGame,mh9_bgImage1;
+    private ImageView imgListOver, imgReplayOver, imgList, imgReplay, imgResume, imvNextGame, mh9_bgImage1;
     private EditText lblPlayerNameGameOver;
 
     private String OBJECT = "";
@@ -233,7 +232,6 @@ public class ImageGuessingActivity extends AppCompatActivity {
 
     //play game
     private void loadGame() {
-        //StartSmartAnimation.startAnimation(mh9_bgImage1,AnimationType.RotateInDownLeft,25000,0,true);
         lblTimer.clearAnimation();
         lblTimer.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
         lblScore.setText(String.valueOf(SCORE));
@@ -256,8 +254,6 @@ public class ImageGuessingActivity extends AppCompatActivity {
             int x = rd.nextInt(n);
             listImageLevelO.add(listImageFromDataO.get(x));
             listImageFromDataO.remove(x);
-            //Log.d("ImageSizeSV","Index:"+j+"-X:"+ String.valueOf(x) + "-Object: " + listImageFromDataO.get(x).getwEng()+":"+listImageFromDataO.get(x).getwPathImage());
-            //Log.d("ImageSizeLC","Index:"+j+"-X:"+ String.valueOf(x) + "-Object: " + listImageLevelO.get(j).getwEng()+":"+listImageLevelO.get(j).getwPathImage());
         }
         RESULT_CHOSEN = rd.nextInt(listImageLevelO.size());
         lblWord.setText(listImageLevelO.get(RESULT_CHOSEN).getwEng().toString());
@@ -278,7 +274,6 @@ public class ImageGuessingActivity extends AppCompatActivity {
     private void addDataList() {
         listImageFromDataO = new ArrayList<>();
         listImageFromDataO = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_ANIMALS);
-        //Log.d("ImageSize", String.valueOf(listImageFromDataO.size()) + "-Object: " + listImageFromDataO.get(0).getwEng());
     }
 
     //Add image from resource to ImageButton
@@ -312,6 +307,8 @@ public class ImageGuessingActivity extends AppCompatActivity {
         lblScore.setTypeface(custom_font);
         lblScoreGameOver.setTypeface(custom_font);
         lblPlayerNameGameOver.setTypeface(custom_font);
+        txtNameScoreWin.setTypeface(custom_font);
+        txtScoreWin.setTypeface(custom_font);
     }
 
     //Event
@@ -371,10 +368,10 @@ public class ImageGuessingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialogWinGame.dismiss();
-                Intent intent = new Intent(ImageGuessingActivity.this,RandomGamePracticeActivity.class);
+                Intent intent = new Intent(ImageGuessingActivity.this, RandomGamePracticeActivity.class);
                 Bundle data = new Bundle();
-                data.putSerializable(ConfigApplication.NAME_DATA_LIST,listImageLevelO);
-                data.putInt(ConfigApplication.SCORES_BEFOR_GAME,SCORE);
+                data.putSerializable(ConfigApplication.NAME_DATA_LIST, listImageLevelO);
+                data.putInt(ConfigApplication.SCORES_BEFOR_GAME, SCORE);
                 intent.putExtras(data);
                 startActivity(intent);
                 finish();
@@ -522,9 +519,10 @@ public class ImageGuessingActivity extends AppCompatActivity {
     //Check Result
     private void getResult(int choose) {
         if (choose == RESULT_CHOSEN) {
-            SCORE += lblWord.getText().length() * 10 * Integer.parseInt(lblTimer.getText().toString());
+            //Word's length * 5 * time left
+            SCORE += lblWord.getText().length() * 5 * Integer.parseInt(lblTimer.getText().toString());
             lblScore.setText(String.valueOf(SCORE));
-            StartSmartAnimation.startAnimation(lblScore,AnimationType.StandUp,1000,0,true);
+            StartSmartAnimation.startAnimation(lblScore, AnimationType.StandUp, 1000, 0, true);
             mpOK.start();
             Log.d("Size", String.valueOf(listImageFromDataO.size()));
             TURN++;
