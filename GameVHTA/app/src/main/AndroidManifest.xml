@@ -39,6 +39,7 @@
         <activity
             android:name=".picture_puzzle_game.PicturePuzzleActivity"
             android:screenOrientation="landscape">
+
         </activity>
         <!--game catching words-->
         <activity android:name=".catching_words_game.CatchingWordsActivity"
@@ -53,7 +54,6 @@
         <!--Game Screen 5 -->
         <activity android:name=".market_game.Market_game"
             android:screenOrientation="landscape">
-
         </activity>
 
         <activity android:name=".image_guessing_game.ImageGuessingActivity"

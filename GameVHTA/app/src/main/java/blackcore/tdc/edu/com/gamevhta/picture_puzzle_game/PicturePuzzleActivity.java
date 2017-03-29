@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.DragEvent;
@@ -35,23 +36,22 @@ import com.podcopic.animationlib.library.AnimationType;
 import com.podcopic.animationlib.library.StartSmartAnimation;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import blackcore.tdc.edu.com.gamevhta.LoadingGoInGameActivity;
 import blackcore.tdc.edu.com.gamevhta.LoadingGoOutGameActivity;
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.RandomGameMemoryChallengeActivity;
 import blackcore.tdc.edu.com.gamevhta.button.PauseButton;
-import blackcore.tdc.edu.com.gamevhta.catching_words_game.CatchingWordsActivity;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
-public class PicturePuzzleActivity extends AppCompatActivity {
+public class PicturePuzzleActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     TextView txtTime,txtScore,txtAnswerOne,txtAnswerTwo,txtAnswerThree,txtAnswerFour,txtAnswerFive,txtAnswerSix,lblScoreGameOver,txtNameScoreWin,txtScoreWin;
     EditText lblPlayerNameGameOver;
@@ -67,7 +67,6 @@ public class PicturePuzzleActivity extends AppCompatActivity {
     private MediaPlayer mCorrect,mWrong,mClick,mTickTac,mWin,mMusicMainGame,mOver,mClickGame,mCartoonImage;
     private MusicService mService = new MusicService();
     PauseButton imgBackGame;
-    private int timeCount;
 
     ServiceConnection conn = new ServiceConnection() {
         @Override
@@ -87,6 +86,7 @@ public class PicturePuzzleActivity extends AppCompatActivity {
     private ImageView imgListOver, imgReplayOver;
     private Handler handler;
     private Timer timer;
+    private TextToSpeech textToSpeech = null;
     private int SCORE_ONE = 0, SCORE_TWO = 0, SCORE_THREE = 0, SCORE_FOUR = 0, SCORE_FIVE = 0, SCORE_SIX = 0, SCORE_ALL = 0;
     private int timesDrop = 0;
     private DbAccessHelper dbAccessHelper;
@@ -106,6 +106,9 @@ public class PicturePuzzleActivity extends AppCompatActivity {
 
         listImageGame = new ArrayList<>();
         listImageData = new ArrayList<>();
+
+        textToSpeech = new TextToSpeech(this,this);
+        imgBackGame = (PauseButton) findViewById(R.id.btnBackGame);
 
         mCorrect = MediaPlayer.create(PicturePuzzleActivity.this,R.raw.dung_market_game);
         mWrong = MediaPlayer.create(PicturePuzzleActivity.this,R.raw.sai);
@@ -217,6 +220,9 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         effectImageQuestion();
         Answer();
         Question();
+
+//        test
+        txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
         Timer();
     }
     public void randomBackgroundGame(){
@@ -282,9 +288,8 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                 }
             }
         };
-        txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-        timer = new Timer();
 
+        timer = new Timer();
 
         TimerTask timerTask = new TimerTask() {
             @Override
@@ -347,7 +352,6 @@ public class PicturePuzzleActivity extends AppCompatActivity {
     }
 
     public void moveActivity() {
-        imgBackGame = (PauseButton) findViewById(R.id.btnBackGame);
         Intent intent = new Intent(getApplicationContext(),LoadingGoOutGameActivity.class);
         imgBackGame.setMoveActivity(intent,this);
 
@@ -355,23 +359,35 @@ public class PicturePuzzleActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         // TODO Auto-generated method stub
-    }
-    public void onSuperBackPressed(){
         super.onBackPressed();
     }
     @Override
     protected void onPause() {
         // TODO Auto-generated method stub
+        super.onPause();
         timer.cancel();
         mService.pauseMusic(mTickTac);
         mService.pauseMusic(mMusicMainGame);
-        super.onPause();
     }
 
     protected void onResume(){
         // TODO Auto-generated method stub
-        mService.playMusic(mMusicMainGame);
         super.onResume();
+        mService.playMusic(mMusicMainGame);
+        timer.cancel();
+        Timer();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mService.stopMusic(mMusicMainGame);
+        mService.stopMusic(mCartoonImage);
+        mService.stopMusic(mWin);
+        mService.stopMusic(mCorrect);
+        mService.stopMusic(mClickGame);
+        mService.stopMusic(mTickTac);
+        mService.stopMusic(mOver);
     }
 
     public void effectText(){
@@ -469,63 +485,99 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                         }
                         if(v.getId() == R.id.imbAnimalone && view.getId() == R.id.imbAnimalquestionone){
                             timesDrop();
-                            StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerOne) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
                             StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionone) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionOne.clearColorFilter();
                             imbAnimalQuestionOne.setImageDrawable(getBitmapResource(listImageGame.get(0).getwPathImage()));
                             getResult(1);
                             flagVoice = true;
                             Voice();
+                            mCorrect.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mediaPlayer) {
+                                    StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerOne) , AnimationType.Tada , 2000 , 0 , true , 300 );
+                                    textToSpeech.speak(listImageGame.get(0).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                                }
+                            });
                             imbAnimalOne.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimaltwo && view.getId() == R.id.imbAnimalquestiontwo){
                             timesDrop();
-                            StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerTwo) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
                             StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestiontwo) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionTwo.clearColorFilter();
                             imbAnimalQuestionTwo.setImageDrawable(getBitmapResource(listImageGame.get(1).getwPathImage()));
                             getResult(2);
                             flagVoice = true;
                             Voice();
+                            mCorrect.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mediaPlayer) {
+                                    StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerTwo) , AnimationType.Tada , 2000 , 0 , true , 300 );
+                                    textToSpeech.speak(listImageGame.get(1).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                                }
+                            });
                             imbAnimalTwo.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimalthree && view.getId() == R.id.imbAnimalquestionthree){
                             timesDrop();
-                            StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerThree) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
                             StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionthree) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionThree.clearColorFilter();
                             imbAnimalQuestionThree.setImageDrawable(getBitmapResource(listImageGame.get(2).getwPathImage()));
                             getResult(3);
                             flagVoice = true;
                             Voice();
+                            mCorrect.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mediaPlayer) {
+                                    StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerThree) , AnimationType.Tada , 2000 , 0 , true , 300 );
+                                    textToSpeech.speak(listImageGame.get(2).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                                }
+                            });
                             imbAnimalThree.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimlafour && view.getId() == R.id.imbAnimalquestionfour){
                             timesDrop();
-                            StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerFour) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
                             StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionfour) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionFour.clearColorFilter();
                             imbAnimalQuestionFour.setImageDrawable(getBitmapResource(listImageGame.get(3).getwPathImage()));
                             getResult(4);
                             flagVoice = true;
                             Voice();
+                            mCorrect.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mediaPlayer) {
+                                    StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerFour) , AnimationType.Tada , 2000 , 0 , true , 300 );
+                                    textToSpeech.speak(listImageGame.get(3).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                                }
+                            });
                             imbAnimalFour.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimalfive && view.getId() == R.id.imbAnimalquestionfive){
                             timesDrop();
-                            StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerFive) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
                             StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionfive) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionFive.clearColorFilter();
                             imbAnimalQuestionFive.setImageDrawable(getBitmapResource(listImageGame.get(4).getwPathImage()));
                             getResult(5);
                             flagVoice = true;
                             Voice();
+                            mCorrect.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mediaPlayer) {
+                                    StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerFive) , AnimationType.Tada , 2000 , 0 , true , 300 );
+                                    textToSpeech.speak(listImageGame.get(4).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                                }
+                            });
                             imbAnimalFive.setVisibility(View.INVISIBLE);
                         }else if(v.getId() == R.id.imbAnimalsix && view.getId() == R.id.imbAnimalquestionsix){
                             timesDrop();
-                            StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerSix) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
                             StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalquestionsix) , AnimationType.Tada , 2000 , 0 , true , 300 );
                             imbAnimalQuestionSix.clearColorFilter();
                             imbAnimalQuestionSix.setImageDrawable(getBitmapResource(listImageGame.get(5).getwPathImage()));
                             getResult(6);
                             flagVoice = true;
                             Voice();
+                            mCorrect.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mediaPlayer) {
+                                    StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerSix) , AnimationType.Tada , 2000 , 0 , true , 300 );
+                                    textToSpeech.speak(listImageGame.get(5).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                                }
+                            });
                             imbAnimalSix.setVisibility(View.INVISIBLE);
                         }else
                             flagVoice = false;
@@ -590,7 +642,8 @@ public class PicturePuzzleActivity extends AppCompatActivity {
                             imgReplayOver.setSelected(false);
                             doSaveScore();
                             SCORE_ALL = 0;
-                            Intent intent = new Intent(PicturePuzzleActivity.this, LoadingGoInGameActivity.class);
+                            Intent intent = new Intent(PicturePuzzleActivity.this,PicturePuzzleActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
                             startActivity(intent);
                             finish();
                             return true;
@@ -629,16 +682,16 @@ public class PicturePuzzleActivity extends AppCompatActivity {
             });
         }
 
-        private void timesDrop() {
-            if(timesDrop == 6)
-            {
-                timesDrop = 0;
-            }
-            else
-            {
-                timesDrop++;
-            }
+    private void timesDrop() {
+        if(timesDrop == 6)
+        {
+            timesDrop = 0;
         }
+        else
+        {
+            timesDrop++;
+        }
+    }
 
     //Save Score
     private void doSaveScore() {
@@ -659,6 +712,18 @@ public class PicturePuzzleActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            int result = textToSpeech.setLanguage(Locale.US);
+
+            if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+            }
+        } else {
+            Log.e("TTS", "Initilization Failed!");
+        }
+    }
 
     //Check Result
     private void getResult(int choose) {

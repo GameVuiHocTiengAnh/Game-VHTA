@@ -40,7 +40,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         mService.pauseMusic(mpBus);
-        SplashScreenActivity.this.finish();
         super.onPause();
 
     }

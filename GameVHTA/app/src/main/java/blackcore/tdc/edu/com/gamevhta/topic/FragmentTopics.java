@@ -56,6 +56,9 @@ public class FragmentTopics extends android.support.v4.app.Fragment{
         }
     };
 
+    public FragmentTopics(){
+
+    }
     public FragmentTopics(BitmapTopic bitmapTopic){
         this.imageTopic = bitmapTopic.getImageTopic();
         this.toPic = bitmapTopic.getTopic();

@@ -80,9 +80,9 @@ public class GuideActivity extends AppCompatActivity {
 
     public void onBackPressed()
     {
+        super.onBackPressed();
         Intent intent = new Intent(getApplicationContext(),MainMenuActivity.class);
         startActivity(intent);
         finish();
-        super.onBackPressed();
     }
 }

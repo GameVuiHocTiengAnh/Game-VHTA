@@ -49,8 +49,8 @@
 
                     <ImageView
                         android:id="@+id/iconTimer"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/time_image_sc5" />
 
                     <TextView
@@ -110,7 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Cow"
-                    android:textColor="#000"
+                    android:textColor="@android:color/holo_red_light"
                     android:textSize="@dimen/txtAnswer" />
 
                 <ImageView
@@ -134,7 +134,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Goat"
-                    android:textColor="#000"
+                    android:textColor="@android:color/holo_red_light"
                     android:textSize="@dimen/txtAnswer" />
 
                 <ImageView
@@ -159,14 +159,13 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Bunny"
-                    android:textColor="#000"
+                    android:textColor="@android:color/holo_red_light"
                     android:textSize="@dimen/txtAnswer" />
 
                 <ImageView
                     android:id="@+id/imbAnimalquestiontwo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/questionThree"
                     android:background="@android:color/transparent"
                     android:src="@drawable/bunny_answer" />
             </LinearLayout>
@@ -184,7 +183,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Cat"
-                    android:textColor="#000"
+                    android:textColor="@android:color/holo_red_light"
                     android:textSize="@dimen/txtAnswer" />
 
                 <ImageView
@@ -209,7 +208,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Dog"
-                    android:textColor="#000"
+                    android:textColor="@android:color/holo_red_light"
                     android:textSize="@dimen/txtAnswer" />
 
                 <ImageView
@@ -234,7 +233,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Buffalo"
-                    android:textColor="#000"
+                    android:textColor="@android:color/holo_red_light"
                     android:textSize="@dimen/txtAnswer" />
 
                 <ImageView
