@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Vui Học Tiếng Anh</string>
     <string name="fontPath">fonts/bubblegum.ttf</string>
+    <string name="fontPathMarketGame">fonts/gothic.ttf</string>
     <string name="txtdialogbackgame">Pause</string>
     <string name="txtdialogovergame">Game Over</string>
     <string name="txtTime">60</string>

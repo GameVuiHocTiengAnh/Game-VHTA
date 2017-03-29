@@ -18,6 +18,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Layout;
 import android.util.Log;
@@ -40,6 +41,7 @@ import com.podcopic.animationlib.library.StartSmartAnimation;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -55,14 +57,14 @@ import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 import static blackcore.tdc.edu.com.gamevhta.R.layout.activity_market_game;
 
-public class Market_game extends AppCompatActivity {
+public class Market_game extends AppCompatActivity implements TextToSpeech.OnInitListener{
 
     private Handler handler;
     private Animation animation;
     private Animation animationRotate;
     private Timer timer = new Timer();
-    private TextView txtvWord, txtvTimer, txtvLevel, txtvScore, lblScoreGameOver, txtvTurnNumber, txtScoreWin, txtWordEngNextTurn, txtWordVieNextTurn;
-    private ImageView imgListOver, imgReplayOver, imgvObject1, imgvObject2, imgvObject3, imgvObject4, imgvObject5, imgvObject6, imgResume, imgList, imgReplay, imgBag, imbNextGameWin, imgObjectNextTurn;
+    private TextView txtvWord, txtvTimer, txtvLevel, txtvScore, lblScoreGameOver, txtvTurnNumber, txtScoreWin, txtWordEngNextTurn, txtWordVieNextTurn, txtNameScoreWin;
+    private ImageView imgListOver, imgReplayOver, imgvObject1, imgvObject2, imgvObject3, imgvObject4, imgvObject5, imgvObject6, imgResume, imgList, imgReplay, imgBag, imbNextGameWin, imgObjectNextTurn, imgSpeak;
     private MediaPlayer mButtonClick, mCorrect, mWrong, mClick, mTickTac, mpSoundBackground, mReadyGo, mNextLevel, mGameOver, mYaah, mtornado, mLoadImage;
     private MusicService mService = new MusicService();
     private EditText lblPlayerNameGameOver;
@@ -79,6 +81,7 @@ public class Market_game extends AppCompatActivity {
     private int TIMES_PAUSE = 0;
     private boolean TIMER_IS_RUN = false;
     private boolean IS_RESUM = false;
+    private int score_temp = 0;
 
     private ArrayList<WordObject> listImageFromDataO;
     private ArrayList<WordObject> listImageLevelO;
@@ -86,6 +89,8 @@ public class Market_game extends AppCompatActivity {
     private Dialog dialogBack, dialogGameOver, dialogComplete, dialogNextTurn;
     private DbAccessHelper DbAccessHelper;
     private boolean flagVoice = true;
+
+    private TextToSpeech textToSpeech = null;
 
     //test
     private ArrayList<Bitmap> listBitMapAnswer = null;
@@ -181,6 +186,7 @@ public class Market_game extends AppCompatActivity {
         mTickTac.stop();
         mGameOver.stop();
         mpSoundBackground.stop();
+
     }
 
     @Override
@@ -244,6 +250,7 @@ public class Market_game extends AppCompatActivity {
         dialogComplete.setContentView(R.layout.activity_dialog_win_game);
         dialogComplete.getWindow().setBackgroundDrawableResource(R.color.tran);
         dialogComplete.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        txtNameScoreWin = (TextView) dialogComplete.findViewById(R.id.txtNameScoreWin);
         txtScoreWin = (TextView) dialogComplete.findViewById(R.id.txtScoreWin);
         imbNextGameWin = (ImageView) dialogComplete.findViewById(R.id.imvNextGame);
 
@@ -258,6 +265,7 @@ public class Market_game extends AppCompatActivity {
         txtWordEngNextTurn = (TextView) dialogNextTurn.findViewById(R.id.txtWordEngNextTurn);
         txtWordVieNextTurn = (TextView) dialogNextTurn.findViewById(R.id.txtWordVieNextTurn);
         imgObjectNextTurn = (ImageView) dialogNextTurn.findViewById(R.id.imgObjectNextTurn);
+        imgSpeak = (ImageView) dialogNextTurn.findViewById(R.id.imgSpeak);
         dialogNextTurn.getWindow().getAttributes().width = (Resources.getSystem().getDisplayMetrics().widthPixels) - 20;
 
 //        Sound
@@ -278,6 +286,8 @@ public class Market_game extends AppCompatActivity {
         Voice(mReadyGo);
         Voice(mpSoundBackground);
 
+//      textToSpeech
+        textToSpeech = new TextToSpeech(this,this);
 
 
         ///database
@@ -425,6 +435,9 @@ public class Market_game extends AppCompatActivity {
     };
 
     private void loadGame() {
+//      if animation still run on image object == > clear animation
+        clearAnimation();
+
         Voice(mLoadImage);
         StartSmartAnimation.startAnimation(findViewById(R.id.imgvObject1), AnimationType.BounceInLeft, 1500, 0, false);
         StartSmartAnimation.startAnimation(findViewById(R.id.imgvObject2), AnimationType.BounceInLeft, 1500, 0, false);
@@ -507,16 +520,21 @@ public class Market_game extends AppCompatActivity {
     }
 
     private void setFont() {
-        Typeface custom_font = Typeface.createFromAsset(getAssets(), getResources().getString(R.string.fontPath));
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), getResources().getString(R.string.fontPathMarketGame));
         txtvTimer.setTypeface(custom_font);
         txtvWord.setTypeface(custom_font);
         txtvScore.setTypeface(custom_font);
         txtvLevel.setTypeface(custom_font);
         lblScoreGameOver.setTypeface(custom_font);
         lblPlayerNameGameOver.setTypeface(custom_font);
+        txtWordEngNextTurn.setTypeface(custom_font);
+        txtScoreWin.setTypeface(custom_font);
+        txtNameScoreWin.setTypeface(custom_font);
     }
 
     private void getEvents() {
+
+
         imgListOver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -601,6 +619,15 @@ public class Market_game extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(), "turn khi click next level:" + TURN, Toast.LENGTH_SHORT).show();
             }
         });
+
+        imgSpeak.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(textToSpeech != null && listImageLevelO.get(RESULT_CHOSEN -1).getwEng() != null){
+                    textToSpeech.speak(listImageLevelO.get(RESULT_CHOSEN -1).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
+                }
+            }
+        });
     }
 
     private void doWhenClickImglist() {
@@ -617,6 +644,7 @@ public class Market_game extends AppCompatActivity {
         RESULT_FAILED = 0;
         TURN = 0;//truong hop truoc thi bang 1
         SCORE = 0;
+        LEVEL = 1;
         txtvLevel.setText("Level. 1");
         txtvTurnNumber.setText("1");
         lblPlayerNameGameOver.setText("");
@@ -627,28 +655,19 @@ public class Market_game extends AppCompatActivity {
 //        neu chon dung
         if (choose == RESULT_CHOSEN) {
             TURN++;
-            //Voice(mCorrect);
-            //Toast.makeText(getApplicationContext(), "ban chon dung", Toast.LENGTH_SHORT).show();
 //            khi turn = 3 => qua level
             if (TURN == 3) {
                 showDialogNextTurn();
                 Voice(mCorrect);
                 PlayTwoSound(1000, 1000, mCorrect, mNextLevel);
                 timer.cancel();
-                SCORE += txtvWord.getText().length() * 10 * Integer.parseInt(txtvTimer.getText().toString());
+                SCORE += txtvWord.getText().length() * 2 * Integer.parseInt(txtvTimer.getText().toString());
                 txtvScore.setText(String.valueOf(SCORE));
                 dialogNextTurn.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-//                        Voice(mCorrect);
-//                        PlayTwoSound(1000, 1000, mCorrect, mNextLevel);
                         Voice(mNextLevel);
-                        //Toast.makeText(getApplicationContext(), "TURN" + TURN, Toast.LENGTH_SHORT).show();
                         txtvTurnNumber.setText(String.valueOf(TURN));
-                        //Toast.makeText(getApplicationContext(), "Qua level", Toast.LENGTH_SHORT).show();
-//                        timer.cancel();
-//                        SCORE += txtvWord.getText().length() * 10 * Integer.parseInt(txtvTimer.getText().toString());
-//                        txtvScore.setText(String.valueOf(SCORE));
                         txtScoreWin.setText(String.valueOf(SCORE));
                         dialogComplete.show();
                     }
@@ -660,16 +679,12 @@ public class Market_game extends AppCompatActivity {
                 showDialogNextTurn();
                 Voice(mCorrect);
                 timer.cancel();
-                SCORE += txtvWord.getText().length() * 10 * Integer.parseInt(txtvTimer.getText().toString());
+                SCORE += txtvWord.getText().length() * 2 * Integer.parseInt(txtvTimer.getText().toString());
                 txtvScore.setText(String.valueOf(SCORE));
                 dialogNextTurn.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        //Toast.makeText(getApplicationContext(), "TURN" + TURN, Toast.LENGTH_SHORT).show();
                         txtvTurnNumber.setText(String.valueOf(TURN + 1));
-                        //timer.cancel();
-                        //SCORE += txtvWord.getText().length() * 10 * Integer.parseInt(txtvTimer.getText().toString());
-                        //txtvScore.setText(String.valueOf(SCORE));
                         int tempTIMES_PAUSE = TIMES_PAUSE;
                         loadGame();
                         TIMES_PAUSE = tempTIMES_PAUSE;
@@ -900,6 +915,12 @@ public class Market_game extends AppCompatActivity {
                 txtWordEngNextTurn.setText(listImageLevelO.get(RESULT_CHOSEN  - 1).getwEng().toString());
                 imgObjectNextTurn.setBackground(getBitmapResource(listImageLevelO.get(RESULT_CHOSEN - 1).getwPathImage()));
                 dialogNextTurn.show();
+                if(dialogNextTurn.isShowing() == true)
+                {
+                    StartSmartAnimation.startAnimation(dialogNextTurn.findViewById(R.id.txtWordVieNextTurn), AnimationType.ZoomIn, 1000, 0, false);
+                    imgSpeak.startAnimation(animation);
+                }
+
             }
 
             @Override
@@ -909,6 +930,43 @@ public class Market_game extends AppCompatActivity {
         }.start();
     }
 
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            int result = textToSpeech.setLanguage(Locale.US);
+
+            if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+            }
+        } else {
+            Log.e("TTS", "Initilization Failed!");
+        }
+    }
+
+    private void addScore() {
+        new CountDownTimer(txtvWord.getText().length() * (Integer.parseInt(txtvTimer.getText().toString()) * 5), 1) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                Toast.makeText(getApplicationContext(), String.valueOf(txtvWord.getText().length() * (Integer.parseInt(txtvTimer.getText().toString()) * 5)), Toast.LENGTH_SHORT).show();
+                SCORE++;
+                txtvScore.setText(String.valueOf(SCORE));
+            }
+
+            @Override
+            public void onFinish() {
+                Toast.makeText(getApplicationContext(), "da chay  xong", Toast.LENGTH_SHORT).show();
+            }
+        }.start();
+    }
+
+    private void clearAnimation() {
+        imgvObject1.clearAnimation();
+        imgvObject2.clearAnimation();
+        imgvObject3.clearAnimation();
+        imgvObject4.clearAnimation();
+        imgvObject5.clearAnimation();
+        imgvObject6.clearAnimation();
+    }
 //    private void animationWhenCompleteLevel(){
 //        imgvObject1.startAnimation();
 //        imgvObject2.startAnimation(animationRotate);

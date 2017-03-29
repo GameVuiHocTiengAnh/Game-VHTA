@@ -322,7 +322,8 @@
                     android:paddingTop="25dp"
                     android:text="Bear"
                     android:textSize="30dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="#991b1f"/>
             </RelativeLayout>
         </RelativeLayout>
 

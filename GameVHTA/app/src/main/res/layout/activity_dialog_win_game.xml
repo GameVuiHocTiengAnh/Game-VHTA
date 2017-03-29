@@ -59,7 +59,7 @@
                      <LinearLayout
                          android:layout_width="match_parent"
                          android:layout_height="0dp"
-                         android:layout_weight="1"
+                         android:layout_weight="0.5"
                          android:gravity="left|bottom"
                          android:orientation="horizontal">
 
@@ -68,7 +68,7 @@
                              android:layout_width="wrap_content"
                              android:layout_height="wrap_content"
                              android:text="Score:"
-                             android:textColor="#FFFFFF"
+                             android:textColor="#502618"
                              android:textSize="@dimen/txtNameWingame" />
                      </LinearLayout>
 
@@ -84,7 +84,7 @@
                              android:layout_width="wrap_content"
                              android:layout_height="wrap_content"
                              android:text="0"
-                             android:textColor="#502618"
+                             android:textColor="#ffffff"
                              android:textSize="@dimen/txtScoreWingame" />
                      </LinearLayout>
                 </LinearLayout>
