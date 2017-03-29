@@ -169,10 +169,12 @@ public class MainMenuActivity extends AppCompatActivity {
                                     case MotionEvent.ACTION_DOWN:
                                         btnYes.setSelected(!btnYes.isSelected());
                                         btnYes.isSelected();
+                                        btnNo.setEnabled(false);
                                         mService.playMusic(mClick);
                                         return true;
                                     case MotionEvent.ACTION_UP:
                                         playMusicMain();
+                                        btnNo.setEnabled(true);
                                         finish();
                                         return true;
                                 }
@@ -187,9 +189,11 @@ public class MainMenuActivity extends AppCompatActivity {
                                     case MotionEvent.ACTION_DOWN:
                                         btnNo.setSelected(!btnNo.isSelected());
                                         btnNo.isSelected();
+                                        btnYes.setEnabled(false);
                                         mService.playMusic(mClick);
                                         return true;
                                     case MotionEvent.ACTION_UP:
+                                        btnYes.setEnabled(true);
                                         mService.playMusic(mClick);
                                         dialog.dismiss();
                                         return true;

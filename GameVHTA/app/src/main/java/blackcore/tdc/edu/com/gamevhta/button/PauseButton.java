@@ -115,10 +115,14 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
                         mService.playMusic(mClick);
                         imgList.setSelected(!imgList.isSelected());
                         imgList.isSelected();
+                        imgResume.setEnabled(false);
+                        imgReplay.setEnabled(false);
                         return true;
                     case MotionEvent.ACTION_UP:
                         mService.playMusic(mClick);
                         imgList.setSelected(false);
+                        imgResume.setEnabled(true);
+                        imgReplay.setEnabled(true);
                         MoveActivity();
                         return true;
                 }
@@ -135,10 +139,14 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
                         imgReplay.setSelected(!imgReplay.isSelected());
                         imgReplay.isSelected();
                         mService.playMusic(mClick);
+                        imgList.setEnabled(false);
+                        imgResume.setEnabled(false);
                         return true;
                     case MotionEvent.ACTION_UP:
                         mService.playMusic(mClick);
                         imgReplay.setSelected(false);
+                        imgList.setEnabled(true);
+                        imgResume.setEnabled(true);
                         intent = new Intent( PauseButton.this.context,PauseButton.this.context.getClass());
                         PauseButton.this.context.startActivity(intent);
                         PauseButton.this.context.finish();
@@ -156,10 +164,14 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
                         imgResume.setSelected(!imgResume.isSelected());
                         imgResume.isSelected();
                         mService.playMusic(mClick);
+                        imgList.setEnabled(false);
+                        imgReplay.setEnabled(false);
                         return true;
                     case MotionEvent.ACTION_UP:
                         mService.playMusic(mClick);
                         imgResume.setSelected(false);
+                        imgList.setEnabled(true);
+                        imgReplay.setEnabled(true);
                         resumeGameMH6();
                         //resumeChoosingGame();
                         dialog.dismiss();

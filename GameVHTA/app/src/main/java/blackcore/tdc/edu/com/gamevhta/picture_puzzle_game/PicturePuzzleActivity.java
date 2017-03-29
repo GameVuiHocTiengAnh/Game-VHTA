@@ -613,10 +613,12 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
                             mService.playMusic(mClick);
                             imgListOver.setSelected(!imgListOver.isSelected());
                             imgListOver.isSelected();
+                            imgReplayOver.setEnabled(false);
                             return true;
                         case MotionEvent.ACTION_UP:
                             mService.playMusic(mClick);
                             imgListOver.setSelected(false);
+                            imgReplayOver.setEnabled(true);
                             doSaveScore();
                             SCORE_ALL = 0;
                             Intent intent = new Intent(PicturePuzzleActivity.this, LoadingGoOutGameActivity.class);
@@ -636,10 +638,12 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
                             imgReplayOver.setSelected(!imgReplayOver.isSelected());
                             imgReplayOver.isSelected();
                             mService.playMusic(mClick);
+                            imgListOver.setEnabled(false);
                             return true;
                         case MotionEvent.ACTION_UP:
                             mService.playMusic(mClick);
                             imgReplayOver.setSelected(false);
+                            imgListOver.setEnabled(true);
                             doSaveScore();
                             SCORE_ALL = 0;
                             Intent intent = new Intent(PicturePuzzleActivity.this,PicturePuzzleActivity.class);

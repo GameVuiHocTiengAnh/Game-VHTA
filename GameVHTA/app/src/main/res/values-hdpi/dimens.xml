@@ -21,8 +21,8 @@
     <dimen name="lvLeft">90dp</dimen>
     <dimen name="lvRight">50dp</dimen>
     <!--Topic-->
-    <dimen name="btnBackTopicTop">10dp</dimen>
-    <dimen name="btnBackTopicLeft">10dp</dimen>
+    <dimen name="btnBackTopicTop">20dp</dimen>
+    <dimen name="btnBackTopicLeft">20dp</dimen>
     <dimen name="btnPrevNext">30dp</dimen>
     <!--dialog Exit-->
     <dimen name="btnYesBottom">56dp</dimen>
