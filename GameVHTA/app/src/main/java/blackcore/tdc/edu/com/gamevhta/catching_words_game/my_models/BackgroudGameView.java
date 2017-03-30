@@ -79,6 +79,7 @@ public class BackgroudGameView extends View implements View.OnTouchListener{
         thread.setGameRunning(true);
         thread.start();
         characterGameView.setRunning(true);
+        characterGameView.setIsNinjaDontMove(false);
         characterGameView.onResumeMySurfaceView();
     }
 
