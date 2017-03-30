@@ -34,6 +34,7 @@ public class CharacterGameView extends SurfaceView implements Runnable{
     volatile boolean running = false;
     private boolean isNinjaFighting;
     private int countDrawNinjaFighting;
+    private boolean isNinjaDontMove;
 
 
     public CharacterGameView(Context context) {
@@ -51,6 +52,7 @@ public class CharacterGameView extends SurfaceView implements Runnable{
                 );
         layoutParams.setMargins(250,0,0,ConfigCWGame.maginBotOfCharacter());
         ConfigCWGame.WIDTH_SUB_CHARACTER = ninja.getWidthSubImg();
+        isNinjaDontMove = false;
         this.setLayoutParams(layoutParams);
     }
 
@@ -71,6 +73,8 @@ public class CharacterGameView extends SurfaceView implements Runnable{
                 e.printStackTrace();
             }
         }
+        thread = new Thread(this);
+        thread.start();
     }
 
     @Override
@@ -88,10 +92,14 @@ public class CharacterGameView extends SurfaceView implements Runnable{
                             ninjaFighting.setColUsing(0);
                         }
                     }
+                    if(!running && isNinjaDontMove){
+                        setNinjaDontMove();
+                    }
                     if(canvas != null){
 //                    Log.d("Tagtest","runOK");
                         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
                         ninja.draw(canvas);
+//                        if(running)
                         ninja.updateColUsing();
                         surfaceHolder.unlockCanvasAndPost(canvas);
                     }
@@ -111,6 +119,17 @@ public class CharacterGameView extends SurfaceView implements Runnable{
         isNinjaFighting = true;
     }
 
+    private void setNinjaDontMove(){
+        isNinjaFighting = false;
+        ninja = this.ninjaFighting;
+        ninjaFighting.setColUsing(0);
+        running = false;
+
+    }
+
+    public void setIsNinjaDontMove(boolean isMove){
+        this.isNinjaDontMove = isMove;
+    }
     public  void setNinjaDefaut(){
         ninja = this.ninjaDefaut;
         isNinjaFighting = false;

@@ -45,6 +45,7 @@ public class BackgroudThread extends Thread {
                         if(backgroudGameView.isPauseGame()){
                             gameRunning = false;
                             activity.showHelthbar();
+                            charac.setIsNinjaDontMove(true);
                             charac.onPauseMySurfaceView();
 
                         }
