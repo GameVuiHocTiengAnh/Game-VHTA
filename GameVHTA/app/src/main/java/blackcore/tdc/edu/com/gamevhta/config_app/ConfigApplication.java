@@ -1,5 +1,12 @@
 package blackcore.tdc.edu.com.gamevhta.config_app;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
+
+import java.io.File;
+import java.util.ArrayList;
+
 /**
  * Created by HOANG on 3/18/2017.
  */
@@ -7,6 +14,7 @@ package blackcore.tdc.edu.com.gamevhta.config_app;
 public class ConfigApplication {
 
     /*------------- START HOANG -----------------*/
+    public static final String PACKAGE = "blackcore.tdc.edu.com.gamevhta";
     //Time left default
     public static final int TIME_LEFT_GAME = 50;
 
@@ -63,4 +71,26 @@ public class ConfigApplication {
      public  static final String NAME_DATA_LIST = "dataListUsing";
     public  static final String SCORES_BEFOR_GAME = "scores";
 
+    //Add image from sdcard to ImageButton
+    public static Bitmap getImageBitmapFromSDCard(String imageName) {
+        String path = Environment.getExternalStorageDirectory().toString() + "/" + imageName + ".jpg";
+        File fileImage = new File(path);
+        Bitmap bmp = null;
+        if (fileImage.exists()) {
+            bmp = BitmapFactory.decodeFile(fileImage.getAbsolutePath());
+        }
+        return bmp;
+    }
+    //Add image from sdcard to ImageButton
+    public static ArrayList<String> getListImageFromSDCard(String folder) {
+        String root = Environment.getExternalStorageDirectory().toString();
+        File file = new File(root+ folder);
+        File listFile[] = file.listFiles();
+        ArrayList<String> arrayList = new ArrayList<>();
+        for (int i = 0; i<listFile.length;i++){
+            arrayList.add(listFile[i].getName());
+        }
+        //String path = Environment.getExternalStorageDirectory().toString() + "" + folder + "";
+        return arrayList;
+    }
 }

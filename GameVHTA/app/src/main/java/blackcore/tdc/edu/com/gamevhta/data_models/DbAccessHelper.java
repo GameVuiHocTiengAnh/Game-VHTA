@@ -123,7 +123,7 @@ public class DbAccessHelper extends SQLiteOpenHelper {
     }
 
     private void copyDatabase() throws IOException {
-        InputStream inputStream = myContext.getAssets().open("databases/"+ConfigApplication.DATABASE_NAME+".db");
+        InputStream inputStream = myContext.getAssets().open("databases/" + ConfigApplication.DATABASE_NAME + ".db");
         String outFile = dbPath + ConfigApplication.DATABASE_NAME;
         OutputStream outputStream = new FileOutputStream(outFile);
         byte[] buffer = new byte[1024];
@@ -147,11 +147,11 @@ public class DbAccessHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(W_COLUMN_WORD_ENG, wordObject.getwEng());
-        contentValues.put(W_COLUMN_WORD_VIE, wordObject.getwEng());
-        contentValues.put(W_COLUMN_PATH_IMAGE, wordObject.getwEng());
-        contentValues.put(W_COLUMN_PATH_SOUND, wordObject.getwEng());
-        contentValues.put(W_COLUMN_OBJECT, wordObject.getwEng());
-        contentValues.put(W_COLUMN_LEVEL, wordObject.getwEng());
+        contentValues.put(W_COLUMN_WORD_VIE, wordObject.getwVie());
+        contentValues.put(W_COLUMN_PATH_IMAGE, wordObject.getwPathImage());
+        contentValues.put(W_COLUMN_PATH_SOUND, wordObject.getwPathSound());
+        contentValues.put(W_COLUMN_OBJECT, wordObject.getwObject());
+        contentValues.put(W_COLUMN_LEVEL, wordObject.getưLevel());
         db.insert(TABLE_WORD, null, contentValues);
         return true;
     }
@@ -160,11 +160,11 @@ public class DbAccessHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(W_COLUMN_WORD_ENG, wordObject.getwEng());
-        contentValues.put(W_COLUMN_WORD_VIE, wordObject.getwEng());
-        contentValues.put(W_COLUMN_PATH_IMAGE, wordObject.getwEng());
-        contentValues.put(W_COLUMN_PATH_SOUND, wordObject.getwEng());
-        contentValues.put(W_COLUMN_OBJECT, wordObject.getwEng());
-        contentValues.put(W_COLUMN_LEVEL, wordObject.getwEng());
+        contentValues.put(W_COLUMN_WORD_VIE, wordObject.getwVie());
+        contentValues.put(W_COLUMN_PATH_IMAGE, wordObject.getwPathImage());
+        contentValues.put(W_COLUMN_PATH_SOUND, wordObject.getwPathSound());
+        contentValues.put(W_COLUMN_OBJECT, wordObject.getwObject());
+        contentValues.put(W_COLUMN_LEVEL, wordObject.getưLevel());
         db.update(TABLE_WORD, contentValues, W_COLUMN_ID_WORD + " = ?", new String[]{wordObject.getwID()});
         return true;
     }
@@ -215,7 +215,7 @@ public class DbAccessHelper extends SQLiteOpenHelper {
     public ArrayList<WordObject> getWordObject(String strObject) {
         ArrayList<WordObject> arrWord = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("SELECT * FROM " + TABLE_WORD + " WHERE " + W_COLUMN_OBJECT + " = '" + strObject +"'", null);
+        Cursor res = db.rawQuery("SELECT * FROM " + TABLE_WORD + " WHERE " + W_COLUMN_OBJECT + " = '" + strObject + "'", null);
         res.moveToFirst();
         while (res.isAfterLast() == false) {
             WordObject wordObject = new WordObject();

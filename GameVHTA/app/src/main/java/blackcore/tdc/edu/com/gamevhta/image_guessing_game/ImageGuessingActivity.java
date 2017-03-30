@@ -2,13 +2,10 @@ package blackcore.tdc.edu.com.gamevhta.image_guessing_game;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +24,6 @@ import android.widget.TextView;
 import com.podcopic.animationlib.library.AnimationType;
 import com.podcopic.animationlib.library.StartSmartAnimation;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
@@ -54,7 +50,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
     private Timer timer = new Timer();
     private ImageButton btnImage1, btnImage2, btnImage3, btnImage4, btnImage5, btnImage6, btnPauseGame5;
     private TextView lblTimer, lblWord, lblScore, lblScoreGameOver, txtNameScoreWin, txtScoreWin;
-    private MediaPlayer mpChoose, mpSoundBackground, mpWingame, mpGameOver, mpOK, mpClicked, mpLoadImage,mpWrong;
+    private MediaPlayer mpChoose, mpSoundBackground, mpWingame, mpGameOver, mpOK, mpClicked, mpLoadImage, mpWrong;
     private ImageView imgListOver, imgReplayOver, imgList, imgReplay, imgResume, imvNextGame, imgSleep;
     private EditText lblPlayerNameGameOver;
     private String OBJECT = "";
@@ -69,8 +65,6 @@ public class ImageGuessingActivity extends AppCompatActivity {
     private Dialog dialogGameOver;
     private Dialog dialogWinGame;
     private DbAccessHelper dbAccessHelper;
-
-    private boolean isTouchDown = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +104,12 @@ public class ImageGuessingActivity extends AppCompatActivity {
             OBJECT = getIntent().getStringExtra(ConfigApplication.OBJECT_SELECTED);
             addDataList();
         }
+        new CustomToask(ImageGuessingActivity.this, R.drawable.screen_5_icon_ani, "Chọn 1 tấm hình đúng với từ vựng nhé...");
         Log.d("Guessing", SizeOfDevice.getScreenWidth() + "x" + SizeOfDevice.getScreenHeight());
+//        for (String arr : ConfigApplication.getListImageFromSDCard("/Download/")) {
+//            Log.d("Guessing", "File Name: " + arr);
+//        }
+
     }
 
     @Override
@@ -216,7 +215,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
         txtScoreWin = (TextView) dialogWinGame.findViewById(R.id.txtScoreWin);
         imvNextGame = (ImageView) dialogWinGame.findViewById(R.id.imvNextGame);
 
-        mpWrong  = MediaPlayer.create(getApplicationContext(), R.raw.game_5_ohoh);
+        mpWrong = MediaPlayer.create(getApplicationContext(), R.raw.game_5_ohoh);
         mpLoadImage = MediaPlayer.create(getApplicationContext(), R.raw.game_5_load_image);
         mpClicked = MediaPlayer.create(getApplicationContext(), R.raw.click);
         mpOK = MediaPlayer.create(getApplicationContext(), R.raw.dung);
@@ -271,7 +270,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
         StartSmartAnimation.startAnimation(btnImage4, AnimationType.FlipInX, 2200, 0, true);
         StartSmartAnimation.startAnimation(btnImage5, AnimationType.FlipInX, 2100, 0, true);
         StartSmartAnimation.startAnimation(btnImage6, AnimationType.FlipInX, 2400, 0, true);
-        StartSmartAnimation.startAnimation(lblWord, AnimationType.ZoomInRubberBand, 2000, 0, true);
+        StartSmartAnimation.startAnimation(lblWord, AnimationType.ZoomInRubberBand, 1500, 0, true);
 
         listImageLevelO = new ArrayList<>();
         Random rd = new Random();
@@ -283,15 +282,12 @@ public class ImageGuessingActivity extends AppCompatActivity {
         }
         RESULT_CHOSEN = rd.nextInt(listImageLevelO.size());
         lblWord.setText(listImageLevelO.get(RESULT_CHOSEN).getwEng().toString());
-        Log.d("ImageSizeResult", String.valueOf(RESULT_CHOSEN));
-
         btnImage1.setBackground(getBitmapResource(listImageLevelO.get(0).getwPathImage()));
         btnImage2.setBackground(getBitmapResource(listImageLevelO.get(1).getwPathImage()));
         btnImage3.setBackground(getBitmapResource(listImageLevelO.get(2).getwPathImage()));
         btnImage4.setBackground(getBitmapResource(listImageLevelO.get(3).getwPathImage()));
         btnImage5.setBackground(getBitmapResource(listImageLevelO.get(4).getwPathImage()));
         btnImage6.setBackground(getBitmapResource(listImageLevelO.get(5).getwPathImage()));
-
         timer = new Timer();
         playTimer();
     }
@@ -312,17 +308,6 @@ public class ImageGuessingActivity extends AppCompatActivity {
         else
             dr = getApplicationContext().getResources().getDrawable(R.drawable.screen_5_dv);
         return dr;
-    }
-
-    //Add image from sdcard to ImageButton
-    private Bitmap getImageBitmap(String imageName) {
-        String path = Environment.getExternalStorageDirectory().toString() + "" + imageName + ".jpg";
-        File fileImage = new File(path);
-        Bitmap bmp = null;
-        if (fileImage.exists()) {
-            bmp = BitmapFactory.decodeFile(fileImage.getAbsolutePath());
-        }
-        return bmp;
     }
 
     //Font
@@ -349,6 +334,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
                         imgListOver.setSelected(!imgListOver.isSelected());
                         imgListOver.isSelected();
                         mpClicked.start();
+                        imgReplayOver.setEnabled(false);
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
@@ -356,6 +342,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
                         imgListOver.setSelected(false);
                         startActivity(new Intent(ImageGuessingActivity.this, TopisChoosingActivity.class));
                         finish();
+                        imgReplayOver.setEnabled(true);
                         return true; // if you want to handle the touch event
                 }
                 return false;
@@ -370,6 +357,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
                         imgReplayOver.setSelected(!imgReplayOver.isSelected());
                         imgReplayOver.isSelected();
                         mpClicked.start();
+                        imgListOver.setEnabled(false);
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
@@ -380,6 +368,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
                         SCORE = 0;
                         loadGame();
                         dialogGameOver.dismiss();
+                        imgListOver.setEnabled(true);
                         return true; // if you want to handle the touch event
                 }
                 return false;
@@ -416,6 +405,8 @@ public class ImageGuessingActivity extends AppCompatActivity {
                         imgResume.setSelected(!imgResume.isSelected());
                         imgResume.isSelected();
                         mpClicked.start();
+                        imgList.setEnabled(false);
+                        imgReplay.setEnabled(false);
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
@@ -423,6 +414,8 @@ public class ImageGuessingActivity extends AppCompatActivity {
                         playTimer();
                         dialogBack.dismiss();
                         imgSleep.clearAnimation();
+                        imgList.setEnabled(true);
+                        imgReplay.setEnabled(true);
                         return true; // if you want to handle the touch event
                 }
                 return false;
@@ -437,12 +430,16 @@ public class ImageGuessingActivity extends AppCompatActivity {
                         imgList.setSelected(!imgList.isSelected());
                         imgList.isSelected();
                         mpClicked.start();
+                        imgResume.setEnabled(false);
+                        imgReplay.setEnabled(false);
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
                         imgList.setSelected(false);
                         startActivity(new Intent(ImageGuessingActivity.this, TopisChoosingActivity.class));
                         finish();
+                        imgResume.setEnabled(true);
+                        imgReplay.setEnabled(true);
                         return true; // if you want to handle the touch event
                 }
                 return false;
@@ -457,6 +454,8 @@ public class ImageGuessingActivity extends AppCompatActivity {
                         imgReplay.setSelected(!imgReplay.isSelected());
                         imgReplay.isSelected();
                         mpClicked.start();
+                        imgList.setEnabled(false);
+                        imgResume.setEnabled(false);
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
@@ -467,6 +466,8 @@ public class ImageGuessingActivity extends AppCompatActivity {
                         loadGame();
                         dialogBack.dismiss();
                         imgSleep.clearAnimation();
+                        imgList.setEnabled(true);
+                        imgResume.setEnabled(true);
                         return true; // if you want to handle the touch event
                 }
                 return false;
@@ -508,11 +509,11 @@ public class ImageGuessingActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
                         btnImage6.startAnimation(animation);
-                        getResult(5);
                         mpChoose.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
+                        getResult(5);
                         btnImage6.clearAnimation();
                         return true; // if you want to handle the touch event
                 }
@@ -527,11 +528,12 @@ public class ImageGuessingActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
                         btnImage5.startAnimation(animation);
-                        getResult(4);
                         mpChoose.start();
+
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
+                        getResult(4);
                         btnImage5.clearAnimation();
                         return true; // if you want to handle the touch event
                 }
@@ -546,11 +548,11 @@ public class ImageGuessingActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
                         btnImage4.startAnimation(animation);
-                        getResult(3);
                         mpChoose.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
+                        getResult(3);
                         btnImage4.clearAnimation();
                         return true; // if you want to handle the touch event
                 }
@@ -564,19 +566,13 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
-                        if (!isTouchDown) {
-                            isTouchDown = true;
-                            btnImage3.startAnimation(animation);
-                            mpChoose.start();
-                        }
+                        btnImage3.startAnimation(animation);
+                        mpChoose.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
-                        if (isTouchDown) {
-                            isTouchDown = false;
-                            getResult(2);
-                            btnImage3.clearAnimation();
-                        }
+                        getResult(2);
+                        btnImage3.clearAnimation();
                         return true; // if you want to handle the touch event
                 }
                 return false;
@@ -589,19 +585,13 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
-                        if (!isTouchDown) {
-                            isTouchDown = true;
-                            btnImage2.startAnimation(animation);
-                            mpChoose.start();
-                        }
+                        btnImage2.startAnimation(animation);
+                        mpChoose.start();
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
-                        if (isTouchDown) {
-                            isTouchDown = false;
-                            getResult(1);
-                            btnImage2.clearAnimation();
-                        }
+                        getResult(1);
+                        btnImage2.clearAnimation();
                         return true; // if you want to handle the touch event
                 }
                 return false;
@@ -615,20 +605,14 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         // PRESSED
-                        if (!isTouchDown) {
-                            isTouchDown = true;
-                            btnImage1.startAnimation(animation);
-                            mpChoose.start();
-                        }
+                        btnImage1.startAnimation(animation);
+                        mpChoose.start();
                         return true;
                     // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         // RELEASED
-                        if (isTouchDown) {
-                            isTouchDown = false;
-                            getResult(0);
-                            btnImage1.clearAnimation();
-                        }
+                        getResult(0);
+                        btnImage1.clearAnimation();
                         return true; // if you want to handle the touch event
                 }
                 return false;
@@ -657,7 +641,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
             //Word's length * 5 * time left
             SCORE += lblWord.getText().length() * 5 * Integer.parseInt(lblTimer.getText().toString());
             lblScore.setText(String.valueOf(SCORE));
-            StartSmartAnimation.startAnimation(lblScore, AnimationType.StandUp, 1000, 0, true);
+            StartSmartAnimation.startAnimation(lblScore, AnimationType.StandUp, 1500, 0, true);
             mpOK.start();
             TURN++;
             if (TURN >= 4) {
