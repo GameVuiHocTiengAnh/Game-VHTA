@@ -66,6 +66,12 @@ public class ConfigApplication {
 
      /*------------- GAME CATCHING WORDS-----------------*/
      public  static final String SCREEN_USING_PAUSE_DIALOG_MH6 = "MH6";
+     public  static final String BG_FOREST_LIGHT = "mh6_backgroud_light";
+    public  static final String BG_FOREST_DARK = "mh6_backgroud_dark";
+    public  static final String BG_CITY_LIGHT = "mh6_backgroud_city_map_light";
+    public  static final String BG_CITY_DARK = "mh6_backgroud_city_map_dark";
+    public  static final String BG_FARM_LIGHT = "mh6_backgroud_farm_map_light";
+    public  static final String BG_FRAM_DARK = "mh6_backgroud_farm_map_dark";
      /*------------- END GAME CATCHING WORDS-----------------*/
 
      public  static final String NAME_DATA_LIST = "dataListUsing";

@@ -1,35 +1,21 @@
 package blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
-import android.view.Window;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.CatchingWordsActivity;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
-import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.ConfigCWGame;
 import blackcore.tdc.edu.com.gamevhta.models.SizeOfDevice;
-import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
 /**
  * Created by Shiro on 3/15/2017.
@@ -56,11 +42,12 @@ public class BackgroudGameView extends View implements View.OnTouchListener{
         super(context);
         this.setFocusable(true);
         this.context = context;
-        Bitmap imgDark = BitmapFactory.decodeResource(getResources(), R.drawable.mh6_backgroud_dark);
-        Bitmap imgLight = BitmapFactory.decodeResource(getResources(),R.drawable.mh6_backgroud_light);
-        Random ran = new Random();
-        int dom = ran.nextInt(2);
-        randomBG(dom,imgDark,imgLight);
+
+        bitmapTrunk = BitmapFactory.decodeResource(getResources(), R.drawable.mh6_trunk);
+        int idImgRoot = randomBG();
+        Bitmap bg = BitmapFactory.decodeResource(getResources(),idImgRoot);
+        imgRoot = Bitmap.createScaledBitmap(bg,SizeOfDevice.getScreenWidth(),SizeOfDevice.getScreenHeight(),false);
+
         backgroud = new Backgroud(imgRoot, xLeft, yTop);
         bitmapTrunk = BitmapFactory.decodeResource(getResources(), R.drawable.mh6_trunk);
         trunk = new Trunk(bitmapTrunk, SizeOfDevice.getScreenWidth() + 500, ConfigCWGame.yPositonOfTrunk());
@@ -173,14 +160,25 @@ public class BackgroudGameView extends View implements View.OnTouchListener{
         return trunk.isPause();
     }
 
-    private void randomBG(int dom, Bitmap bg1, Bitmap bg2){
-        bitmapTrunk = BitmapFactory.decodeResource(getResources(), R.drawable.mh6_trunk);
+    private int randomBG(){
+       int idBg = -1;
+        Random ran = new Random();
+        int dom = ran.nextInt(6);
         switch (dom){
-            case 0: imgRoot = Bitmap.createScaledBitmap(bg1, SizeOfDevice.getScreenWidth(), SizeOfDevice.getScreenHeight(), false);
+            case 0: idBg = getResources().getIdentifier(ConfigApplication.BG_CITY_DARK,"drawable",getContext().getPackageName());
                 break;
-            case 1: imgRoot = Bitmap.createScaledBitmap(bg2, SizeOfDevice.getScreenWidth(), SizeOfDevice.getScreenHeight(), false);
+            case 1: idBg = getResources().getIdentifier(ConfigApplication.BG_CITY_LIGHT,"drawable",getContext().getPackageName());
+                break;
+            case 2: idBg = getResources().getIdentifier(ConfigApplication.BG_FARM_LIGHT,"drawable",getContext().getPackageName());
+                break;
+            case 3: idBg = getResources().getIdentifier(ConfigApplication.BG_FRAM_DARK,"drawable",getContext().getPackageName());
+                break;
+            case 4: idBg = getResources().getIdentifier(ConfigApplication.BG_FOREST_LIGHT,"drawable",getContext().getPackageName());
+                break;
+            case 5: idBg = getResources().getIdentifier(ConfigApplication.BG_FOREST_DARK,"drawable",getContext().getPackageName());
                 break;
         }
+        return idBg;
     }
 
 }

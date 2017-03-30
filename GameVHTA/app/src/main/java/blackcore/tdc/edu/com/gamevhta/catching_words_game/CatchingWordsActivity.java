@@ -1,9 +1,8 @@
 package blackcore.tdc.edu.com.gamevhta.catching_words_game;
 
 import android.app.Dialog;
-import android.content.ComponentName;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -12,8 +11,6 @@ import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
-import android.os.Parcelable;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -23,8 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
 
-import blackcore.tdc.edu.com.gamevhta.LoadingGoInGameActivity;
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.RandomGameMemoryChallengeActivity;
 import blackcore.tdc.edu.com.gamevhta.TopisChoosingActivity;
@@ -51,7 +45,6 @@ import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.ConfigCWGame;
 import blackcore.tdc.edu.com.gamevhta.models.SizeOfDevice;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
-import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 public class CatchingWordsActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
@@ -63,7 +56,6 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
     private TextView txtVocalubary;
     private TextView tvScore;
     private ProgressBar helth;
-    private MusicService themeMusic = new MusicService();
     private MediaPlayer songThemeMusic;
     private PauseButton btnPause;
     private ShurikenView throwShuriken;
@@ -88,26 +80,17 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
     private MediaPlayer dialogWinSound = null;
     private MediaPlayer mplClicked = null;
 
-    ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            MusicService.MyBinder mBinder = (MusicService.MyBinder) iBinder;
-            themeMusic = mBinder.getService();
+    private BroadcastReceiver screenOnReceiver = null;
+    private boolean flagScreenOff;
 
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            themeMusic = null;
-
-        }
-    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //WindowManager.LayoutParams attribute = getWindow().getAttributes();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        flagScreenOff = false;
 
         textToSpeech = new TextToSpeech(this,this);
         countComplete = 0;
@@ -119,9 +102,9 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
               if(db != null)
                 listWords = db.getWordObject(ConfigApplication.OBJECT_ANIMALS);
                 initObjectUSing();
-            Log.d("Tagtest",listWords.get(0).getwPathImage());
+           // Log.d("Tagtest",listWords.get(0).getwPathImage());
         }catch (NullPointerException e){
-            Log.d("Tagtest",e.toString());
+           // Log.d("Tagtest",e.toString());
         }
 
         frameGame = new FrameLayout(this);
@@ -156,7 +139,6 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         this.addTopBarView(frameGame);
         this.addProgressbarHelth(frameGame);
 
-        this.playThemeMusic();
         catchingSound = MediaPlayer.create(getApplicationContext(),R.raw.catching_words);
         imvVocalubary.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,6 +150,9 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
             }
         });
         this.initDialogCatchingWords();
+        playThemeMusic();
+
+
         this.dialogWinSound = MediaPlayer.create(getApplicationContext(),R.raw.wingame);
         this.mplClicked = MediaPlayer.create(getApplicationContext(),R.raw.click);
 //        Log.d("Tagtest",SizeOfDevice.getScreenWidth() +"=============="+ SizeOfDevice.getScreenHeight());
@@ -179,7 +164,8 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
     protected void onRestart() {
         super.onRestart();
         btnPause.callOnClick();
-        themeMusic.playMusic(songThemeMusic);
+       // Log.d("Tagtest","onRestart");
+        songThemeMusic.start();
     }
 
     @Override
@@ -190,7 +176,9 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
     @Override
     protected void onStop() {
         backgroudGameView.stopMoveBG();
-        themeMusic.pauseMusic(songThemeMusic);
+        if(songThemeMusic.isPlaying()){
+            songThemeMusic.pause();
+        }
         super.onStop();
     }
 
@@ -311,9 +299,27 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         songThemeMusic = MediaPlayer.create(getApplicationContext(),R.raw.blizzards);
         songThemeMusic.setVolume(0.25f,0.25f);
         songThemeMusic.setLooping(true);
-        themeMusic.playMusic(this.songThemeMusic);
-    }
 
+//        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+//        screenOnReceiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF)){
+//                    if(songThemeMusic.isPlaying()){
+//                        songThemeMusic.pause();
+//                    }
+//                    Log.d("Tagtest","inReciever "+flagScreenOff);
+//                }
+//            }
+//        };
+//        this.registerReceiver(screenOnReceiver,intentFilter);
+    }
+    private void releaseThemeMusic(){
+        if(this.songThemeMusic != null){
+            songThemeMusic.stop();
+            songThemeMusic.release();
+        }
+    }
     public void throwShuriken(){
         final MediaPlayer  soundThrowShuriken = MediaPlayer.create(getApplicationContext(),R.raw.shuriken_throw);
         soundThrowShuriken.setVolume(0.9f,0.9f);
@@ -469,9 +475,18 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
 
     @Override
     protected void onDestroy() {
+      //  Log.d("Tagtest","destroy");
         if (textToSpeech != null) {
             textToSpeech.stop();
             textToSpeech.shutdown();
+
+        }
+        if(songThemeMusic != null){
+           if(songThemeMusic.isPlaying()){
+               songThemeMusic.stop();
+               songThemeMusic.release();
+           }else
+               songThemeMusic.release();
         }
         super.onDestroy();
     }
@@ -487,5 +502,17 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
 
     private void startAnimClickedOnImvVoca(){
         StartSmartAnimation.startAnimation(imvVocalubary,AnimationType.Swing,2000,0,true,300);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        Log.d("Tagtest",flagScreenOff+"");
+//        if(flagScreenOff)
+//            songThemeMusic.stop();
+//        else
+//            if(!flagScreenOff)
+//                songThemeMusic.start();
+        songThemeMusic.start();
     }
 }

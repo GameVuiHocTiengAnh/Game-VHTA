@@ -35,7 +35,7 @@ public class Shuriken {
         this.ytop = ytop;
         this.isComplete = false;
         ran = new Random();
-        xComplete = (SizeOfDevice.getScreenWidth()/2) - 230;
+        xComplete = (SizeOfDevice.getScreenWidth()/2 - 230);
     }
 
 
