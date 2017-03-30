@@ -78,4 +78,12 @@
     <!-- End Screen 5-->
     <!--Game catching words-->
 
+    <!--Game Choosing Objects-->
+    <dimen name="layout_width_image_dialog">250dp</dimen>
+    <dimen name="layout_height_image_dialog">250dp</dimen>
+    <dimen name="textWordEng">60sp</dimen>
+    <dimen name="marginBottom">22dp</dimen>
+
+    <dimen name="layout_width_image">155dp</dimen>
+    <dimen name="layout_height_image">125dp</dimen>
 </resources>

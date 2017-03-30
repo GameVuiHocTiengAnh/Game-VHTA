@@ -106,7 +106,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
         mGameWin = MediaPlayer.create(ChoosingObjectActivity.this, R.raw.wingame);
 
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_in);
-        animationsacle = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_anim);
+        animationsacle = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_anim_trieu);
 
 
         //dialog win game
@@ -119,14 +119,13 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
         dialogWin.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         txtScoreWin = (TextView) dialogWin.findViewById(R.id.txtScoreWin);
         imbNextGameWin = (ImageView) dialogWin.findViewById(R.id.imvNextGame);
-        //txtWorddialog = (TextView) dialogGame.findViewById(R.id.txtWorddialog);
 
         //Text to Speech
         textToSpeech = new TextToSpeech(this,this);
         mService.playMusic(mMusicMainGame);
         mMusicMainGame.setLooping(true);
-        mMusicMainGame.setVolume(0.4f,0.4f);
-        mClick.setVolume(0.3f,0.3f);
+        mMusicMainGame.setVolume(0.5f,0.5f);
+        mClick.setVolume(0.4f,0.4f);
 
         addDataList();
         createDataGame();
@@ -190,14 +189,12 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
         txtWordVie = (TextView) dialogGame.findViewById(R.id.txtWordVie);
         dialogGame.getWindow().getAttributes().width = (Resources.getSystem().getDisplayMetrics().widthPixels) - 80;
         startAnimation( dialogGame.findViewById(R.id.imgAnimalDialog) , AnimationType.DropOut , 2000 , 0 , true , 300 );
-        startAnimation( dialogGame.findViewById(R.id.txtWordEng) , AnimationType.DropOut , 2000 , 0 , true , 300 );
-        startAnimation( dialogGame.findViewById(R.id.txtWordVie) , AnimationType.DropOut , 2000 , 0 , true , 300 );
+        startAnimation( dialogGame.findViewById(R.id.txtWordEng) , AnimationType.BounceIn , 2000 , 0 , true , 300 );
+        startAnimation( dialogGame.findViewById(R.id.txtWordVie) , AnimationType.BounceInLeft , 2000 , 0 , true , 300 );
     }
     private void setFont() {
         Typeface custom_font = Typeface.createFromAsset(getAssets(), getResources().getString(R.string.fontPath));
         txtScore.setTypeface(custom_font);
-//        txtWordEng.setTypeface(custom_font);
-//        txtWordVie.setTypeface(custom_font);
         txtWordOne.setTypeface(custom_font);
         txtWordTwo.setTypeface(custom_font);
         txtWordThree.setTypeface(custom_font);
@@ -250,7 +247,8 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                                     mService.playMusic(mGameWin);
                                     dialogWin.show();
                                 }
-                                startAnimation( findViewById(R.id.txtWordOne) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
+
+                                startAnimation( findViewById(R.id.txtWordOne) , AnimationType.ZoomInDown , 2000 , 0 , true , 300 );
                                 startAnimation( findViewById(R.id.imgAnimalOne) , AnimationType.Tada , 2000 , 0 , true , 300 );
                                 txtWordOne.setText(listImageGame.get(0).getwEng());
                                 if(textToSpeech != null && listImageGame.get(0).getwEng() != null){
@@ -368,7 +366,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                                     dialogWin.show();
                                 }
                                 startAnimation( findViewById(R.id.txtWordThree) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
-                                startAnimation( findViewById(R.id.imgAnimalThree) , AnimationType.Tada , 2000 , 0 , true , 300 );
+                                startAnimation( findViewById(R.id.imgAnimalThree) , AnimationType.Tada , 1000 , 0 , true , 300 );
                                 txtWordThree.setText(listImageGame.get(2).getwEng());
                                 if(textToSpeech != null && listImageGame.get(2).getwEng() != null){
                                     textToSpeech.speak(listImageGame.get(2).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
@@ -425,8 +423,8 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                                     mService.playMusic(mGameWin);
                                     dialogWin.show();
                                 }
-                                startAnimation( findViewById(R.id.txtWordFour) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
-                                startAnimation( findViewById(R.id.imgAnimalFour) , AnimationType.Tada , 2000 , 0 , true , 300 );
+                                startAnimation( findViewById(R.id.txtWordFour) , AnimationType.ZoomInRight , 2000 , 0 , true , 300 );
+                                startAnimation( findViewById(R.id.imgAnimalFour) , AnimationType.Tada , 1000 , 0 , true , 300 );
                                 txtWordFour.setText(listImageGame.get(3).getwEng());
                                 if(textToSpeech != null && listImageGame.get(3).getwEng() != null){
                                     textToSpeech.speak(listImageGame.get(3).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
@@ -485,7 +483,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                                     dialogWin.show();
                                 }
                                 startAnimation( findViewById(R.id.txtWordFive) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
-                                startAnimation( findViewById(R.id.imgAnimalFive) , AnimationType.Tada , 2000 , 0 , true , 300 );
+                                startAnimation( findViewById(R.id.imgAnimalFive) , AnimationType.BounceIn , 1000 , 0 , true , 300 );
                                 txtWordFive.setText(listImageGame.get(4).getwEng());
                                 if(textToSpeech != null && listImageGame.get(4).getwEng() != null){
                                     textToSpeech.speak(listImageGame.get(4).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
@@ -524,6 +522,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                             @Override
                             public void onClick(View v) {
                                 imgAnimalDialog.startAnimation(animationsacle);
+
                                 if(textToSpeech != null && listImageGame.get(5).getwEng() != null){
                                     textToSpeech.speak(listImageGame.get(5).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
                                 }
@@ -544,8 +543,8 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                                     mService.playMusic(mGameWin);
                                     dialogWin.show();
                                 }
-                                startAnimation( findViewById(R.id.txtWordSix) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
-                                startAnimation( findViewById(R.id.imgAnimalSix) , AnimationType.Tada , 2000 , 0 , true , 300 );
+                                startAnimation( findViewById(R.id.txtWordSix) , AnimationType.ZoomInLeft , 2000 , 0 , true , 300 );
+                                startAnimation( findViewById(R.id.imgAnimalSix) , AnimationType.Tada , 1000 , 0 , true , 300 );
                                 txtWordSix.setText(listImageGame.get(5).getwEng());
                                 if(textToSpeech != null && listImageGame.get(5).getwEng() != null){
                                     textToSpeech.speak(listImageGame.get(5).getwEng(),TextToSpeech.QUEUE_FLUSH,null);

@@ -77,4 +77,11 @@
     <dimen name="layout_right_bot_row_image_size">100dp</dimen>
 
     <!-- End screen 5 -->
+
+    <!--Game Choosing Objects-->
+    <dimen name="layout_width_image_dialog">160dp</dimen>
+    <dimen name="layout_height_image_dialog">100dp</dimen>
+
+    <dimen name="layout_width_image">80dp</dimen>
+    <dimen name="layout_height_image">800dp</dimen>
 </resources>

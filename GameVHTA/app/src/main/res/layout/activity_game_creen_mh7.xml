@@ -71,7 +71,7 @@
                 android:weightSum="1">
 
                 <FrameLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:orientation="horizontal">
@@ -79,23 +79,26 @@
                     <TextView
                         android:id="@+id/txtWordOne"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_gravity="bottom|center"
                         android:textColor="#D50000"
-                        android:textSize="30sp" />
+                        android:layout_marginRight="20dp"
+                        android:textSize="20sp" />
 
                     <ImageView
                         android:id="@+id/img_markOne"
                         android:layout_width="match_parent"
-                        android:layout_height="25dp"
+                        android:layout_height="30dp"
+                        android:layout_marginRight="40dp"
                         android:src="@drawable/mark" />
                 </FrameLayout>
 
 
                 <ImageView
                     android:id="@+id/imgAnimalOne"
-                    android:layout_width="@dimen/widthandheight"
-                    android:layout_height="@dimen/widthandheight"
+                    android:layout_width="@dimen/layout_width_image"
+                    android:layout_height="@dimen/layout_width_image"
+                    android:layout_marginRight="25dp"
                     android:src="@drawable/screen_3_monkey" />
             </LinearLayout>
 
@@ -115,22 +118,25 @@
                     <ImageView
                         android:id="@+id/img_markTwo"
                         android:layout_width="match_parent"
-                        android:layout_height="25dp"
+                        android:layout_height="30dp"
+                        android:layout_marginRight="55dp"
                         android:src="@drawable/mark" />
 
                     <TextView
                         android:id="@+id/txtWordTwo"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_gravity="bottom|center"
-                        android:textSize="30sp"
-                        android:textColor="#D50000"/>
+                        android:layout_marginRight="20dp"
+                        android:textColor="#D50000"
+                        android:textSize="20sp" />
                 </FrameLayout>
 
                 <ImageView
                     android:id="@+id/imgAnimalTwo"
-                    android:layout_width="@dimen/widthandheight"
-                    android:layout_height="@dimen/widthandheight"
+                    android:layout_width="@dimen/layout_width_image"
+                    android:layout_height="@dimen/layout_width_image"
+                    android:layout_marginRight="20dp"
                     android:src="@drawable/screen_3_caw" />
             </LinearLayout>
 
@@ -150,22 +156,22 @@
                     <ImageView
                         android:id="@+id/img_markThree"
                         android:layout_width="match_parent"
-                        android:layout_height="25dp"
+                        android:layout_height="30dp"
                         android:src="@drawable/mark" />
 
                     <TextView
                         android:id="@+id/txtWordThree"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_gravity="bottom|center"
-                        android:textSize="30sp"
-                        android:textColor="#D50000"/>
+                        android:textColor="#D50000"
+                        android:textSize="20sp" />
                 </FrameLayout>
 
                 <ImageView
                     android:id="@+id/imgAnimalThree"
-                    android:layout_width="@dimen/widthandheight"
-                    android:layout_height="@dimen/widthandheight"
+                    android:layout_width="@dimen/layout_width_image"
+                    android:layout_height="@dimen/layout_width_image"
                     android:src="@drawable/screen_3_panda" />
             </LinearLayout>
 
@@ -191,25 +197,25 @@
                     android:layout_gravity="center"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/img_markFour"
-                        android:layout_width="match_parent"
-                        android:layout_height="25dp"
-                        android:src="@drawable/mark" />
-
                     <TextView
                         android:id="@+id/txtWordFour"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_gravity="bottom|center"
-                        android:textSize="30sp"
-                        android:textColor="#D50000"/>
+                        android:textColor="#D50000"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:id="@+id/img_markFour"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:src="@drawable/mark" />
                 </FrameLayout>
 
                 <ImageView
                     android:id="@+id/imgAnimalFour"
-                    android:layout_width="@dimen/widthandheight"
-                    android:layout_height="@dimen/widthandheight"
+                    android:layout_width="@dimen/layout_width_image"
+                    android:layout_height="@dimen/layout_width_image"
                     android:src="@drawable/screen_3_pig" />
             </LinearLayout>
 
@@ -229,22 +235,22 @@
                     <ImageView
                         android:id="@+id/img_markFive"
                         android:layout_width="match_parent"
-                        android:layout_height="25dp"
+                        android:layout_height="30dp"
                         android:src="@drawable/mark" />
 
                     <TextView
                         android:id="@+id/txtWordFive"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_gravity="bottom|center"
-                        android:textSize="30sp"
-                        android:textColor="#D50000"/>
+                        android:textColor="#D50000"
+                        android:textSize="20sp" />
                 </FrameLayout>
 
                 <ImageView
                     android:id="@+id/imgAnimalFive"
-                    android:layout_width="@dimen/widthandheight"
-                    android:layout_height="@dimen/widthandheight"
+                    android:layout_width="@dimen/layout_width_image"
+                    android:layout_height="@dimen/layout_width_image"
                     android:src="@drawable/screen_3_rabbit" />
             </LinearLayout>
 
@@ -257,29 +263,29 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="34dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/img_markSix"
                         android:layout_width="match_parent"
-                        android:layout_height="25dp"
+                        android:layout_height="40dp"
                         android:src="@drawable/mark" />
 
                     <TextView
                         android:id="@+id/txtWordSix"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_gravity="bottom|center"
-                        android:textSize="30sp"
-                        android:textColor="#D50000"/>
+                        android:textColor="#D50000"
+                        android:textSize="20sp" />
                 </FrameLayout>
 
                 <ImageView
                     android:id="@+id/imgAnimalSix"
-                    android:layout_width="@dimen/widthandheight"
-                    android:layout_height="@dimen/widthandheight"
+                    android:layout_width="@dimen/layout_width_image"
+                    android:layout_height="@dimen/layout_width_image"
                     android:src="@drawable/screen_3_tiger" />
             </LinearLayout>
 
