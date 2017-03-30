@@ -4,12 +4,10 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
-        android:hardwareAccelerated="false"
         android:allowBackup="true"
         android:icon="@mipmap/ic_vhta"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:largeHeap="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".SplashScreenActivity"

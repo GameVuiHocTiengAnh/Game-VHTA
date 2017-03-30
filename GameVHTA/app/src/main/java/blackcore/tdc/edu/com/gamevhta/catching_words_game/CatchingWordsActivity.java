@@ -515,4 +515,10 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
 //                songThemeMusic.start();
         songThemeMusic.start();
     }
+
+    @Override
+    protected void onPause() {
+        songThemeMusic.pause();
+        super.onPause();
+    }
 }
