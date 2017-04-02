@@ -6,9 +6,24 @@
     <string name="txtdialogovergame">Game Over</string>
     <string name="txtTime">60</string>
     <string name="txtScore">0</string>
-    <array name="myImages">
-        <item>@drawable/animal_two</item>
-        <item>@drawable/animal_three</item>
-        <item>@drawable/scene</item>
+    <array name="topicAnimal">
+        <item>@drawable/background_animal_one</item>
+        <item>@drawable/background_animal_two</item>
+    </array>
+    <array name="topicSchool">
+        <item>@drawable/background_school_one</item>
+        <item>@drawable/background_school_two</item>
+    </array>
+    <array name="topicPlant">
+        <item>@drawable/background_tree_one</item>
+        <item>@drawable/background_tree_two</item>
+    </array>
+    <array name="topicHome">
+        <item>@drawable/background_school_one</item>
+        <item>@drawable/background_school_two</item>
+    </array>
+    <array name="topicFarm">
+        <item>@drawable/background_farm_one</item>
+        <item>@drawable/background_farm_two</item>
     </array>
 </resources>

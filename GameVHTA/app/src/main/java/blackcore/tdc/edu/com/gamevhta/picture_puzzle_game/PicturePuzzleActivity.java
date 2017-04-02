@@ -198,19 +198,14 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         txtNameScoreWin = (TextView) dialogWin.findViewById(R.id.txtNameScoreWin);
         txtScoreWin = (TextView) dialogWin.findViewById(R.id.txtScoreWin);
 
-        //get Object selected at screen topic
-        if (getIntent().getExtras() != null) {
-            OBJECT = getIntent().getStringExtra(ConfigApplication.OBJECT_SELECTED);
-            //listImageFromData = dbWordHelper.getWordObject(OBJECT, 30);
-        }
 
         mService.playMusic(mMusicMainGame);
         mMusicMainGame.setLooping(true);
         mMusicMainGame.setVolume(0.5f,0.5f);
         mService.playMusic(mCartoonImage);
         mCartoonImage.setVolume(1f,1f);
-        randomBackgroundGame();
         addDataList();
+        randomBackground();
         randomImage();
         moveActivity();
         setFont();
@@ -221,24 +216,82 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         Answer();
         Question();
 
-//        test
         txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
         Timer();
     }
-    public void randomBackgroundGame(){
+    public void randomBackground(){
         background = (LinearLayout) findViewById(R.id.scene);
         Resources res = getResources();
-        TypedArray myImages = res.obtainTypedArray(R.array.myImages);
+        TypedArray topicSchool = res.obtainTypedArray(R.array.topicAnimal);
         Random random = new Random();
-        int r = random.nextInt(myImages.length());
-        int i = myImages.getResourceId(r, -1);
+        int r = random.nextInt(topicSchool.length());
+        int i = topicSchool.getResourceId(r, -1);
         background.setBackgroundResource(i);
     }
-
     //List Image was loaded from database
     private void addDataList() {
         listImageData = new ArrayList<>();
         listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_ANIMALS);
+//        if (getIntent().getExtras() != null) {
+//
+//            OBJECT = getIntent().getStringExtra(ConfigApplication.OBJECT_SELECTED);
+//
+//            if (ConfigApplication.OBJECT_SELECTED == ConfigApplication.OBJECT_ANIMALS)
+//            {
+//                listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_ANIMALS);
+//                background = (LinearLayout) findViewById(R.id.scene);
+//                Resources res = getResources();
+//                TypedArray topicSchool = res.obtainTypedArray(R.array.topicAnimal);
+//                Random random = new Random();
+//                int r = random.nextInt(topicSchool.length());
+//                int i = topicSchool.getResourceId(r, -1);
+//                background.setBackgroundResource(i);
+//
+//            }else if (ConfigApplication.OBJECT_SELECTED == ConfigApplication.OBJECT_SCHOOL)
+//            {
+//                listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_SCHOOL);
+//                background = (LinearLayout) findViewById(R.id.scene);
+//                Resources res = getResources();
+//                TypedArray topicAnimal = res.obtainTypedArray(R.array.topicAnimal);
+//                Random random = new Random();
+//                int r = random.nextInt(topicAnimal.length());
+//                int i = topicAnimal.getResourceId(r, -1);
+//                background.setBackgroundResource(i);
+//
+//            }else if (ConfigApplication.OBJECT_SELECTED == ConfigApplication.OBJECT_COUNTRY_SIDE)
+//            {
+//                listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_COUNTRY_SIDE);
+//                background = (LinearLayout) findViewById(R.id.scene);
+//                Resources res = getResources();
+//                TypedArray topicFarm = res.obtainTypedArray(R.array.topicFarm);
+//                Random random = new Random();
+//                int r = random.nextInt(topicFarm.length());
+//                int i = topicFarm.getResourceId(r, -1);
+//                background.setBackgroundResource(i);
+//
+//            }else if (ConfigApplication.OBJECT_SELECTED == ConfigApplication.OBJECT_HOUSEHOLD_APPLIANCES)
+//            {
+//                listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_HOUSEHOLD_APPLIANCES);
+//                background = (LinearLayout) findViewById(R.id.scene);
+//                Resources res = getResources();
+//                TypedArray topicHome = res.obtainTypedArray(R.array.topicHome);
+//                Random random = new Random();
+//                int r = random.nextInt(topicHome.length());
+//                int i = topicHome.getResourceId(r, -1);
+//                background.setBackgroundResource(i);
+//
+//            }else if (ConfigApplication.OBJECT_SELECTED == ConfigApplication.OBJECT_PLANTS)
+//            {
+//                listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_PLANTS);
+//                background = (LinearLayout) findViewById(R.id.scene);
+//                Resources res = getResources();
+//                TypedArray topicPlant = res.obtainTypedArray(R.array.topicPlant);
+//                Random random = new Random();
+//                int r = random.nextInt(topicPlant.length());
+//                int i = topicPlant.getResourceId(r, -1);
+//                background.setBackgroundResource(i);
+//            }
+//        }
     }
 
     public void randomImage(){
@@ -391,21 +444,21 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
     }
 
     public void effectText(){
-        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerOne) , AnimationType.DropOut , 2000 , 0 , true , 300 );
-        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerTwo) , AnimationType.DropOut , 2000 , 0 , true , 300 );
-        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerThree) , AnimationType.DropOut , 2000 , 0 , true , 300 );
-        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerFour) , AnimationType.DropOut , 2000 , 0 , true , 300 );
-        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerFive) , AnimationType.DropOut , 2000 , 0 , true , 300 );
-        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerSix) , AnimationType.DropOut , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerOne) , AnimationType.DropOut , 2000 , 0 , true , 100 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerTwo) , AnimationType.DropOut , 2000 , 0 , true , 100 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerThree) , AnimationType.DropOut , 2000 , 0 , true , 100 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerFour) , AnimationType.DropOut , 2000 , 0 , true , 100 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerFive) , AnimationType.DropOut , 2000 , 0 , true , 100 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.txtAnswerSix) , AnimationType.DropOut , 2000 , 0 , true , 100 );
     }
 
     public void effectImageAnswer(){
-        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalone) , AnimationType.DropOut , 2000 , 0 , true , 300 );
-        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimaltwo) , AnimationType.DropOut , 2000 , 0 , true , 300 );
-        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalthree) , AnimationType.DropOut , 2000 , 0 , true , 300 );
-        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimlafour) , AnimationType.DropOut , 2000 , 0 , true , 300 );
-        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalfive) , AnimationType.DropOut , 2000 , 0 , true , 300 );
-        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalsix) , AnimationType.DropOut , 2000 , 0 , true , 300 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalone) , AnimationType.DropOut , 2000 , 0 , true , 100 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimaltwo) , AnimationType.DropOut , 2000 , 0 , true , 100 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalthree) , AnimationType.DropOut , 2000 , 0 , true , 100 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimlafour) , AnimationType.DropOut , 2000 , 0 , true , 100 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalfive) , AnimationType.DropOut , 2000 , 0 , true , 100 );
+        StartSmartAnimation.startAnimation( findViewById(R.id.imbAnimalsix) , AnimationType.DropOut , 2000 , 0 , true , 100 );
     }
 
     public void effectImageQuestion(){

@@ -42,7 +42,7 @@
     <dimen name="backGame">10dp</dimen>
     <dimen name="background_score_game_top">10dp</dimen>
     <dimen name="background_score_game_left">50dp</dimen>
-    <dimen name="txtAnswer">25sp</dimen>
+    <dimen name="txtAnswer">18sp</dimen>
     <!-- dialog back game-->
     <dimen name="imageBottomBackGame">40dp</dimen>
     <dimen name="txtDialogBackgame">65sp</dimen>
