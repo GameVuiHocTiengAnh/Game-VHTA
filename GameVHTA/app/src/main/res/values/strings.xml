@@ -19,8 +19,8 @@
         <item>@drawable/background_tree_two</item>
     </array>
     <array name="topicHome">
-        <item>@drawable/background_school_one</item>
-        <item>@drawable/background_school_two</item>
+        <item>@drawable/background_home_one</item>
+        <item>@drawable/background_home_two</item>
     </array>
     <array name="topicFarm">
         <item>@drawable/background_farm_one</item>

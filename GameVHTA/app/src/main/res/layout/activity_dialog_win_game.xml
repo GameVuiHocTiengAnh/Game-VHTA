@@ -27,7 +27,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/background_name_win" />
+                android:src="@drawable/background_name_end" />
         </LinearLayout>
 
         <LinearLayout
@@ -59,7 +59,7 @@
                      <LinearLayout
                          android:layout_width="match_parent"
                          android:layout_height="0dp"
-                         android:layout_weight="0.5"
+                         android:layout_weight="1"
                          android:gravity="left|bottom"
                          android:orientation="horizontal">
 
@@ -93,11 +93,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.6"
             android:gravity="center|top"
             android:orientation="horizontal">
 
             <ImageView
+                android:layout_marginBottom="@dimen/next_bottom"
                 android:id="@+id/imvNextGame"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

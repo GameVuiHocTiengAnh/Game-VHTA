@@ -222,7 +222,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
     public void randomBackground(){
         background = (LinearLayout) findViewById(R.id.scene);
         Resources res = getResources();
-        TypedArray topicSchool = res.obtainTypedArray(R.array.topicAnimal);
+        TypedArray topicSchool = res.obtainTypedArray(R.array.topicHome);
         Random random = new Random();
         int r = random.nextInt(topicSchool.length());
         int i = topicSchool.getResourceId(r, -1);
