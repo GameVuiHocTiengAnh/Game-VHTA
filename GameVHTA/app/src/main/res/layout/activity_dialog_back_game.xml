@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="@dimen/DialogBackGameLeftandRight"
     android:layout_marginRight="@dimen/DialogBackGameLeftandRight"
-    android:layout_marginTop="@dimen/DialogBackGameBottomandTop"
+    android:layout_marginTop="@dimen/DialogwinGameBottomandTop"
     android:orientation="horizontal"
     tools:context="blackcore.tdc.edu.com.gamevhta.MainMenuActivity">
 
@@ -19,12 +19,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginLeft="@dimen/imageOverGame"
-            android:layout_marginRight="@dimen/imageOverGame"
             android:layout_weight="1"
             android:gravity="top|center_horizontal">
 
             <ImageView
+                android:layout_marginLeft="@dimen/txtNamedialog"
+                android:layout_marginRight="@dimen/txtNamedialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_name_pause" />

@@ -8,7 +8,6 @@
     android:layout_marginLeft="@dimen/DialogBackGameLeftandRight"
     android:layout_marginRight="@dimen/DialogBackGameLeftandRight"
     android:layout_marginTop="10dp"
-    android:orientation="horizontal"
     tools:context="blackcore.tdc.edu.com.gamevhta.MainMenuActivity">
 
     <LinearLayout
@@ -21,48 +20,56 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center_vertical|center_horizontal">
+
             <ImageView
+                android:layout_marginBottom="15dp"
+                android:layout_marginRight="@dimen/txtNamedialog"
+                android:layout_marginLeft="@dimen/txtNamedialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_name_over"/>
+                android:background="@drawable/background_name_over" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center_vertical|center_horizontal"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/lblScoreGameOver"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1000"
+                android:layout_marginBottom="10dp"
                 android:layout_marginLeft="@dimen/DialogBackGameLeftandRight"
                 android:layout_marginRight="@dimen/DialogBackGameLeftandRight"
-                android:textSize="@dimen/textScoreOverGame"
-                android:textColor="#ffffff"
-                android:textColorHint="#ffffff"
+                android:background="@drawable/end_game"
                 android:gravity="center"
                 android:lines="1"
-                android:background="@drawable/end_game"
-                android:layout_marginBottom="10dp"/>
+                android:text="1000"
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff"
+                android:textSize="@dimen/textScoreOverGame" />
+
             <EditText
                 android:id="@+id/lblPlayerNameGameOver"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:textColor="#ffffff"
-                android:textColorHint="#ffffff"
-                android:text=""
                 android:layout_marginLeft="@dimen/DialogBackGameLeftandRight"
                 android:layout_marginRight="@dimen/DialogBackGameLeftandRight"
-                android:hint="Enter your name!"
+                android:background="@drawable/end_game"
                 android:gravity="center"
+                android:hint="Enter your name!"
                 android:lines="1"
-                android:textSize="@dimen/textNameOverGame"
-                android:background="@drawable/end_game"/>
+                android:padding="10dp"
+                android:text=""
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff"
+                android:textSize="@dimen/textNameOverGame" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -103,7 +110,7 @@
                     android:src="@drawable/btnreplay" />
             </LinearLayout>
 
-,
+            ,
         </LinearLayout>
     </LinearLayout>
 

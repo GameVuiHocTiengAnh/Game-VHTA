@@ -116,8 +116,8 @@
 
                 <ImageView
                     android:id="@+id/imbAnimalquestionfour"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/widthandheightques"
+                    android:layout_height="@dimen/widthandheightques"
                     android:background="@android:color/transparent"
                     android:src="@drawable/animal_bat" />
             </LinearLayout>
@@ -141,8 +141,8 @@
 
                 <ImageView
                     android:id="@+id/imbAnimalquestionfive"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/widthandheightques"
+                    android:layout_height="@dimen/widthandheightques"
                     android:background="@android:color/transparent"
                     android:src="@drawable/goat_answer" />
             </LinearLayout>
@@ -166,8 +166,8 @@
 
                 <ImageView
                     android:id="@+id/imbAnimalquestiontwo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/widthandheightques"
+                    android:layout_height="@dimen/widthandheightques"
                     android:background="@android:color/transparent"
                     android:src="@drawable/bunny_answer" />
             </LinearLayout>
@@ -191,8 +191,8 @@
 
                 <ImageView
                     android:id="@+id/imbAnimalquestionthree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/widthandheightques"
+                    android:layout_height="@dimen/widthandheightques"
                     android:background="@android:color/transparent"
                     android:src="@drawable/cat_answer" />
             </LinearLayout>
@@ -216,8 +216,8 @@
 
                 <ImageView
                     android:id="@+id/imbAnimalquestionsix"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/widthandheightques"
+                    android:layout_height="@dimen/widthandheightques"
                     android:background="@android:color/transparent"
                     android:src="@drawable/dog_answer" />
             </LinearLayout>
@@ -241,8 +241,8 @@
 
                 <ImageView
                     android:id="@+id/imbAnimalquestionone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/widthandheightques"
+                    android:layout_height="@dimen/widthandheightques"
                     android:background="@android:color/transparent"
                     android:src="@drawable/buffalo_answer" />
             </LinearLayout>

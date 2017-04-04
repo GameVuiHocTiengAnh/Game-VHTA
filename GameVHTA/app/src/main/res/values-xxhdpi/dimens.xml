@@ -30,6 +30,7 @@
     <dimen name="btnNoBottom">36dp</dimen>
     <!--game Assemble picture -->
     <dimen name="widthandheight">60dp</dimen>
+    <dimen name="widthandheightques">100dp</dimen>
     <dimen name="questionTwo">30dp</dimen>
     <dimen name="questionThree">60dp</dimen>
     <dimen name="questionFour">30dp</dimen>
@@ -52,6 +53,7 @@
     <dimen name="textNameOverGame">30sp</dimen>
     <dimen name="textScoreOverGame">40sp</dimen>
     <!-- dialog win game-->
+    <dimen name="txtNamedialog">120dp</dimen>
     <dimen name="txtScoreWingame">50sp</dimen>
     <dimen name="txtNameWingame">30dp</dimen>
     <dimen name="next_bottom">5dp</dimen>
