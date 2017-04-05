@@ -504,7 +504,7 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
         if (id != 0)
             dr = getApplicationContext().getResources().getDrawable(id);
         else
-            dr = getApplicationContext().getResources().getDrawable(R.drawable.screen_5_dv);
+            dr = getApplicationContext().getResources().getDrawable(R.drawable.animal_bee);
         return dr;
     }
 

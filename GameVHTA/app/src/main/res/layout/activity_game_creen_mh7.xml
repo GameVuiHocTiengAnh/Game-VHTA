@@ -99,7 +99,7 @@
                     android:layout_width="@dimen/layout_width_image"
                     android:layout_height="@dimen/layout_width_image"
                     android:layout_marginRight="25dp"
-                    android:src="@drawable/screen_3_monkey" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
 
             <LinearLayout
@@ -137,7 +137,7 @@
                     android:layout_width="@dimen/layout_width_image"
                     android:layout_height="@dimen/layout_width_image"
                     android:layout_marginRight="20dp"
-                    android:src="@drawable/screen_3_caw" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
 
             <LinearLayout
@@ -172,7 +172,7 @@
                     android:id="@+id/imgAnimalThree"
                     android:layout_width="@dimen/layout_width_image"
                     android:layout_height="@dimen/layout_width_image"
-                    android:src="@drawable/screen_3_panda" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
 
         </LinearLayout>
@@ -216,7 +216,7 @@
                     android:id="@+id/imgAnimalFour"
                     android:layout_width="@dimen/layout_width_image"
                     android:layout_height="@dimen/layout_width_image"
-                    android:src="@drawable/screen_3_pig" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
 
             <LinearLayout
@@ -251,7 +251,7 @@
                     android:id="@+id/imgAnimalFive"
                     android:layout_width="@dimen/layout_width_image"
                     android:layout_height="@dimen/layout_width_image"
-                    android:src="@drawable/screen_3_rabbit" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
 
             <LinearLayout
@@ -286,7 +286,7 @@
                     android:id="@+id/imgAnimalSix"
                     android:layout_width="@dimen/layout_width_image"
                     android:layout_height="@dimen/layout_width_image"
-                    android:src="@drawable/screen_3_tiger" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
 
         </LinearLayout>

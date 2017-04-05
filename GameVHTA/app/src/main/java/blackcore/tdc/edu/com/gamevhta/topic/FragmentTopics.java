@@ -74,6 +74,16 @@ public class FragmentTopics extends android.support.v4.app.Fragment{
         toPicDown = AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_down);
         toPicUp = AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_up);
 
+        dialog = new Dialog(view.getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.activity_dialog_choose_topic);
+        dialog.getWindow().setBackgroundDrawableResource(R.color.tran);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        btnCancel = (ImageView) dialog.findViewById(R.id.btnCancel);
+        btnLearn = (ImageView) dialog.findViewById(R.id.btnLearn);
+        btnMemory = (ImageView) dialog.findViewById(R.id.btnMemory);
+        btnPractice = (ImageView) dialog.findViewById(R.id.btnPractice);
+
         Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(), getResources().getString(R.string.fontPath));
 
         TextView txtNameTopic = (TextView) view.findViewById(R.id.txtNameTopic);
@@ -89,72 +99,65 @@ public class FragmentTopics extends android.support.v4.app.Fragment{
             public void onClick(View view) {
                 btnChoosemap.startAnimation(toPicDown);
                 mService.playMusic(mClick);
-                dialog = new Dialog(view.getContext());
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.activity_dialog_choose_topic);
-                dialog.getWindow().setBackgroundDrawableResource(R.color.tran);
-                dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+                EventDialogChooseTopic();
                 dialog.show();
-                btnCancel = (ImageView) dialog.findViewById(R.id.btnCancel);
-                btnLearn = (ImageView) dialog.findViewById(R.id.btnLearn);
-                btnMemory = (ImageView) dialog.findViewById(R.id.btnMemory);
-                btnPractice = (ImageView) dialog.findViewById(R.id.btnPractice);
 
-                btnCancel.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                        switch (motionEvent.getAction()){
-                            case MotionEvent.ACTION_DOWN:
-                                btnCancel.setSelected(!btnCancel.isSelected());
-                                btnCancel.isSelected();
-                                mService.playMusic(mClick);
-                                return true;
-                            case MotionEvent.ACTION_UP:
-                                btnChoosemap.startAnimation(toPicUp);
-                                mService.playMusic(mClick);
-                                dialog.dismiss();
-                                return true;
-                        }
-                        return false;
-                    }
-                });
-
-                btnLearn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mService.playMusic(mClick);
-                        btnLearn.startAnimation(alpha1);
-                        Intent intent = new Intent(view.getContext(),LoadingGoInGameActivity.class);
-                        startActivity(intent);
-                        getActivity().finish();
-                    }
-                });
-
-                btnMemory.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mService.playMusic(mClick);
-                        btnMemory.startAnimation(alpha2);
-                        Intent intent = new Intent(view.getContext(),RandomGameMemoryChallengeActivity.class);
-                        startActivity(intent);
-                        getActivity().finish();
-                    }
-                });
-
-                btnPractice.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mService.playMusic(mClick);
-                        btnPractice.startAnimation(alpha3);
-                        Intent intent = new Intent(view.getContext(),RandomGamePracticeActivity.class);
-                        startActivity(intent);
-                        getActivity().finish();
-                    }
-                });
             }
         });
 
         return view;
+    }
+    public void EventDialogChooseTopic(){
+        btnCancel.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        btnCancel.setSelected(!btnCancel.isSelected());
+                        btnCancel.isSelected();
+                        mService.playMusic(mClick);
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        mService.playMusic(mClick);
+                        dialog.dismiss();
+                        return true;
+                }
+                return false;
+            }
+        });
+
+        btnLearn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mService.playMusic(mClick);
+                btnLearn.startAnimation(alpha1);
+                Intent intent = new Intent(view.getContext(),LoadingGoInGameActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
+
+        btnMemory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mService.playMusic(mClick);
+                btnMemory.startAnimation(alpha2);
+                Intent intent = new Intent(view.getContext(),RandomGameMemoryChallengeActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
+
+        btnPractice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mService.playMusic(mClick);
+                btnPractice.startAnimation(alpha3);
+                Intent intent = new Intent(view.getContext(),RandomGamePracticeActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
     }
 
 }

@@ -64,24 +64,8 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
 
     final int color = Color.parseColor("#FFFFFF");
     private boolean flagVoice = true, flagWin = true;
-    private MediaPlayer mCorrect,mWrong,mClick,mTickTac,mWin,mMusicMainGame,mOver,mClickGame,mCartoonImage;
-    private MusicService mService = new MusicService();
+    private MediaPlayer mCorrect = null,mWrong=null,mClick=null,mTickTac=null,mWin=null,mMusicMainGame=null,mOver=null,mClickGame=null,mCartoonImage=null;
     PauseButton imgBackGame;
-
-    ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            MusicService.MyBinder mBinder = (MusicService.MyBinder) iBinder;
-            mService = mBinder.getService();
-
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mService = null;
-
-        }
-    };
     private Animation scale,zoom_in;
     private ImageView imgListOver, imgReplayOver;
     private Handler handler;
@@ -199,10 +183,10 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         txtScoreWin = (TextView) dialogWin.findViewById(R.id.txtScoreWin);
 
 
-        mService.playMusic(mMusicMainGame);
+        mMusicMainGame.start();
         mMusicMainGame.setLooping(true);
         mMusicMainGame.setVolume(0.5f,0.5f);
-        mService.playMusic(mCartoonImage);
+        mCartoonImage.start();
         mCartoonImage.setVolume(1f,1f);
         addDataList();
         randomBackground();
@@ -228,7 +212,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         int i = topicSchool.getResourceId(r, -1);
         background.setBackgroundResource(i);
     }
-    //List Image was loaded from database
+
     private void addDataList() {
         listImageData = new ArrayList<>();
         listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_ANIMALS);
@@ -313,7 +297,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         if(id != 0)
             dr =getApplicationContext().getResources().getDrawable(id);
         else
-            dr =getApplicationContext().getResources().getDrawable(R.drawable.screen_5_dv);
+            dr =getApplicationContext().getResources().getDrawable(R.drawable.animal_hamster);
         return  dr;
     }
 
@@ -328,13 +312,14 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
                 int t = Integer.parseInt(time);
                 if (t > 0 && t <= 10) {
                     txtTime.startAnimation(zoom_in);
-                    mService.playMusic(mTickTac);
+                    mTickTac.start();
                     mTickTac.setLooping(true);
 
                 } else if (t == 0) {
                     timer.cancel();
-                    mService.stopMusic(mTickTac);
-                    mService.playMusic(mOver);
+                    mTickTac.stop();
+                    mTickTac.release();
+                    mOver.start();
                     effectWin();
                     EventOver();
                     dialogOver.show();
@@ -419,14 +404,16 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         // TODO Auto-generated method stub
         super.onPause();
         timer.cancel();
-        mService.pauseMusic(mTickTac);
-        mService.pauseMusic(mMusicMainGame);
+        mTickTac.pause();
+        mCartoonImage.pause();
+        mMusicMainGame.pause();
     }
 
     protected void onResume(){
         // TODO Auto-generated method stub
         super.onResume();
-        mService.playMusic(mMusicMainGame);
+        mCartoonImage.start();
+        mMusicMainGame.start();
         timer.cancel();
         Timer();
     }
@@ -434,13 +421,20 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mService.stopMusic(mMusicMainGame);
-        mService.stopMusic(mCartoonImage);
-        mService.stopMusic(mWin);
-        mService.stopMusic(mCorrect);
-        mService.stopMusic(mClickGame);
-        mService.stopMusic(mTickTac);
-        mService.stopMusic(mOver);
+        mMusicMainGame.stop();
+        mMusicMainGame.release();
+        mCartoonImage.stop();
+        mCartoonImage.release();
+        mWin.stop();
+        mWin.release();
+        mCorrect.stop();
+        mCorrect.release();
+        mClickGame.stop();
+        mClickGame.release();
+        mTickTac.stop();
+        mTickTac.release();
+        mOver.stop();
+        mOver.release();
     }
 
     public void effectText(){
@@ -499,7 +493,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         public boolean onTouch(View v, MotionEvent motionEvent) {
             switch (motionEvent.getAction()){
                 case MotionEvent.ACTION_DOWN:
-                    mService.playMusic(mClickGame);
+                    mClickGame.start();
                     ClipData data = ClipData.newPlainText("", "");
                     View.DragShadowBuilder myShadowBuilder = new View.DragShadowBuilder(v);
                     v.startAnimation(scale);
@@ -507,7 +501,8 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
                     return true;
                 case MotionEvent.ACTION_UP:
                     v.clearAnimation();
-                    mService.stopMusic(mClickGame);
+                    mClickGame.stop();
+                    mClickGame.release();
                     return true;
             }
             return false;
@@ -516,9 +511,9 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
 
     public void Voice(){
         if(flagVoice == true) {
-            mService.playMusic(mCorrect);
+            mCorrect.start();
         }else if(flagVoice == false){
-            mService.playMusic(mWrong);
+            mWrong.start();
         }
     }
 
@@ -644,7 +639,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
                         {
                             effectWin();
                             timer.cancel();
-                            mService.playMusic(mWin);
+                            mWin.start();
                             EventWin();
                             dialogWin.show();
                         }
@@ -663,13 +658,13 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
 
                     switch (motionEvent.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            mService.playMusic(mClick);
+                            mClick.start();
                             imgListOver.setSelected(!imgListOver.isSelected());
                             imgListOver.isSelected();
                             imgReplayOver.setEnabled(false);
                             return true;
                         case MotionEvent.ACTION_UP:
-                            mService.playMusic(mClick);
+                            mClick.start();
                             imgListOver.setSelected(false);
                             imgReplayOver.setEnabled(true);
                             doSaveScore();
@@ -690,11 +685,11 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
                         case MotionEvent.ACTION_DOWN:
                             imgReplayOver.setSelected(!imgReplayOver.isSelected());
                             imgReplayOver.isSelected();
-                            mService.playMusic(mClick);
+                            mClick.start();
                             imgListOver.setEnabled(false);
                             return true;
                         case MotionEvent.ACTION_UP:
-                            mService.playMusic(mClick);
+                            mClick.start();
                             imgReplayOver.setSelected(false);
                             imgListOver.setEnabled(true);
                             doSaveScore();
@@ -719,12 +714,12 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
 
                     switch (motionEvent.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            mService.playMusic(mClick);
+                            mClick.start();
                             imbNextGameWin.setSelected(!imbNextGameWin.isSelected());
                             imbNextGameWin.isSelected();
                             return true;
                         case MotionEvent.ACTION_UP:
-                            mService.playMusic(mClick);
+                            mClick.start();
                             imbNextGameWin.setSelected(false);
                             Intent intent = new Intent(PicturePuzzleActivity.this,RandomGameMemoryChallengeActivity.class);
                             Bundle data = new Bundle();
@@ -763,7 +758,10 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
                 Log.d("ScoreSave", String.valueOf(SCORE_ALL));
                 Log.d("ScoreSavePlayer", playerName);
                 dbAccessHelper.doInsertScore(scoreObject);
-                lblPlayerNameGameOver.setText("");
+                if(SCORE_ALL == 0) {
+                    lblPlayerNameGameOver.setVisibility(View.GONE);
+                }else
+                    lblPlayerNameGameOver.setText("");
                 Toast.makeText(getApplicationContext(), "Saving Score", Toast.LENGTH_SHORT).show();
             }
         }

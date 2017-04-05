@@ -104,7 +104,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
             OBJECT = getIntent().getStringExtra(ConfigApplication.OBJECT_SELECTED);
             addDataList();
         }
-        new CustomToask(ImageGuessingActivity.this, R.drawable.screen_5_icon_ani, "Chọn 1 tấm hình đúng với từ vựng nhé...");
+        new CustomToask(ImageGuessingActivity.this, R.drawable.animal_bat, "Chọn 1 tấm hình đúng với từ vựng nhé...");
         Log.d("Guessing", SizeOfDevice.getScreenWidth() + "x" + SizeOfDevice.getScreenHeight());
 //        for (String arr : ConfigApplication.getListImageFromSDCard("/Download/")) {
 //            Log.d("Guessing", "File Name: " + arr);
@@ -306,7 +306,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
         if (id != 0)
             dr = getApplicationContext().getResources().getDrawable(id);
         else
-            dr = getApplicationContext().getResources().getDrawable(R.drawable.screen_5_dv);
+            dr = getApplicationContext().getResources().getDrawable(R.drawable.animal_bee);
         return dr;
     }
 
@@ -658,7 +658,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
             RESULT_FAILED++;
             if (RESULT_FAILED == 1) {
                 mpWrong.start();
-                new CustomToask(ImageGuessingActivity.this, R.drawable.screen_5_icon_ani, "SAI rồi! Chọn thêm 1 lần nữa nhé...");
+                new CustomToask(ImageGuessingActivity.this, R.drawable.animal_bat, "SAI rồi! Chọn thêm 1 lần nữa nhé...");
             } else if (RESULT_FAILED == 2) {
                 executeAnimation();
                 mpGameOver.start();

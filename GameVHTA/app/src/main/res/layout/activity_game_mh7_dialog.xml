@@ -35,7 +35,7 @@
                     android:id="@+id/imgAnimalDialog"
                     android:layout_width="@dimen/layout_width_image_dialog"
                     android:layout_height="@dimen/layout_height_image_dialog"
-                    android:src="@drawable/screen_3_caw" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
 
             <LinearLayout

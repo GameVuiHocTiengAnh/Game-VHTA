@@ -145,7 +145,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:layout_alignParentBottom="true"
-                        android:background="@drawable/screen_5_elephen" />
+                        android:background="@drawable/animal_bat" />
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -166,7 +166,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:layout_alignParentBottom="true"
-                        android:background="@drawable/screen_5_elephen" />
+                        android:background="@drawable/animal_bat" />
                 </RelativeLayout>
 
             </RelativeLayout>
@@ -196,7 +196,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:layout_alignParentBottom="true"
-                        android:background="@drawable/screen_5_elephen" />
+                        android:background="@drawable/animal_bat" />
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -217,7 +217,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:layout_alignParentBottom="true"
-                        android:background="@drawable/screen_5_elephen" />
+                        android:background="@drawable/animal_bat" />
                 </RelativeLayout>
 
             </RelativeLayout>
@@ -245,7 +245,7 @@
                         android:id="@+id/imgvObject5"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:background="@drawable/screen_5_elephen"
+                        android:background="@drawable/animal_bat"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true" />
                 </RelativeLayout>
@@ -265,7 +265,7 @@
                         android:id="@+id/imgvObject6"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:background="@drawable/screen_5_elephen"
+                        android:background="@drawable/animal_bat"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true" />
                 </RelativeLayout>

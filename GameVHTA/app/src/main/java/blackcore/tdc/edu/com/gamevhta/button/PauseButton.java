@@ -37,24 +37,8 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
     private MediaPlayer mClick;
     private Animation zoomIn,rotate_crazy;
     private String returnIdBtn;
-    private MusicService mService = new MusicService();
     private String screenUse = null;
     private BackgroudGameView game = null;
-
-    ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            MusicService.MyBinder mBinder = (MusicService.MyBinder) iBinder;
-            mService = mBinder.getService();
-
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mService = null;
-
-        }
-    };
 
     public PauseButton(Context context) {
         super(context);
@@ -75,11 +59,11 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
         switch (motionEvent.getAction()){
             case MotionEvent.ACTION_DOWN:
                 PauseButton.this.startAnimation(zoomIn);
-                mService.playMusic(mClick);
+                mClick.start();
                 return true;
             case MotionEvent.ACTION_UP:
                 PauseButton.this.clearAnimation();
-                mService.playMusic(mClick);
+                mClick.start();
                 callOnClick();
                 animationPause();
                 dialog.show();
@@ -112,14 +96,14 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
 
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        mService.playMusic(mClick);
+                        mClick.start();
                         imgList.setSelected(!imgList.isSelected());
                         imgList.isSelected();
                         imgResume.setEnabled(false);
                         imgReplay.setEnabled(false);
                         return true;
                     case MotionEvent.ACTION_UP:
-                        mService.playMusic(mClick);
+                        mClick.start();
                         imgList.setSelected(false);
                         imgResume.setEnabled(true);
                         imgReplay.setEnabled(true);
@@ -138,12 +122,12 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
                     case MotionEvent.ACTION_DOWN:
                         imgReplay.setSelected(!imgReplay.isSelected());
                         imgReplay.isSelected();
-                        mService.playMusic(mClick);
+                        mClick.start();
                         imgList.setEnabled(false);
                         imgResume.setEnabled(false);
                         return true;
                     case MotionEvent.ACTION_UP:
-                        mService.playMusic(mClick);
+                        mClick.start();
                         imgReplay.setSelected(false);
                         imgList.setEnabled(true);
                         imgResume.setEnabled(true);
@@ -163,12 +147,12 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
                     case MotionEvent.ACTION_DOWN:
                         imgResume.setSelected(!imgResume.isSelected());
                         imgResume.isSelected();
-                        mService.playMusic(mClick);
+                        mClick.start();
                         imgList.setEnabled(false);
                         imgReplay.setEnabled(false);
                         return true;
                     case MotionEvent.ACTION_UP:
-                        mService.playMusic(mClick);
+                        mClick.start();
                         imgResume.setSelected(false);
                         imgList.setEnabled(true);
                         imgReplay.setEnabled(true);

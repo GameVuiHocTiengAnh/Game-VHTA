@@ -155,7 +155,7 @@
                         android:layout_height="@dimen/layout_right_bot_row_image_size"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/screen_5_dv" />
+                        android:background="@drawable/animal_bat" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -179,7 +179,7 @@
                         android:layout_height="@dimen/layout_right_bot_row_image_size"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/screen_5_elephen" />
+                        android:background="@drawable/animal_bat" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -203,7 +203,7 @@
                         android:layout_height="@dimen/layout_right_bot_row_image_size"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/screen_5_dv" />
+                        android:background="@drawable/animal_bat" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -237,7 +237,7 @@
                         android:layout_height="@dimen/layout_right_bot_row_image_size"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/screen_5_elephen" />
+                        android:background="@drawable/animal_bat" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -261,7 +261,7 @@
                         android:layout_height="@dimen/layout_right_bot_row_image_size"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/screen_5_dv" />
+                        android:background="@drawable/animal_bat" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -285,7 +285,7 @@
                         android:layout_height="@dimen/layout_right_bot_row_image_size"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/screen_5_elephen" />
+                        android:background="@drawable/animal_bat" />
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>

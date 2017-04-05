@@ -151,7 +151,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
         if (id != 0)
             dr = getApplicationContext().getResources().getDrawable(id);
         else
-            dr = getApplicationContext().getResources().getDrawable(R.drawable.screen_5_dv);
+            dr = getApplicationContext().getResources().getDrawable(R.drawable.animal_bat);
         return dr;
     }
     private void addDataList(){

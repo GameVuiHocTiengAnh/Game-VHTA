@@ -144,7 +144,7 @@
                     android:layout_width="@dimen/widthandheightques"
                     android:layout_height="@dimen/widthandheightques"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/goat_answer" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
 
             <LinearLayout
@@ -169,7 +169,7 @@
                     android:layout_width="@dimen/widthandheightques"
                     android:layout_height="@dimen/widthandheightques"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/bunny_answer" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
 
             <LinearLayout
@@ -194,7 +194,7 @@
                     android:layout_width="@dimen/widthandheightques"
                     android:layout_height="@dimen/widthandheightques"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/cat_answer" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
 
             <LinearLayout
@@ -219,7 +219,7 @@
                     android:layout_width="@dimen/widthandheightques"
                     android:layout_height="@dimen/widthandheightques"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/dog_answer" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
 
             <LinearLayout
@@ -244,7 +244,7 @@
                     android:layout_width="@dimen/widthandheightques"
                     android:layout_height="@dimen/widthandheightques"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/buffalo_answer" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
         </LinearLayout>
 
@@ -267,7 +267,7 @@
                     android:layout_width="@dimen/widthandheight"
                     android:layout_height="@dimen/widthandheight"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/buffalo_answer" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
 
             <LinearLayout
@@ -282,7 +282,7 @@
                     android:layout_width="@dimen/widthandheight"
                     android:layout_height="@dimen/widthandheight"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/bunny_answer" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
 
             <LinearLayout
@@ -297,7 +297,7 @@
                     android:layout_width="@dimen/widthandheight"
                     android:layout_height="@dimen/widthandheight"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/cat_answer" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
 
             <LinearLayout
@@ -312,7 +312,7 @@
                     android:layout_width="@dimen/widthandheight"
                     android:layout_height="@dimen/widthandheight"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/cow_answer" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
 
             <LinearLayout
@@ -327,7 +327,7 @@
                     android:layout_width="@dimen/widthandheight"
                     android:layout_height="@dimen/widthandheight"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/goat_answer" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
 
             <LinearLayout
@@ -342,7 +342,7 @@
                     android:layout_width="@dimen/widthandheight"
                     android:layout_height="@dimen/widthandheight"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/dog_answer" />
+                    android:src="@drawable/animal_bat" />
             </LinearLayout>
 
         </LinearLayout>
