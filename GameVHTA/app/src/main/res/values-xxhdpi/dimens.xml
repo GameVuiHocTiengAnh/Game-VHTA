@@ -86,4 +86,13 @@
 
     <dimen name="layout_width_image">80dp</dimen>
     <dimen name="layout_height_image">800dp</dimen>
+
+    <!--Game Bubble Hitting-->
+    <dimen name="layout_left_timer">25dp</dimen>
+    <dimen name="layout_left_score">180dp</dimen>
+    <dimen name="layout_score_textSize">25dp</dimen>
+
+    <dimen name="layout_marginLeft_image">25dp</dimen>
+    <dimen name="layout_marginRight_image">25dp</dimen>
+
 </resources>

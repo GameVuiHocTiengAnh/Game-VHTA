@@ -14,7 +14,6 @@
             android:name=".SplashScreenActivity"
             android:screenOrientation="landscape">
 
-
         </activity>
         <activity
             android:name=".MainMenuActivity"
@@ -43,10 +42,6 @@
         <!--game catching words-->
         <activity android:name=".catching_words_game.CatchingWordsActivity"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <!--game choosing object -->
         <activity android:name=".choosing_objects_game.ChoosingObjectActivity"
@@ -55,18 +50,30 @@
         </activity>
 
         <!--Game Screen 5 -->
-        <activity android:name=".market_game.Market_game"
-            android:screenOrientation="landscape">
-        </activity>
 
         <activity android:name=".image_guessing_game.ImageGuessingActivity"
             android:screenOrientation="landscape">
         </activity>
+        <activity android:name=".market_game.Market_game"
+            android:screenOrientation="landscape">
+        </activity>
 
-        <activity android:name=".RandomGamePracticeActivity"
-            android:screenOrientation="landscape"/>
         <activity android:name=".RandomGameMemoryChallengeActivity"
             android:screenOrientation="landscape"/>
+        <activity android:name=".RandomGamePracticeActivity"
+            android:screenOrientation="landscape"/>
+
+        <!--Bubble Hitting Game-->
+        <activity android:name=".bubble_hitting_game.BubbleHittingActivity"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".writing_words_game.WirtingNinjaActivity"
+            android:screenOrientation="landscape">
+        </activity>
     </application>
 
 </manifest>

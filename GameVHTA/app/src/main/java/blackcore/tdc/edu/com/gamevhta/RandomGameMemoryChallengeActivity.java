@@ -11,9 +11,8 @@ import com.wang.avi.AVLoadingIndicatorView;
 import java.util.ArrayList;
 import java.util.Random;
 
-import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
+import blackcore.tdc.edu.com.gamevhta.bubble_hitting_game.BubbleHittingActivity;
 import blackcore.tdc.edu.com.gamevhta.image_guessing_game.ImageGuessingActivity;
-import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 import blackcore.tdc.edu.com.gamevhta.writing_words_game.WirtingNinjaActivity;
 
 /**
@@ -26,6 +25,7 @@ public class RandomGameMemoryChallengeActivity extends AppCompatActivity {
     private Random ran;
     private final int IMAGE_GUESING_GAME = 0;
     private final int WRITING_NINJA_GAME = 1;
+    private final int BUBBLE_HITTING_GAME = 2;
     private ArrayList<Integer> screenGame;
     private Bundle listAndScores = null;
 
@@ -42,6 +42,7 @@ public class RandomGameMemoryChallengeActivity extends AppCompatActivity {
         screenGame = new ArrayList<Integer>();
         screenGame.add(IMAGE_GUESING_GAME);
         screenGame.add(WRITING_NINJA_GAME);
+        screenGame.add(BUBBLE_HITTING_GAME);
 
         Random ran = new Random();
         int dom = ran.nextInt(screenGame.size());
@@ -62,6 +63,10 @@ public class RandomGameMemoryChallengeActivity extends AppCompatActivity {
                         break;
                     case WRITING_NINJA_GAME:
                         intent = new Intent(RandomGameMemoryChallengeActivity.this, WirtingNinjaActivity.class);
+                        break;
+                    case BUBBLE_HITTING_GAME:
+                        intent = new Intent(RandomGameMemoryChallengeActivity.this, BubbleHittingActivity.class);
+                        break;
                 }
                 //ADD BUNDLE HERE
                 if(listAndScores != null)
