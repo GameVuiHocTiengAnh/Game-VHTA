@@ -28,7 +28,7 @@ public class BackgroudThread extends Thread {
     public void run() {
         super.run();
 
-        while (gameRunning) {
+        do {
             try {
                 sleep(ConfigCWGame.SPEED_MOVE_BACKGROUD);
             } catch (InterruptedException e) {
@@ -52,7 +52,7 @@ public class BackgroudThread extends Thread {
                     }
                 });
             }
-        }
+        }while (gameRunning);
     }
 
     public void setGameRunning(Boolean gameRunning) {

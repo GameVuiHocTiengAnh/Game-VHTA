@@ -38,10 +38,13 @@ public class BackgroudGameView extends View implements View.OnTouchListener{
     private int uinitHelth;
     private Canvas canvas;
 
+    private boolean modeWriting;
+
     public BackgroudGameView(CatchingWordsActivity context, int xLeft, int yTop, CharacterGameView characterGameView) {
         super(context);
         this.setFocusable(true);
         this.context = context;
+        modeWriting =false;
 
         bitmapTrunk = BitmapFactory.decodeResource(getResources(), R.drawable.mh6_trunk);
         int idImgRoot = randomBG();
@@ -109,7 +112,7 @@ public class BackgroudGameView extends View implements View.OnTouchListener{
     public boolean onTouch(View v, MotionEvent event) {
         if (trunk.isPause() && !characterGameView.isRunning()) {
             countTouch++;
-            Log.d("Tagtest","countTouch: "+countTouch);
+//            Log.d("Tagtest","countTouch: "+countTouch);
             if(countTouch == 1){
                 characterGameView.ninjaSpeak();
             }
@@ -128,7 +131,7 @@ public class BackgroudGameView extends View implements View.OnTouchListener{
             },300);
 
             //Log.d("Tagtest",countTouch+"countTouch");
-            if (countTouch == leghtVoca) {
+            if (countTouch == leghtVoca && !modeWriting) {
                 boolean handlerdelay = new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -146,6 +149,25 @@ public class BackgroudGameView extends View implements View.OnTouchListener{
                     }
                 }, 1000);
 
+            }else {
+
+                if(countTouch == leghtVoca && modeWriting){
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            countTouch = 0;
+                            context.hideHelthbar();
+                            progressHelth = 100;
+                            context.updateProgressHeth(100);
+                            context.setImvVocalubary();
+                            trunk.setPause(false);
+                            trunk.resetXleft();
+                            thread = new BackgroudThread(BackgroudGameView.this, characterGameView, context);
+                            thread.setGameRunning(false);
+                            thread.start();
+                        }
+                    },1000);
+                }
             }
             return true;
         } else
@@ -182,4 +204,7 @@ public class BackgroudGameView extends View implements View.OnTouchListener{
         return idBg;
     }
 
+    public void setModeWriting(boolean modeWriting) {
+        this.modeWriting = modeWriting;
+    }
 }

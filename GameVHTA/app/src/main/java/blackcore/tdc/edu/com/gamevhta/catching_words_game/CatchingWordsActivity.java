@@ -76,12 +76,14 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
     private TextView txtDialogCatching;
 
     private MediaPlayer catchingSound;
-    private TextToSpeech textToSpeech = null;
+    public TextToSpeech textToSpeech = null;
     private MediaPlayer dialogWinSound = null;
     private MediaPlayer mplClicked = null;
 
     private BroadcastReceiver screenOnReceiver = null;
     private boolean flagScreenOff;
+
+    private boolean modeWriting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +93,7 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         flagScreenOff = false;
+        modeWriting = false;
 
         textToSpeech = new TextToSpeech(this,this);
         countComplete = 0;
@@ -182,7 +185,7 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         super.onStop();
     }
 
-    private void addTopBarView(FrameLayout rootLayout){
+    protected void addTopBarView(FrameLayout rootLayout){
 
         LinearLayout linearLayout = new LinearLayout(this);
         LinearLayout.LayoutParams lpLinear = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
@@ -196,8 +199,8 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         LinearLayout.LayoutParams lpHorizaltal = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT);
         lpHorizaltal.weight = 1;
         lpHorizaltal.gravity = Gravity.CENTER;
-        LinearLayout.LayoutParams lpWrap = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams lpWrap = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
         int marginLeftRight = ConfigCWGame.getMarginVocalubary();
         lpHorizaltal.setMargins(marginLeftRight,10,marginLeftRight,10);
         lpWrap.setMargins(10,10,10,10);
@@ -224,12 +227,14 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         lnVocalubary.setGravity(Gravity.CENTER);
         imvVocalubary = new ImageView(this);
         imvVocalubary.setLayoutParams(lpWrap);
+        imvVocalubary.setScaleType(ImageView.ScaleType.FIT_CENTER);
         txtVocalubary = new TextView(this);
         txtVocalubary.setTypeface(gothic);
         txtVocalubary.setTextColor(Color.RED);
         txtVocalubary.setLayoutParams(lpWrap);
+       // txtVocalubary.setSingleLine();
         txtVocalubary.setText("");
-        txtVocalubary.setTextSize(ConfigCWGame.getSizeTextScores());
+        txtVocalubary.setTextSize(ConfigCWGame.getSizeTextScores() -8);
         lnVocalubary.addView(imvVocalubary);
         lnVocalubary.addView(txtVocalubary);
 
@@ -256,7 +261,7 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         rootLayout.addView(linearLayout);
     }
 
-    private void addProgressbarHelth(FrameLayout root){
+    protected void addProgressbarHelth(FrameLayout root){
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ConfigCWGame.withProgressHelth(), FrameLayout.LayoutParams.WRAP_CONTENT);
         lp.setMargins(SizeOfDevice.getScreenWidth()/2,ConfigCWGame.marginBotOfHelth(),0,0);
         helth.setLayoutParams(lp);
@@ -295,26 +300,13 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
 
     }
 
-    private void playThemeMusic(){
+    protected void playThemeMusic(){
         songThemeMusic = MediaPlayer.create(getApplicationContext(),R.raw.blizzards);
         songThemeMusic.setVolume(0.25f,0.25f);
         songThemeMusic.setLooping(true);
 
-//        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
-//        screenOnReceiver = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF)){
-//                    if(songThemeMusic.isPlaying()){
-//                        songThemeMusic.pause();
-//                    }
-//                    Log.d("Tagtest","inReciever "+flagScreenOff);
-//                }
-//            }
-//        };
-//        this.registerReceiver(screenOnReceiver,intentFilter);
     }
-    private void releaseThemeMusic(){
+    protected void releaseThemeMusic(){
         if(this.songThemeMusic != null){
             songThemeMusic.stop();
             songThemeMusic.release();
@@ -334,8 +326,10 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         });
     }
     public void setImvVocalubary(){
-        scores += 100;
-        tvScore.setText(scores+"");
+        if(!modeWriting){
+            scores += 100;
+            tvScore.setText(scores+"");
+        }
         String imvName = listWordsUsing.get(countComplete).getwPathImage();
         String imvText = listWordsUsing.get(countComplete).getwEng();
         int idImgeDr = getResources().getIdentifier(imvName, "drawable", getApplicationContext().getPackageName());
@@ -346,11 +340,15 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
             showDialogCatchingWords(imgVoca,imvText);
         }
         countComplete++;
-        if(countComplete == listWordsUsing.size()){
+        if(countComplete == listWordsUsing.size() && !modeWriting){
             boolean handlerDayley = new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    levelComplete();
+                    Intent intent = new Intent(CatchingWordsActivity.this,RandomGameMemoryChallengeActivity.class);
+                    Bundle data = new Bundle();
+                    data.putSerializable(ConfigApplication.NAME_DATA_LIST,listWordsUsing);
+                    intent.putExtras(data);
+                    levelComplete(intent);
                     countComplete = 0;
                 }
             },2000);
@@ -362,7 +360,7 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         return listWordsUsing.get(countComplete).getwEng().length();
     };
 
-    private void levelComplete() {
+    protected void levelComplete(final Intent intentRechaed) {
        Dialog dialogWin = new Dialog(this);
         dialogWin.setCancelable(false);
         dialogWin.setCanceledOnTouchOutside(false);
@@ -392,11 +390,7 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
                         return true;
                     case MotionEvent.ACTION_UP:
                         imbNextGameWin.setSelected(false);
-                        Intent intent = new Intent(CatchingWordsActivity.this,RandomGameMemoryChallengeActivity.class);
-                        Bundle data = new Bundle();
-                        data.putSerializable(ConfigApplication.NAME_DATA_LIST,listWordsUsing);
-                        intent.putExtras(data);
-                        startActivity(intent);
+                        startActivity(intentRechaed);
                         finish();
                         return true;
                 }
@@ -426,7 +420,7 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         return characterHeight;
     }
 
-    private void initDialogCatchingWords(){
+    protected void initDialogCatchingWords(){
         dialogCatchingWords = new Dialog(this);
         dialogCatchingWords.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogCatchingWords.setCanceledOnTouchOutside(false);
@@ -436,10 +430,11 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         imvDialogCatching = (ImageView)dialogCatchingWords.findViewById(R.id.mh6_imge_voca);
         txtDialogCatching = (TextView)dialogCatchingWords.findViewById(R.id.mh6_txt_voce);
         txtDialogCatching.setTextColor(Color.RED);
+        txtDialogCatching.setTextSize(25);
         txtDialogCatching.setTypeface(gothic);
     }
 
-    private void showDialogCatchingWords(final Bitmap image, final String text){
+    protected void showDialogCatchingWords(final Bitmap image, final String text){
         imvDialogCatching.setImageBitmap(image);
         txtDialogCatching.setText(text);
         dialogCatchingWords.show();
@@ -452,8 +447,8 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
             @Override
             public void run() {
                 dialogCatchingWords.dismiss();
-                imvVocalubary.setImageBitmap(image);
-                txtVocalubary.setText(text);
+                setWordObjectActionbar(image,text);
+              //  Log.d("Tagtest",text);
                 starAnimGroupVoca();
             }
         },2000);
@@ -491,16 +486,19 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         super.onDestroy();
     }
 
-    private void starAnimationImageDialogCatching(){
+    protected Typeface getTyeface(){
+        return this.gothic;
+    }
+    protected void starAnimationImageDialogCatching(){
         StartSmartAnimation.startAnimation(imvDialogCatching, AnimationType.StandUp,2000,0,true,600);
         StartSmartAnimation.startAnimation(txtDialogCatching, AnimationType.Shake,2000,0,true,600);
     }
-    private void starAnimGroupVoca(){
+    protected void starAnimGroupVoca(){
         StartSmartAnimation.startAnimation(imvVocalubary,AnimationType.StandUp,2000,0,true,2000);
         StartSmartAnimation.startAnimation(txtVocalubary,AnimationType.ShakeBand,2000,0,true,2000);
     }
 
-    private void startAnimClickedOnImvVoca(){
+    protected void startAnimClickedOnImvVoca(){
         StartSmartAnimation.startAnimation(imvVocalubary,AnimationType.Swing,2000,0,true,300);
     }
 
@@ -520,5 +518,35 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
     protected void onPause() {
         songThemeMusic.pause();
         super.onPause();
+    }
+
+    protected void setWritingMode(boolean b){
+        backgroudGameView.setModeWriting(b);
+        modeWriting = b;
+    }
+
+    protected void setNinjaDefaut(){
+        ninja.setNinjaDefaut();
+    }
+
+    public void setListWordsUsing(ArrayList<WordObject> listWordsUsing) {
+        this.listWordsUsing = listWordsUsing;
+    }
+
+    public ArrayList<WordObject> getListWordsUsing() {
+        return listWordsUsing;
+    }
+
+    public int getCountComplete() {
+        return countComplete;
+    }
+
+    public void setScores(int scores){
+        tvScore.setText(scores + "");
+    }
+
+    protected void setWordObjectActionbar(Bitmap bitmap, String wordUsing){
+        imvVocalubary.setImageBitmap(bitmap);
+        txtVocalubary.setText(wordUsing.trim());
     }
 }

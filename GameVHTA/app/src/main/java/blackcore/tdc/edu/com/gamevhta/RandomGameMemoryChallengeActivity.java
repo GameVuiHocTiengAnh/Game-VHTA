@@ -14,6 +14,7 @@ import java.util.Random;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.image_guessing_game.ImageGuessingActivity;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
+import blackcore.tdc.edu.com.gamevhta.writing_words_game.WirtingNinjaActivity;
 
 /**
  * Created by phong on 2/27/2017.
@@ -24,6 +25,7 @@ public class RandomGameMemoryChallengeActivity extends AppCompatActivity {
 
     private Random ran;
     private final int IMAGE_GUESING_GAME = 0;
+    private final int WRITING_NINJA_GAME = 1;
     private ArrayList<Integer> screenGame;
     private Bundle listAndScores = null;
 
@@ -39,6 +41,7 @@ public class RandomGameMemoryChallengeActivity extends AppCompatActivity {
 
         screenGame = new ArrayList<Integer>();
         screenGame.add(IMAGE_GUESING_GAME);
+        screenGame.add(WRITING_NINJA_GAME);
 
         Random ran = new Random();
         int dom = ran.nextInt(screenGame.size());
@@ -57,6 +60,8 @@ public class RandomGameMemoryChallengeActivity extends AppCompatActivity {
                     case IMAGE_GUESING_GAME:
                         intent = new Intent(RandomGameMemoryChallengeActivity.this,ImageGuessingActivity.class);
                         break;
+                    case WRITING_NINJA_GAME:
+                        intent = new Intent(RandomGameMemoryChallengeActivity.this, WirtingNinjaActivity.class);
                 }
                 //ADD BUNDLE HERE
                 if(listAndScores != null)
