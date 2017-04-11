@@ -1,15 +1,24 @@
 package blackcore.tdc.edu.com.gamevhta.writing_words_game;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,13 +31,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.RandomGameMemoryChallengeActivity;
 import blackcore.tdc.edu.com.gamevhta.RandomGamePracticeActivity;
+import blackcore.tdc.edu.com.gamevhta.TopisChoosingActivity;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.CatchingWordsActivity;
+import blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models.BackgroudGameView;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.custom_toask.CustomToask;
+import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
+import blackcore.tdc.edu.com.gamevhta.image_guessing_game.ImageGuessingActivity;
+import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
 /**
@@ -38,6 +54,7 @@ import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 public class WirtingNinjaActivity extends CatchingWordsActivity{
 
     private Dialog dialogWriting;
+    private Dialog dialogGameOver;
     private ImageView imvDialogWriting;
     private EditText txtDialogWriting;
     private Typeface gothic;
@@ -48,6 +65,16 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
     private int scores;
     private TextView txtHintWord;
     private Bitmap bmUsing;
+    private TextView txtTime;
+    private int time;
+    private Timer timer;
+    private Handler timeHandler ;
+    private Animation animationTimer;
+    private boolean inDialogWriting;
+    private ImageView imgListOver;
+    private ImageView imgReplayOver;
+    private EditText lblPlayerNameGameOver;
+    private TextView lblScoreGameOver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +82,32 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
         listUsing = this.getListWordsUsing();
         gothic = this.getTyeface();
         textWord = null;
+        time = 50;
         bmUsing = null;
         scores = 0;
+        inDialogWriting = false;
         this.setWritingMode(true);
+        animationTimer = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_anim_trieu);
+        initDialogOverGame();
+        timeHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle reMessage = msg.getData();
+                String time = reMessage.getString("time");
+
+                txtTime.setText(time);
+                int t = Integer.parseInt(time);
+                if (t > 0 && t <= 10) {
+                } else if (t == 0) {
+                    lblScoreGameOver.setText(scores+"");
+                    MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.sai);
+                    mediaPlayer.start();
+                   dialogGameOver.show();
+                    dialogWriting.dismiss();
+                    timer.cancel();
+                }
+            }
+        };
     }
 
     @Override
@@ -72,10 +122,19 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
         txtDialogWriting = (EditText) dialogWriting.findViewById(R.id.edtEnterWord);
         btnCheck = (ImageView) dialogWriting.findViewById(R.id.btnCheckWriting);
         txtHintWord = (TextView) dialogWriting.findViewById(R.id.txtHintWord);
+        txtTime = (TextView) dialogWriting.findViewById(R.id.txtTime);
+        txtTime.setTypeface(gothic);
+        txtDialogWriting.setTypeface(gothic);
+        txtHintWord.setTypeface(gothic);
+
         btnCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Log.d("Tagtest",textWord);
+                btnCheck.setSelected(true);
+                btnCheck.isSelected();
+                MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.click);
+                mediaPlayer.start();
                 if(textWord != null ){
                     String textWriting = txtDialogWriting.getText().toString();
 //                    Log.d("Tagtest",textWriting);
@@ -89,14 +148,19 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
                             data.putInt(ConfigApplication.SCORES_BEFOR_GAME,scores);
                             intent.putExtras(data);
                             WirtingNinjaActivity.this.levelComplete(intent);
+
                         }else{
+
+                            timer.cancel();
                             dialogWriting.dismiss();
-                            scores+= 200;
+                            scores+= 2*Integer.parseInt(txtTime.getText().toString());
                             txtHintWord.setText("");
+                            txtTime.setText("50");
                             if(bmUsing != null)
                                 setWordObjectActionbar(bmUsing,textWord);
                             setScores(scores);
                             WirtingNinjaActivity.this.setNinjaDefaut();
+                            inDialogWriting = false;
                             WirtingNinjaActivity.this.onResumeGame();
                         }
                     }else{
@@ -121,7 +185,12 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
                     }
                 }
                 txtDialogWriting.setText("");
-
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        btnCheck.setSelected(false);
+                    }
+                },200);
             }
         });
 
@@ -134,6 +203,19 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
                 StartSmartAnimation.startAnimation(imvDialogWriting, AnimationType.StandUp,2000,0,true,2000);
             }
         });
+
+        dialogWriting.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if(keyCode == event.KEYCODE_BACK){
+//                    Log.d("Tagtest","back");
+                    return true;
+                }else{
+                    return false;
+                }
+
+            }
+        });
     }
 
     @Override
@@ -142,5 +224,129 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
         imvDialogWriting.setImageBitmap(image);
         textWord = text;
         dialogWriting.show();
+        inDialogWriting = true;
+        if(timer != null){
+            timer.cancel();
+        }
+        txtTime.setText("50");
+        playTimer();
+    }
+    private void playTimer() {
+        timer = new Timer();
+        txtTime.startAnimation(animationTimer);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                int t = Integer.parseInt(txtTime.getText().toString());
+                if (t > 0) {
+                    t--;
+                    Message message = new Message();
+                    Bundle sendMsg = new Bundle();
+                    sendMsg.putString("time", String.valueOf(t));
+                    message.setData(sendMsg);
+                    timeHandler.sendMessage(message);
+                }
+            }
+        },1000,1000);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(timer != null)
+            timer.cancel();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+    }
+
+    @Override
+    public void onResumeGame() {
+//        setIsPauseGame(true);
+        if(!inDialogWriting)
+            super.onResumeGame();
+        playTimer();
+    }
+
+    public void releaseTimer() {
+        if (timer != null)
+            timer.cancel();
+    }
+
+    @Override
+    protected void setScreenUsingPauseBnt(String key, BackgroudGameView bgv, Activity activity) {
+        super.setScreenUsingPauseBnt("WRITING_GAME_NINJA", bgv, this);
+    }
+    private void initDialogOverGame(){
+        //dialog game over
+        dialogGameOver = new Dialog(this);
+        dialogGameOver.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogGameOver.setCancelable(false);
+        dialogGameOver.setContentView(R.layout.activity_dialog_game_over);
+        dialogGameOver.getWindow().setBackgroundDrawableResource(R.color.tran);
+        dialogGameOver.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        imgListOver = (ImageView) dialogGameOver.findViewById(R.id.imgListOver);
+        imgReplayOver = (ImageView) dialogGameOver.findViewById(R.id.imgReplayOver);
+        lblScoreGameOver = (TextView) dialogGameOver.findViewById(R.id.lblScoreGameOver);
+        lblPlayerNameGameOver = (EditText) dialogGameOver.findViewById(R.id.lblPlayerNameGameOver);
+
+        imgListOver.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // PRESSED
+                        imgListOver.setSelected(!imgListOver.isSelected());
+                        imgListOver.isSelected();
+                        imgReplayOver.setEnabled(false);
+                        return true; // if you want to handle the touch event
+                    case MotionEvent.ACTION_UP:
+                        // RELEASED
+                        doSaveScore();
+                        imgListOver.setSelected(false);
+                        startActivity(new Intent(WirtingNinjaActivity.this, TopisChoosingActivity.class));
+                        finish();
+                        imgReplayOver.setEnabled(true);
+                        return true; // if you want to handle the touch event
+                }
+                return false;
+            }
+        });
+        imgReplayOver.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // PRESSED
+                        imgReplayOver.setSelected(!imgReplayOver.isSelected());
+                        imgReplayOver.isSelected();
+                        imgListOver.setEnabled(false);
+                        return true; // if you want to handle the touch event
+                    case MotionEvent.ACTION_UP:
+                        dialogGameOver.dismiss();
+                        startActivity(new Intent(WirtingNinjaActivity.this,WirtingNinjaActivity.class));
+                        finish();
+                        imgListOver.setEnabled(true);
+                        return true; // if you want to handle the touch event
+                }
+                return false;
+            }
+        });
+    }
+    private void doSaveScore() {
+        if (scores > 0) {
+            String playerName = lblPlayerNameGameOver.getText().toString();
+            if (playerName.equals(""))
+                playerName = "Unknown Player";
+            ScoreObject scoreObject = new ScoreObject();
+            scoreObject.setsPlayer(playerName);
+            scoreObject.setsScore(scores);
+            DbAccessHelper db = new DbAccessHelper(this);
+            db.doInsertScore(scoreObject);
+            lblPlayerNameGameOver.setText("");
+        }
     }
 }

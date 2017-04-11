@@ -22,6 +22,7 @@ import blackcore.tdc.edu.com.gamevhta.catching_words_game.CatchingWordsActivity;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models.BackgroudGameView;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.service.MusicService;
+import blackcore.tdc.edu.com.gamevhta.writing_words_game.WirtingNinjaActivity;
 
 /**
  * Created by phong on 3/14/2017.
@@ -166,16 +167,26 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
         });
     }
 
-    public void setScreenUse(String MH, BackgroudGameView game){
+    public void setScreenUse(String MH, BackgroudGameView game, Activity activity){
+        this.context = activity;
         if(MH.equals(ConfigApplication.SCREEN_USING_PAUSE_DIALOG_MH6)){
             this.screenUse = ConfigApplication.SCREEN_USING_PAUSE_DIALOG_MH6;
             this.game = game;
+        }else{
+            if(MH.equals("WRITING_GAME_NINJA")){
+                this.screenUse = "WRITING_GAME_NINJA";
+            }
         }
     }
 
     public void stopGameMH6(){
-        if(game != null)
+        if(game != null) {
             game.stopMoveBG();
+            if(screenUse.equals("WRITING_GAME_NINJA")){
+                WirtingNinjaActivity activity = (WirtingNinjaActivity) context;
+                activity.releaseTimer();
+            }
+        }
     }
     public void resumeGameMH6(){
         if(game != null){
