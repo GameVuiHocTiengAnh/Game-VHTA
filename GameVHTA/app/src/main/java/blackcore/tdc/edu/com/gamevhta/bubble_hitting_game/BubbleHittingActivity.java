@@ -46,7 +46,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
 
     private Animation mAnimation;
     private ImageView imgQuestionsOne, imgQuestionsTwo, imgQuestionsThree, imgQuestionsFour, imgQuestionsFive, imgQuestionsSix, imgAnimalDialog;
-    private ImageView imgBubbleOne, imgBubbleTwo, imgBubbleThree, imgBubbleFour, imgBubbleFive, imgBubbleSix;
+    private ImageView imgBubbleOne, imgBubbleTwo, imgBubbleThree, imgBubbleFour, imgBubbleFive, imgBubbleSix, imgDialogBubbleOne, imgDialogBubbleTwo, imgDialogBubbleThree;
     private ImageView imgListOver, imgReplayOver, imgNextGameWin;
 
     private TextView txtWordOne, txtWordTwo, txtWordThree, txtTime, txtWord, txtScore, txtScoreGameOver, txtScoreWin;
@@ -150,7 +150,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
 
     private void effectImageQuestion(){
         mAnimation = new TranslateAnimation(0, 0, 0,40);
-        mAnimation.setDuration(700);
+        mAnimation.setDuration(1500);
         mAnimation.setFillAfter(true);
         mAnimation.setRepeatCount(-1);
         mAnimation.setRepeatMode(Animation.REVERSE);
@@ -426,6 +426,9 @@ public class BubbleHittingActivity extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        imgBubbleTwo.setSelected(!imgQuestionsTwo.isSelected());
+                        imgQuestionsTwo.isSelected();
+                        imgQuestionsTwo.setEnabled(false);
                         BubbleDialog();
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(1).getwPathImage()));
                         ArrayList<String> arr = new ArrayList<String>();
@@ -542,6 +545,9 @@ public class BubbleHittingActivity extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        imgBubbleThree.setSelected(!imgQuestionsThree.isSelected());
+                        imgQuestionsThree.isSelected();
+                        imgQuestionsThree.setEnabled(false);
                         BubbleDialog();
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(2).getwPathImage()));
                         ArrayList<String> arr = new ArrayList<String>();
@@ -656,6 +662,9 @@ public class BubbleHittingActivity extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        imgBubbleFour.setSelected(!imgQuestionsFour.isSelected());
+                        imgQuestionsFour.isSelected();
+                        imgQuestionsFour.setEnabled(false);
                         BubbleDialog();
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(3).getwPathImage()));
                         ArrayList<String> arr = new ArrayList<String>();
@@ -770,6 +779,10 @@ public class BubbleHittingActivity extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        imgBubbleFive.setSelected(!imgQuestionsFive.isSelected());
+                        imgQuestionsFive.isSelected();
+                        imgQuestionsFive.setEnabled(false);
+                        imgQuestionsFive.setEnabled(false);
                         BubbleDialog();
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(4).getwPathImage()));
                         ArrayList<String> arr = new ArrayList<String>();
@@ -884,6 +897,9 @@ public class BubbleHittingActivity extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        imgBubbleSix.setSelected(!imgQuestionsSix.isSelected());
+                        imgQuestionsSix.isSelected();
+                        imgQuestionsSix.setEnabled(false);
                         BubbleDialog();
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(5).getwPathImage()));
                         ArrayList<String> arr = new ArrayList<String>();
