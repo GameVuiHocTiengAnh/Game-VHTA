@@ -11,10 +11,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+
+import com.podcopic.animationlib.library.AnimationType;
+import com.podcopic.animationlib.library.StartSmartAnimation;
 
 import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
@@ -37,8 +41,8 @@ public class MainMenuActivity extends AppCompatActivity {
 
         }
     };
-    private ImageView btnExit,btnPlay,btnGuide,btnScore;
-    private Animation scaleBtnPlay,scaleBtnScore,scaleBtnGuide,scaleBtnExit,zoomIn;
+    private ImageView btnExit,btnPlay,btnGuide,btnScore,imgNameExit;
+    private Animation scaleBtnPlay,scaleBtnScore,scaleBtnGuide,scaleBtnExit,zoomIn,rotate_crazy;
     private final int TIME_DELAY_SCALE_BTN = 500;
     private Dialog dialog;
 
@@ -54,6 +58,7 @@ public class MainMenuActivity extends AppCompatActivity {
         scaleBtnGuide = AnimationUtils.loadAnimation(this, R.anim.scale_anim);
         scaleBtnExit = AnimationUtils.loadAnimation(this, R.anim.scale_anim);
         zoomIn = AnimationUtils.loadAnimation(this, R.anim.zoom_in);
+        rotate_crazy = AnimationUtils.loadAnimation(MainMenuActivity.this,R.anim.scale_anim_trieu);
 
         mMain = MediaPlayer.create(getApplicationContext(),R.raw.blizzards);
         mClick = MediaPlayer.create(getApplicationContext(),R.raw.click);
@@ -153,54 +158,63 @@ public class MainMenuActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         btnExit.clearAnimation();
                         mService.playMusic(mClick);
-                        dialog = new Dialog(MainMenuActivity.this);
-                        dialog.setContentView(R.layout.activity_dialog_exit);
-                        dialog.getWindow().setBackgroundDrawableResource(R.color.tran);
-                        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-                        dialog.show();
+                        dialogExit();
 
-                        final ImageView btnYes = (ImageView) dialog.findViewById(R.id.btnYes);
-                        final ImageView btnNo = (ImageView) dialog.findViewById(R.id.btnNo);
+                }
+                return false;
+            }
+        });
+    }
+    public void dialogExit(){
+        dialog = new Dialog(MainMenuActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.activity_dialog_exit);
+        dialog.getWindow().setBackgroundDrawableResource(R.color.tran);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        dialog.show();
 
-                        btnYes.setOnTouchListener(new View.OnTouchListener() {
-                            @Override
-                            public boolean onTouch(View view, MotionEvent motionEvent) {
-                                switch (motionEvent.getAction()){
-                                    case MotionEvent.ACTION_DOWN:
-                                        btnYes.setSelected(!btnYes.isSelected());
-                                        btnYes.isSelected();
-                                        btnNo.setEnabled(false);
-                                        mService.playMusic(mClick);
-                                        return true;
-                                    case MotionEvent.ACTION_UP:
-                                        playMusicMain();
-                                        btnNo.setEnabled(true);
-                                        finish();
-                                        return true;
-                                }
-                                return false;
-                            }
-                        });
+        final ImageView btnYes = (ImageView) dialog.findViewById(R.id.btnYes);
+        final ImageView btnNo = (ImageView) dialog.findViewById(R.id.btnNo);
+        StartSmartAnimation.startAnimation( dialog.findViewById(R.id.btnYes) , AnimationType.DropOut , 2000 , 0 , true , 100 );
+        StartSmartAnimation.startAnimation( dialog.findViewById(R.id.btnNo) , AnimationType.DropOut , 2000 , 0 , true , 100 );
+        imgNameExit = (ImageView) dialog.findViewById(R.id.imgNameExit);
+        imgNameExit.startAnimation(rotate_crazy);
 
-                        btnNo.setOnTouchListener(new View.OnTouchListener() {
-                            @Override
-                            public boolean onTouch(View view, MotionEvent motionEvent) {
-                                switch (motionEvent.getAction()){
-                                    case MotionEvent.ACTION_DOWN:
-                                        btnNo.setSelected(!btnNo.isSelected());
-                                        btnNo.isSelected();
-                                        btnYes.setEnabled(false);
-                                        mService.playMusic(mClick);
-                                        return true;
-                                    case MotionEvent.ACTION_UP:
-                                        btnYes.setEnabled(true);
-                                        mService.playMusic(mClick);
-                                        dialog.dismiss();
-                                        return true;
-                                }
-                                return false;
-                            }
-                        });
+        btnYes.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        btnYes.setSelected(!btnYes.isSelected());
+                        btnYes.isSelected();
+                        btnNo.setEnabled(false);
+                        mService.playMusic(mClick);
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        playMusicMain();
+                        btnNo.setEnabled(true);
+                        finish();
+                        return true;
+                }
+                return false;
+            }
+        });
+
+        btnNo.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        btnNo.setSelected(!btnNo.isSelected());
+                        btnNo.isSelected();
+                        btnYes.setEnabled(false);
+                        mService.playMusic(mClick);
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        btnYes.setEnabled(true);
+                        mService.playMusic(mClick);
+                        dialog.dismiss();
+                        return true;
                 }
                 return false;
             }
@@ -228,50 +242,7 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     public void onBackPressed(){
-        dialog = new Dialog(MainMenuActivity.this);
-        dialog.setContentView(R.layout.activity_dialog_exit);
-        dialog.getWindow().setBackgroundDrawableResource(R.color.tran);
-        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        dialog.show();
-
-        final ImageView btnYes = (ImageView) dialog.findViewById(R.id.btnYes);
-        final ImageView btnNo = (ImageView) dialog.findViewById(R.id.btnNo);
-
-        btnYes.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        btnYes.setSelected(!btnYes.isSelected());
-                        btnYes.isSelected();
-                        mService.playMusic(mClick);
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        playMusicMain();
-                        finish();
-                        return true;
-                }
-                return false;
-            }
-        });
-
-        btnNo.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        btnNo.setSelected(!btnNo.isSelected());
-                        btnNo.isSelected();
-                        mService.playMusic(mClick);
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        mService.playMusic(mClick);
-                        dialog.dismiss();
-                        return true;
-                }
-                return false;
-            }
-        });
+        dialogExit();
     }
     public void onSuperBackPressed(){
         super.onBackPressed();

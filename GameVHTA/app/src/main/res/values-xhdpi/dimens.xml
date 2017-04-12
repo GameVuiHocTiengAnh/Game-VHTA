@@ -25,9 +25,8 @@
     <dimen name="btnBackTopicLeft">10dp</dimen>
     <dimen name="btnPrevNext">30dp</dimen>
     <!--dialog Exit-->
-    <dimen name="btnYesBottom">40dp</dimen>
-    <dimen name="btnYesRight">10dp</dimen>
-    <dimen name="btnNoBottom">36dp</dimen>
+    <dimen name="btnYesBottom">0dp</dimen>
+    <dimen name="btnYesBot">60dp</dimen>
     <!--game Assemble picture -->
     <dimen name="widthandheightques">100dp</dimen>
     <dimen name="widthandheight">60dp</dimen>

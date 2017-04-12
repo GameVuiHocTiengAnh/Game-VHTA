@@ -409,10 +409,18 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         mMusicMainGame.pause();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mMusicMainGame.start();
+        mCartoonImage.start();
+        timer.cancel();
+        Timer();
+    }
+
     protected void onResume(){
         // TODO Auto-generated method stub
         super.onResume();
-        mCartoonImage.start();
         mMusicMainGame.start();
         timer.cancel();
         Timer();
