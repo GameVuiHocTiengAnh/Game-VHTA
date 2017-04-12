@@ -269,6 +269,21 @@ public class DbAccessHelper extends SQLiteOpenHelper {
         return arrWord;
     }
 
+    public int getLevelHighest(String strObject) {
+        ArrayList<WordObject> arrWord = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT LEVEL FROM " + TABLE_WORD + " WHERE " + W_COLUMN_OBJECT + " = '" + strObject + "' ORDER BY " + W_COLUMN_LEVEL  +  " DESC", null);
+        res.moveToFirst();
+        while (res.isAfterLast() == false) {
+            WordObject wordObject = new WordObject();
+            wordObject.setưLevel(res.getString(res.getColumnIndex(W_COLUMN_LEVEL)));
+            arrWord.add(wordObject);
+            res.moveToNext();
+        }
+        int levelHightest = Integer.parseInt(arrWord.get(1).getưLevel());
+        return levelHightest;
+    }
+
     //Table Score
     public boolean doInsertScore(ScoreObject scoreObject) {
         SQLiteDatabase db = this.getWritableDatabase();
