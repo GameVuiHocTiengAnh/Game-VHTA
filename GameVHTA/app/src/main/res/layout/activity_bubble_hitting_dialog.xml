@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/bubble" />
+                    android:background="@drawable/btnbubble" />
 
             </RelativeLayout>
 
@@ -100,7 +100,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            android:background="@drawable/bubble" />
+                            android:background="@drawable/btnbubble" />
 
                     </FrameLayout>
 
@@ -132,7 +132,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/bubble" />
+                        android:background="@drawable/btnbubble" />
 
                 </FrameLayout>
 
@@ -164,7 +164,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            android:background="@drawable/bubble" />
+                            android:background="@drawable/btnbubble" />
 
                     </FrameLayout>
 

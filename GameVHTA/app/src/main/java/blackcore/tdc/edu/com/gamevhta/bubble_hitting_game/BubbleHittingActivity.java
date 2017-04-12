@@ -308,6 +308,9 @@ public class BubbleHittingActivity extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        imgBubbleOne.setSelected(!imgQuestionsOne.isSelected());
+                        imgQuestionsOne.isSelected();
+                        imgQuestionsOne.setEnabled(false);
                         BubbleDialog();
                         imgAnimalDialog.setImageDrawable(getBitmapResource(listImageGame.get(0).getwPathImage()));
                         ArrayList<String> arr = new ArrayList<String>();

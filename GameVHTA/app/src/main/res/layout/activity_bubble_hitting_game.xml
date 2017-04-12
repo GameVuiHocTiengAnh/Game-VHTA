@@ -15,7 +15,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.1"
+            android:layout_weight="0.2"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -103,21 +103,20 @@
                         android:gravity="center">
 
                         <ImageView
+                            android:src="@drawable/animal_albatross"
                             android:id="@+id/imgQuestionsOne"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/imgBubbleOne"
-                            android:layout_alignEnd="@+id/imgBubbleOne"
-                            android:layout_alignStart="@+id/imgBubbleOne"
-                            android:layout_alignTop="@+id/imgBubbleOne" />
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp" />
 
                         <ImageView
                             android:id="@+id/imgBubbleOne"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentTop="true"
-                            android:background="@drawable/bubble" />
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:background="@drawable/btnbubble" />
 
                     </RelativeLayout>
                 </LinearLayout>
@@ -151,7 +150,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            android:background="@drawable/bubble" />
+                            android:background="@drawable/btnbubble" />
 
                     </RelativeLayout>
                 </LinearLayout>
@@ -194,7 +193,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
-                            android:background="@drawable/bubble" />
+                            android:background="@drawable/btnbubble" />
 
                     </RelativeLayout>
 
@@ -228,7 +227,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
-                            android:background="@drawable/bubble" />
+                            android:background="@drawable/btnbubble" />
 
                     </RelativeLayout>
                 </LinearLayout>
@@ -269,7 +268,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
-                            android:background="@drawable/bubble" />
+                            android:background="@drawable/btnbubble" />
 
                     </RelativeLayout>
                 </LinearLayout>
@@ -302,7 +301,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
-                            android:background="@drawable/bubble" />
+                            android:background="@drawable/btnbubble" />
 
                     </RelativeLayout>
                 </LinearLayout>
