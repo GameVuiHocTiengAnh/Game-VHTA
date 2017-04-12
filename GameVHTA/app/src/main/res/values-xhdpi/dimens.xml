@@ -58,7 +58,7 @@
     <dimen name="next_bottom">5dp</dimen>
     <!--Screen 5-->
     <dimen name="layout_left">130dp</dimen>
-    <dimen name="layout_left_timer_height">60dp</dimen>
+    <dimen name="layout_left_timer_height">45dp</dimen>
     <dimen name="layout_left_timer_padding_right">25dp</dimen>
     <dimen name="layout_left_timer_text_size">35sp</dimen>
 
@@ -75,8 +75,11 @@
     <dimen name="layout_right_top_word_text_size">35sp</dimen>
 
     <dimen name="layout_right_bot_row_padding">10dp</dimen>
-    <dimen name="layout_right_bot_row_image_size">100dp</dimen>
+    <dimen name="layout_right_bot_row_image_size">120dp</dimen>
 
+    <!-- 14 -->
+    <dimen name="layout_score_layout_width">120dp</dimen>
+    <!-- End-->
     <!-- End screen 5 -->
 
     <!--Game Choosing Objects-->

@@ -2,6 +2,7 @@ package blackcore.tdc.edu.com.gamevhta.config_app;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Environment;
 
 import java.io.File;
@@ -98,5 +99,12 @@ public class ConfigApplication {
         }
         //String path = Environment.getExternalStorageDirectory().toString() + "" + folder + "";
         return arrayList;
+    }
+
+    //Rotate bimap
+    public static Bitmap doRotateBitmap(Bitmap source, float angle){
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source,0,0, source.getWidth(),source.getHeight(),matrix,true);
     }
 }

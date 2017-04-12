@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/layout_left_timer_height"
             android:layout_marginRight="@dimen/layout_left_timer_padding_right"
-            android:background="@drawable/screen_5_time_left"
+            android:background="@drawable/time_image_sc5"
             android:orientation="vertical">
 
             <ImageView
@@ -43,13 +43,14 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
+
             <ImageButton
                 android:id="@+id/btnPauseGame5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/pause"
                 android:layout_alignRight="@id/iconTimer"
-                android:layout_marginLeft="5dp"/>
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/pause" />
         </LinearLayout>
 
         <LinearLayout
@@ -102,15 +103,17 @@
             android:gravity="center">
 
             <LinearLayout
-                android:layout_width="@dimen/layout_right_top_word_width"
+                android:id="@+id/lnBackGroundWord"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/layout_right_top_word_height"
                 android:background="@drawable/screen_5_background_show_word_o"
                 android:gravity="center_vertical|center_horizontal">
                 <TextView
                     android:id="@+id/lblWord"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:text="Elephen"
+                    android:gravity="center_vertical|center_horizontal"
                     android:textStyle="bold"
                     android:textColor="#fff"
                     android:textSize="@dimen/layout_right_top_word_text_size" />
@@ -289,6 +292,7 @@
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>

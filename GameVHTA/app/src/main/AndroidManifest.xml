@@ -49,15 +49,24 @@
 
         </activity>
 
-        <!--Game Screen 5 -->
 
+        <!--Game Screen 5 and 14 -->
         <activity android:name=".image_guessing_game.ImageGuessingActivity"
             android:screenOrientation="landscape">
+
         </activity>
+        <activity android:name=".picture_guessing_listening_game.PictureGuessingListenActivity"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!--end-->
+
         <activity android:name=".market_game.Market_game"
             android:screenOrientation="landscape">
         </activity>
-
         <activity android:name=".RandomGameMemoryChallengeActivity"
             android:screenOrientation="landscape"/>
         <activity android:name=".RandomGamePracticeActivity"
