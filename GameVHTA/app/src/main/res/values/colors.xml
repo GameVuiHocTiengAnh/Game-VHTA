@@ -10,4 +10,6 @@
     <color name="FirstScore">#ff5555</color>
     <color name="SecondScore">#a2b5b5</color>
     <color name="ThreeScore">#ff9300</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>

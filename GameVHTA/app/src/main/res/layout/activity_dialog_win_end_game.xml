@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/DialogBackGameLeftandRight"
+    android:layout_marginRight="@dimen/DialogBackGameLeftandRight"
+    android:layout_marginTop="10dp"
+    android:orientation="horizontal"
+    android:backgroundDimEnabled = "true"
+    tools:context="blackcore.tdc.edu.com.gamevhta.MainMenuActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_name_over" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/lblScoreWinEndGame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1000"
+                android:layout_marginLeft="@dimen/DialogBackGameLeftandRight"
+                android:layout_marginRight="@dimen/DialogBackGameLeftandRight"
+                android:textSize="@dimen/textScoreOverGame"
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff"
+                android:gravity="center"
+                android:lines="1"
+                android:background="@drawable/customtoast"
+                android:layout_marginBottom="10dp"/>
+
+            <EditText
+                android:id="@+id/lblPlayerNameWinEndGame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/DialogBackGameLeftandRight"
+                android:layout_marginRight="@dimen/DialogBackGameLeftandRight"
+                android:background="@drawable/customtoast"
+                android:gravity="center"
+                android:hint="Enter your name!"
+                android:lines="1"
+                android:padding="10dp"
+                android:text=""
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff"
+                android:textSize="@dimen/textNameOverGame" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.6"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom|right"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imgListWinEndGame"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/imagebottomOverGame"
+                    android:layout_marginRight="@dimen/imageOverGame"
+                    android:background="@color/tran"
+                    android:src="@drawable/btnlist" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom|left"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imgReplayWinEndGame"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/imagebottomOverGame"
+                    android:layout_marginLeft="@dimen/imageOverGame"
+                    android:background="@color/tran"
+                    android:src="@drawable/btnreplay" />
+            </LinearLayout>
+
+,
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

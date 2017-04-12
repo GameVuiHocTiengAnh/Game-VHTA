@@ -41,6 +41,7 @@ import com.podcopic.animationlib.library.StartSmartAnimation;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Random;
 import java.util.Timer;
@@ -63,8 +64,8 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
     private Animation animation;
     private Animation animationRotate;
     private Timer timer = new Timer();
-    private TextView txtvWord, txtvTimer, txtvLevel, txtvScore, lblScoreGameOver, txtvTurnNumber, txtScoreWin, txtWordEngNextTurn, txtWordVieNextTurn, txtNameScoreWin;
-    private ImageView imgListOver, imgReplayOver, imgvObject1, imgvObject2, imgvObject3, imgvObject4, imgvObject5, imgvObject6, imgResume, imgList, imgReplay, imgBag, imbNextGameWin, imgObjectNextTurn, imgSpeak;
+    private TextView txtvWord, txtvTimer, txtvLevel, txtvScore, lblScoreGameOver, txtvTurnNumber, txtScoreWin, txtWordEngNextTurn, txtWordVieNextTurn, txtNameScoreWin, txtScoreWinEndGame, txtPlayerNameWinEndGame;
+    private ImageView imgListOver, imgReplayOver, imgvObject1, imgvObject2, imgvObject3, imgvObject4, imgvObject5, imgvObject6, imgResume, imgList, imgReplay, imgBag, imbNextGameWin, imgObjectNextTurn, imgSpeak, imgListWinEndGame, imgReplayWinEndGame;
     private MediaPlayer mButtonClick, mCorrect, mWrong, mClick, mTickTac, mpSoundBackground, mReadyGo, mNextLevel, mGameOver, mYaah, mtornado, mLoadImage;
     private MusicService mService = new MusicService();
     private EditText lblPlayerNameGameOver;
@@ -82,12 +83,14 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
     private boolean TIMER_IS_RUN = false;
     private boolean IS_RESUM = false;
     private int score_temp = 0;
-
+    private int LEVEL_LIMIT = 0;
     private ArrayList<WordObject> listImageFromDataO;
     private ArrayList<WordObject> listImageLevelO;
+    private ArrayList<WordObject> listImageWithLevel;
 
-    private Dialog dialogBack, dialogGameOver, dialogComplete, dialogNextTurn;
-    private DbAccessHelper DbAccessHelper;
+
+    private Dialog dialogBack, dialogGameOver, dialogComplete, dialogNextTurn, dialogWinEndGame;
+    private DbAccessHelper dbAccessHelper;
     private boolean flagVoice = true;
 
     private TextToSpeech textToSpeech = null;
@@ -136,21 +139,20 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
                 Toast.makeText(getApplicationContext(),"da vao duoc if trong resum" + String.valueOf(TIMES_PAUSE), Toast.LENGTH_SHORT).show();
                 setWhenPause();
                 IS_RESUM = true;
-                Voice(mpSoundBackground);
             }
             else {
                 flagVoice = true;
                 timer.cancel();
                 IS_RESUM = true;
-                Voice(mpSoundBackground);
             }
         } else {
             flagVoice = true;
             timer.cancel();
             IS_RESUM = true;
             playTimer();
-            Voice(mpSoundBackground);
         }
+        Voice(mReadyGo);
+        Voice(mpSoundBackground);
     }
 
     @Override
@@ -170,11 +172,18 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
             flagVoice = false;
 
         }
+        mLoadImage.pause();
+        mReadyGo.pause();
+        mTickTac.pause();
+        mGameOver.pause();
+        mpSoundBackground.pause();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        mLoadImage.pause();
+        mReadyGo.pause();
         mTickTac.pause();
         mGameOver.pause();
         mpSoundBackground.pause();
@@ -183,6 +192,8 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mLoadImage.stop();
+        mReadyGo.stop();
         mTickTac.stop();
         mGameOver.stop();
         mpSoundBackground.stop();
@@ -268,7 +279,19 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
         imgSpeak = (ImageView) dialogNextTurn.findViewById(R.id.imgSpeak);
         dialogNextTurn.getWindow().getAttributes().width = (Resources.getSystem().getDisplayMetrics().widthPixels) - 20;
 
-//        Sound
+//      Dialog win end game
+        dialogWinEndGame = new Dialog(Market_game.this);
+        dialogWinEndGame.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogWinEndGame.setCancelable(false);
+        dialogWinEndGame.setContentView(R.layout.activity_dialog_win_end_game);
+        dialogWinEndGame.getWindow().setBackgroundDrawableResource(R.color.tran);
+        dialogWinEndGame.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        imgListWinEndGame = (ImageView) dialogWinEndGame.findViewById(R.id.imgListWinEndGame);
+        imgReplayWinEndGame = (ImageView) dialogWinEndGame.findViewById(R.id.imgReplayWinEndGame);
+        txtScoreWinEndGame = (TextView) dialogWinEndGame.findViewById(R.id.lblScoreWinEndGame);
+        txtPlayerNameWinEndGame = (EditText) dialogWinEndGame.findViewById(R.id.lblPlayerNameWinEndGame);
+
+//      Sound
         mButtonClick = MediaPlayer.create(Market_game.this, R.raw.click);
         mCorrect = MediaPlayer.create(Market_game.this, R.raw.dung_market_game);
         mClick = MediaPlayer.create(Market_game.this, R.raw.click_market_game);
@@ -283,16 +306,16 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
         mpSoundBackground = MediaPlayer.create(getApplicationContext(), R.raw.background_market_game);
         mpSoundBackground.setLooping(true);
 
-        Voice(mReadyGo);
-        Voice(mpSoundBackground);
+//        Voice(mReadyGo);
+//        Voice(mpSoundBackground);
 
 //      textToSpeech
         textToSpeech = new TextToSpeech(this,this);
 
+//      database
+        dbAccessHelper = new DbAccessHelper(this);
 
-        ///database
-        DbAccessHelper = new DbAccessHelper(this);
-        //set time left default
+//      set time left default
         txtvTimer.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME_MARKET));
         imgvObject1.setOnTouchListener(touchListener);
         imgvObject2.setOnTouchListener(touchListener);
@@ -305,8 +328,10 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
 
         setBackgroundLayout();
         addDataList();
+        getDataWithLevel("ANI", LEVEL);
         setFont();
         getEvents();
+        LEVEL_LIMIT = dbAccessHelper.getLevelHighest("ANI");
         loadGame();
 
         handler = new Handler() {
@@ -436,6 +461,11 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
 
     private void loadGame() {
 //      if animation still run on image object == > clear animation
+//        getDataWithLevel("ANI", LEVEL); // test db
+//        Toast.makeText(getApplicationContext(),String.valueOf(listImageWithLevel.size()), Toast.LENGTH_SHORT).show();
+//        Log.d("Size--", String.valueOf(listImageWithLevel.size()) + "-Object: " + listImageWithLevel.get(0).getwEng() + ":" + listImageWithLevel.get(0).getwPathImage() + " : "+ listImageWithLevel.get(0).getưLevel());
+//        Log.d("Size--", String.valueOf(listImageWithLevel.size()) + "-Object: " + listImageWithLevel.get(1).getwEng() + ":" + listImageWithLevel.get(1).getwPathImage() + " : "+ listImageWithLevel.get(1).getưLevel());
+//        Log.d("Size--", String.valueOf(listImageWithLevel.size()) + "-Object: " + listImageWithLevel.get(2).getwEng() + ":" + listImageWithLevel.get(2).getwPathImage() + " : "+ listImageWithLevel.get(2).getưLevel());
         clearAnimation();
 
         Voice(mLoadImage);
@@ -458,16 +488,42 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
         }
         addDataList();
         listImageLevelO = new ArrayList<>();
+
+        Random rdLevel = new Random();
+        int nLevel = listImageWithLevel.size();
+        int xLevel = rdLevel.nextInt(nLevel);
+        listImageLevelO.add(listImageWithLevel.get(xLevel));
+
         Random rd = new Random();
-        for (int j = 0; j < 6; j++) {
+        for (int j = 0; j < 5; j++) {
             int n = listImageFromDataO.size();
             int x = rd.nextInt(n);
-            listImageLevelO.add(listImageFromDataO.get(x));
-            listImageFromDataO.remove(x);
-            Log.d("Danh sach image", String.valueOf(listImageLevelO.size()) + "-Object: " + listImageFromDataO.get(j).getwEng() + ":" + listImageFromDataO.get(j).getwPathImage());
+            if(listImageFromDataO.get(x).getwEng().equals(listImageWithLevel.get(xLevel).getwEng())) {
+                j--;
+            }
+            else {
+                listImageLevelO.add(listImageFromDataO.get(x));
+                listImageFromDataO.remove(x);
+                Log.d("Danh sach image", String.valueOf(listImageLevelO.size()) + "-Object: " + listImageFromDataO.get(j).getwEng() + ":" + listImageFromDataO.get(j).getwPathImage());
+            }
+
         }
+
+        //listImageWithLevel.remove(x);
         Log.d("Tong size", String.valueOf(listImageFromDataO.size()));
-        RESULT_CHOSEN = rd.nextInt(listImageLevelO.size());
+
+//        xao tron mang
+        Collections.shuffle(listImageLevelO);
+
+        for(int j = 0; j < 6; j++) {
+          if(listImageLevelO.get(j).getwEng().equals(listImageWithLevel.get(xLevel).getwEng())) {
+              RESULT_CHOSEN = j;
+          }
+        }
+
+        listImageWithLevel.remove(xLevel);
+
+        //RESULT_CHOSEN = rd.nextInt(listImageLevelO.size());
         //listImageFromDataO.remove(RESULT_CHOSEN);
         Log.d("size image", String.valueOf(listImageLevelO.size()));
         txtvWord.setText(listImageLevelO.get(RESULT_CHOSEN).getwEng().toString());
@@ -495,7 +551,12 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
     //List Image was loaded from database
     private void addDataList() {
         listImageFromDataO = new ArrayList<>();
-        listImageFromDataO = DbAccessHelper.getWordObject(ConfigApplication.OBJECT_ANIMALS);
+        listImageFromDataO = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_ANIMALS);
+    }
+
+    private void getDataWithLevel(String object, int level) {
+        listImageWithLevel = new ArrayList<>();
+        listImageWithLevel = dbAccessHelper.getWordObjectLevel(object, level);
     }
 
     private Drawable getBitmapResource(String name) {
@@ -533,8 +594,6 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
     }
 
     private void getEvents() {
-
-
         imgListOver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -551,6 +610,24 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
                 timer.cancel();
                 doWhenClickImgReplay();
                 dialogGameOver.dismiss();
+            }
+        });
+        imgListWinEndGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Voice(mButtonClick);
+                doSaveScore();
+                doWhenClickImglist();
+            }
+        });
+        imgReplayWinEndGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Voice(mButtonClick);
+                doSaveScore();
+                timer.cancel();
+                doWhenClickImgReplay();
+                dialogWinEndGame.dismiss();
             }
         });
         btnPause.setOnClickListener(new View.OnClickListener() {
@@ -608,6 +685,7 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
                 Voice(mButtonClick);
                 dialogComplete.dismiss();
                 LEVEL++;
+                getDataWithLevel("ANI", LEVEL);
                 txtvLevel.setText("Level. " + String.valueOf(LEVEL));
                 int tempTIMES_PAUSE = TIMES_PAUSE;
                 //Toast.makeText(getApplicationContext(), "temp= " + tempTIMES_PAUSE, Toast.LENGTH_SHORT).show();
@@ -645,6 +723,7 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
         TURN = 0;//truong hop truoc thi bang 1
         SCORE = 0;
         LEVEL = 1;
+        getDataWithLevel("ANI", LEVEL);
         txtvLevel.setText("Level. 1");
         txtvTurnNumber.setText("1");
         lblPlayerNameGameOver.setText("");
@@ -666,10 +745,16 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
                 dialogNextTurn.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        Voice(mNextLevel);
-                        txtvTurnNumber.setText(String.valueOf(TURN));
-                        txtScoreWin.setText(String.valueOf(SCORE));
-                        dialogComplete.show();
+                        if(LEVEL < LEVEL_LIMIT) {
+                            Voice(mNextLevel);
+                            txtvTurnNumber.setText(String.valueOf(TURN));
+                            txtScoreWin.setText(String.valueOf(SCORE));
+                            dialogComplete.show();
+                        }
+                        else {
+                            txtScoreWinEndGame.setText(String.valueOf(SCORE));
+                            dialogWinEndGame.show();
+                        }
                     }
                 });
 
@@ -718,8 +803,8 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
                 timer.cancel();
                 RESULT_FAILED = 0;
                 lblScoreGameOver.setText(String.valueOf(SCORE));
-                txtvLevel.setText("Level. 1");
-                txtvTurnNumber.setText("1");
+//                txtvLevel.setText("Level. 1");
+//                txtvTurnNumber.setText("1");
             }
 //            chon sai 1 lan thi nhan duoc tro giup
             else {
@@ -772,16 +857,21 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
 
     //Save Score
     private void doSaveScore() {
-        if (Integer.parseInt(lblScoreGameOver.getText().toString()) > 0) {
-            String playerName = lblPlayerNameGameOver.getText().toString();
-            if (lblPlayerNameGameOver.getText().toString().equals("") == false) {
-                ScoreObject scoreObject = new ScoreObject();
-                scoreObject.setsPlayer(playerName);
-                scoreObject.setsScore(Integer.valueOf(lblScoreGameOver.getText().toString()));
-                DbAccessHelper.doInsertScore(scoreObject);
-                lblPlayerNameGameOver.setText("");
-                //Toast.makeText(getApplicationContext(), "Saved Score", Toast.LENGTH_SHORT).show();
-            }
+        String playerName = "";
+        if(dialogGameOver.isShowing()) {
+            playerName = lblPlayerNameGameOver.getText().toString();
+        }
+        else if(dialogWinEndGame.isShowing()){
+            playerName = txtPlayerNameWinEndGame.getText().toString();
+        }
+        if (SCORE > 0 && playerName.equals("") == false) {
+            ScoreObject scoreObject = new ScoreObject();
+            scoreObject.setsPlayer(playerName);
+            scoreObject.setsScore(SCORE);
+            dbAccessHelper.doInsertScore(scoreObject);
+            lblPlayerNameGameOver.setText("");
+            txtPlayerNameWinEndGame.setText("");
+            //Toast.makeText(getApplicationContext(), "Saved Score", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -890,12 +980,12 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
                 imgvObject5.setEnabled(true);
                 imgvObject6.setEnabled(true);
 
-                imgvObject1.setVisibility(View.INVISIBLE);
-                imgvObject2.setVisibility(View.INVISIBLE);
-                imgvObject3.setVisibility(View.INVISIBLE);
-                imgvObject4.setVisibility(View.INVISIBLE);
-                imgvObject5.setVisibility(View.INVISIBLE);
-                imgvObject6.setVisibility(View.INVISIBLE);
+                imgvObject1.setVisibility(View.VISIBLE);
+                imgvObject2.setVisibility(View.VISIBLE);
+                imgvObject3.setVisibility(View.VISIBLE);
+                imgvObject4.setVisibility(View.VISIBLE);
+                imgvObject5.setVisibility(View.VISIBLE);
+                imgvObject6.setVisibility(View.VISIBLE);
 
                 imgvObject1.clearAnimation();
                 imgvObject2.clearAnimation();
@@ -922,7 +1012,6 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
                 }
 
             }
-
             @Override
             public void onFinish() {
                 dialogNextTurn.dismiss();

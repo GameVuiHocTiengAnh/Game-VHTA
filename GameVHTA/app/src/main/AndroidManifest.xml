@@ -66,13 +66,17 @@
         <!--Bubble Hitting Game-->
         <activity android:name=".bubble_hitting_game.BubbleHittingActivity"
             android:screenOrientation="landscape">
+        </activity>
+        <activity android:name=".writing_words_game.WirtingNinjaActivity"
+            android:screenOrientation="landscape">
+        </activity>
+        <activity
+            android:name=".writing_practice_game.writing_practice_game"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".writing_words_game.WirtingNinjaActivity"
-            android:screenOrientation="landscape">
         </activity>
     </application>
 

@@ -10,6 +10,11 @@
         <item>@drawable/background_animal_one</item>
         <item>@drawable/background_animal_two</item>
     </array>
+
+    <string name="title_activity_writing_practice_game">writing_practice_game</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
     <array name="topicSchool">
         <item>@drawable/background_school_one</item>
         <item>@drawable/background_school_two</item>
@@ -26,4 +31,5 @@
         <item>@drawable/background_farm_one</item>
         <item>@drawable/background_farm_two</item>
     </array>
+
 </resources>
