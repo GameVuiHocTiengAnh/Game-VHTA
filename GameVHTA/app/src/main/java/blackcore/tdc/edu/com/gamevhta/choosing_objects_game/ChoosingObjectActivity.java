@@ -1,15 +1,12 @@
 package blackcore.tdc.edu.com.gamevhta.choosing_objects_game;
 
 import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -35,7 +32,6 @@ import blackcore.tdc.edu.com.gamevhta.button.PauseButton;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
-import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 import static com.podcopic.animationlib.library.StartSmartAnimation.startAnimation;
 
@@ -49,8 +45,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
     private Animation animation, animationsacle;
     private ImageView imgAnimalOne, imgAnimalTwo, imgAnimalThree, imgAnimalFour, imgAnimalFive, imgAnimalSix, imgAnimalDialog, imbNextGameWin;
     private TextView txtScore, txtWordEng, txtWordVie, txtScoreWin;
-    private MediaPlayer mClick, mMusicMainGame, mGameWin;
-    private MusicService mService = new MusicService();
+    private MediaPlayer mClick = null, mMusicMainGame = null, mGameWin = null;
     private Dialog dialogGame, dialogWin;
     private DbAccessHelper dbAccessHelper;
     private TextToSpeech textToSpeech = null;
@@ -61,19 +56,6 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
     private int check_finish = 0;
     private ArrayList<WordObject> listImageGame = null;
     private ArrayList<WordObject> listImageData = null;
-
-
-    ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            MusicService.MyBinder mBinder = (MusicService.MyBinder) iBinder;
-            mService = mBinder.getService();
-        }
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mService = null;
-        }
-    };
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,9 +104,10 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
 
         //Text to Speech
         textToSpeech = new TextToSpeech(this,this);
-        mService.playMusic(mMusicMainGame);
+
+        mMusicMainGame.start();
         mMusicMainGame.setLooping(true);
-        mMusicMainGame.setVolume(0.5f,0.5f);
+        mMusicMainGame.setVolume(0.4f,0.4f);
         mClick.setVolume(0.4f,0.4f);
 
         addDataList();
@@ -172,15 +155,28 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
     @Override
     protected void onPause() {
         // TODO Auto-generated method stub
-        mService.pauseMusic(mMusicMainGame);
         super.onPause();
+        mMusicMainGame.pause();
     }
     public void onResume() {
-        mService.playMusic(mMusicMainGame);
         super.onResume();
+        mMusicMainGame.start();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMusicMainGame.stop();
+        mMusicMainGame.release();
+        mClick.stop();
+        mClick.release();
+        mGameWin.stop();
+        mGameWin.release();
     }
     private void dialogGame(){
         dialogGame = new Dialog(ChoosingObjectActivity.this);
+        dialogWin.setCancelable(false);
+        dialogWin.setCanceledOnTouchOutside(false);
+        dialogGame.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogGame.setContentView(R.layout.activity_game_mh7_dialog);
         dialogGame.getWindow().setBackgroundDrawableResource(R.color.tran);
         dialogGame.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
@@ -214,7 +210,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        mService.playMusic(mClick);
+                        mClick.start();
                         imgAnimalOne.startAnimation(animation);
                         if(textToSpeech != null && listImageGame.get(0).getwEng() != null){
                             textToSpeech.speak(listImageGame.get(0).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
@@ -238,13 +234,13 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                         imgCal.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                mService.playMusic(mClick);
+                                mClick.start();
                                 dialogGame.dismiss();
                                 ktcheck_finish();
                                 getResult(1);
                                 if(check_finish == 6) {
                                     EventWin();
-                                    mService.playMusic(mGameWin);
+                                    mGameWin.start();
                                     dialogWin.show();
                                 }
 
@@ -275,7 +271,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        mService.playMusic(mClick);
+                        mClick.start();
                         imgAnimalTwo.startAnimation(animation);
                         if(textToSpeech != null && listImageGame.get(1).getwEng() != null){
                             textToSpeech.speak(listImageGame.get(1).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
@@ -299,13 +295,13 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                         imgCal.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                mService.playMusic(mClick);
+                                mClick.start();
                                 dialogGame.dismiss();
                                 ktcheck_finish ();
                                 getResult(2);
                                 if(check_finish == 6) {
                                     EventWin();
-                                    mService.playMusic(mGameWin);
+                                    mGameWin.start();
                                     dialogWin.show();
                                 }
                                 startAnimation( findViewById(R.id.txtWordTwo) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
@@ -333,7 +329,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        mService.playMusic(mClick);
+                        mClick.start();
                         imgAnimalThree.startAnimation(animation);
                         if(textToSpeech != null && listImageGame.get(2).getwEng() != null){
                             textToSpeech.speak(listImageGame.get(2).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
@@ -356,13 +352,13 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                         imgCal.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                mService.playMusic(mClick);
+                                mClick.start();
                                 dialogGame.dismiss();
                                 ktcheck_finish ();
                                 getResult(3);
                                 if(check_finish == 6) {
                                     EventWin();
-                                    mService.playMusic(mGameWin);
+                                    mGameWin.start();
                                     dialogWin.show();
                                 }
                                 startAnimation( findViewById(R.id.txtWordThree) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
@@ -390,7 +386,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        mService.playMusic(mClick);
+                        mClick.start();
                         imgAnimalFour.startAnimation(animation);
                         if(textToSpeech != null && listImageGame.get(3).getwEng() != null){
                             textToSpeech.speak(listImageGame.get(3).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
@@ -414,13 +410,13 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                         imgCal.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                mService.playMusic(mClick);
+                                mClick.start();
                                 dialogGame.dismiss();
                                 ktcheck_finish ();
                                 getResult(4);
                                 if(check_finish == 6) {
                                     EventWin();
-                                    mService.playMusic(mGameWin);
+                                    mGameWin.start();
                                     dialogWin.show();
                                 }
                                 startAnimation( findViewById(R.id.txtWordFour) , AnimationType.ZoomInRight , 2000 , 0 , true , 300 );
@@ -449,7 +445,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        mService.playMusic(mClick);
+                        mClick.start();
                         imgAnimalFive.startAnimation(animation);
                         if(textToSpeech != null && listImageGame.get(4).getwEng() != null){
                             textToSpeech.speak(listImageGame.get(4).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
@@ -473,13 +469,13 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                         imgCal.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                mService.playMusic(mClick);
+                                mClick.start();
                                 dialogGame.dismiss();
                                 ktcheck_finish ();
                                 getResult(5);
                                 if(check_finish == 6) {
                                     EventWin();
-                                    mService.playMusic(mGameWin);
+                                    mGameWin.start();
                                     dialogWin.show();
                                 }
                                 startAnimation( findViewById(R.id.txtWordFive) , AnimationType.RubberBand , 2000 , 0 , true , 300 );
@@ -509,7 +505,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        mService.playMusic(mClick);
+                        mClick.start();
                         imgAnimalSix.startAnimation(animation);
                         if(textToSpeech != null && listImageGame.get(5).getwEng() != null){
                             textToSpeech.speak(listImageGame.get(5).getwEng(),TextToSpeech.QUEUE_FLUSH,null);
@@ -534,13 +530,13 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                         imgCal.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                mService.playMusic(mClick);
+                                mClick.start();
                                 dialogGame.dismiss();
                                 ktcheck_finish ();
                                 getResult(6);
                                 if(check_finish == 6) {
                                     EventWin();
-                                    mService.playMusic(mGameWin);
+                                    mGameWin.start();
                                     dialogWin.show();
                                 }
                                 startAnimation( findViewById(R.id.txtWordSix) , AnimationType.ZoomInLeft , 2000 , 0 , true , 300 );
@@ -580,20 +576,19 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
         }
     }
 
-    private void EventWin()
-    {
+    private void EventWin() {
         txtScoreWin.setText(String.valueOf(SCORE_ALL));
         imbNextGameWin.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        mService.playMusic(mClick);
+                        mClick.start();
                         imbNextGameWin.setSelected(!imbNextGameWin.isSelected());
                         imbNextGameWin.isSelected();
                         return true;
                     case MotionEvent.ACTION_UP:
-                        mService.playMusic(mClick);
+                        mClick.start();
                         imbNextGameWin.setSelected(false);
                         Intent intent = new Intent(getApplicationContext(),RandomGameMemoryChallengeActivity.class);
                         Bundle sendScore = new Bundle();
