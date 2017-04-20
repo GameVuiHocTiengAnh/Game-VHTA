@@ -106,7 +106,15 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_writing_practice_game);
+
+        if(OBJECT.equals("SCH"))
+        {
+            setContentView(R.layout.activity_writing_practice_game_school);
+        }
+        else {
+            setContentView(R.layout.activity_writing_practice_game);
+        }
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -265,7 +273,7 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
             OBJECT = getIntent().getStringExtra(ConfigApplication.OBJECT_SELECTED);
         }
         setEnableWP(false);
-        setBackgroundLayout();
+        //setBackgroundLayout();
         setFont();
         getEvents();
 //      Get gioi han level, Chi lay so chan

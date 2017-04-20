@@ -195,7 +195,6 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
         mLoadImage.stop();
         mReadyGo.stop();
         mTickTac.stop();
-        mGameOver.stop();
         mpSoundBackground.stop();
 
     }

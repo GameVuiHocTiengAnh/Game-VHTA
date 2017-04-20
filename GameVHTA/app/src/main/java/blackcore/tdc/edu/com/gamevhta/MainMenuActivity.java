@@ -5,10 +5,10 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.media.MediaPlayer;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -21,6 +21,8 @@ import com.podcopic.animationlib.library.AnimationType;
 import com.podcopic.animationlib.library.StartSmartAnimation;
 
 import blackcore.tdc.edu.com.gamevhta.service.MusicService;
+
+//import blackcore.tdc.edu.com.gamevhta.data_models.DbScoreHelper;
 
 public class MainMenuActivity extends AppCompatActivity {
 

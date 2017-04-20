@@ -6,8 +6,6 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
-import com.wang.avi.AVLoadingIndicatorView;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -35,13 +33,12 @@ public class LoadingGoInGameActivity extends AppCompatActivity {
         screenGame.add(PICTURE_PUZZLE_GAME);
         screenGame.add(MH6_CATCHING_WORDS_GAME);
         screenGame.add(CHOOSE_IMAGE_OBJECT_GAME);
-
         Random ran = new Random();
         int dom = ran.nextInt(screenGame.size());
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        AVLoadingIndicatorView loadingGoIn = (AVLoadingIndicatorView) findViewById(R.id.aviSplashLoadingNext);
-        loadingGoIn.show();
+        //AVLoadingIndicatorView loadingGoIn = (AVLoadingIndicatorView) findViewById(R.id.aviSplashLoadingNext);
+        //loadingGoIn.show();
         goNextActivity(dom);
     }
 
