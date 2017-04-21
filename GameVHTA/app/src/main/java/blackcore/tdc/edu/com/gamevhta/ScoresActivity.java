@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ListView;
 
@@ -26,33 +27,40 @@ public class ScoresActivity extends AppCompatActivity {
     private ArrayList<Score> list = new ArrayList<Score>();
 
     private MediaPlayer mScore;
-    private MusicService mService = new MusicService();
     private DbAccessHelper dbAccessHelper;
-    ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            MusicService.MyBinder mBinder = (MusicService.MyBinder) iBinder;
-            mService = mBinder.getService();
-
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mService = null;
-
-        }
-    };
 
     protected void onPause(){
-        mService.pauseMusic(mScore);
         super.onPause();
+        try{
+            mScore.pause();
+        }catch (Exception e){
+            Log.d("ss","dd");
+        }
 
     }
     protected  void onResume(){
-        mService.playMusic(mScore);
         super.onResume();
+        mScore.start();
+        mScore.setLooping(true);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try{
+            mScore.stop();
+            mScore.release();
+        }catch (Exception e){
+            Log.d("a","s");
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mScore.start();
+        mScore.setLooping(true);
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +85,7 @@ public class ScoresActivity extends AppCompatActivity {
         }
         adapter.notifyDataSetChanged();
 
-        mScore = MediaPlayer.create(getApplicationContext(),R.raw.score);
+        mScore = MediaPlayer.create(getApplicationContext(),R.raw.picturepuzzle);
 
         musicScore();
 
@@ -85,7 +93,7 @@ public class ScoresActivity extends AppCompatActivity {
     }
 
     public void musicScore(){
-        mService.playMusic(mScore);
+        mScore.start();
         mScore.setLooping(true);
     }
 

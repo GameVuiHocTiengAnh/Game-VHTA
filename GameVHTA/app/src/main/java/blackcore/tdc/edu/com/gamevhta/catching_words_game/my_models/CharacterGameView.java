@@ -145,15 +145,9 @@ public class CharacterGameView extends SurfaceView implements Runnable{
         int dom = ran.nextInt(4);
         switch (dom){
             case 0:
-                ninjaSpeak = MediaPlayer.create(getContext(),R.raw.ninja_speak1);
-                break;
-            case 1:
                 ninjaSpeak = MediaPlayer.create(getContext(),R.raw.ninja_speak2);
                 break;
-            case 2:
-                ninjaSpeak = MediaPlayer.create(getContext(),R.raw.ninja_speak3);
-                break;
-            case 3:
+            case 1:
                 ninjaSpeak = MediaPlayer.create(getContext(),R.raw.ninja_speak4);
                 break;
         }

@@ -93,6 +93,13 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
 
         textToSpeech = new TextToSpeech(this,this);
         imgBackGame = (PauseButton) findViewById(R.id.btnBackGame);
+        imgBackGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                timer.cancel();
+            }
+        });
+        imgBackGame.setScreenUse("PUZZLE_GAME",null,this);
 
         mCorrect = MediaPlayer.create(PicturePuzzleActivity.this,R.raw.dung_market_game);
         mWrong = MediaPlayer.create(PicturePuzzleActivity.this,R.raw.sai);
@@ -317,12 +324,16 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
 
                 } else if (t == 0) {
                     timer.cancel();
-                    mTickTac.stop();
-                    mTickTac.release();
-                    mOver.start();
-                    effectWin();
-                    EventOver();
-                    dialogOver.show();
+                    try {
+                        mTickTac.stop();
+                        mTickTac.release();
+                        mOver.start();
+                        effectWin();
+                        EventOver();
+                        dialogOver.show();
+                    }catch (Exception e){
+                        Log.d("s","s");
+                    }
                 }
             }
         };
@@ -404,45 +415,56 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         // TODO Auto-generated method stub
         super.onPause();
         timer.cancel();
-        mTickTac.pause();
-        mCartoonImage.pause();
-        mMusicMainGame.pause();
+        try {
+            mTickTac.pause();
+            mMusicMainGame.pause();
+        }catch (Exception e) {
+            Log.d("a","a");
+        }
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         mMusicMainGame.start();
-        mCartoonImage.start();
+        mMusicMainGame.setLooping(true);
         timer.cancel();
         Timer();
+        mTickTac.start();
     }
 
     protected void onResume(){
         // TODO Auto-generated method stub
         super.onResume();
         mMusicMainGame.start();
+        mMusicMainGame.setLooping(true);
         timer.cancel();
         Timer();
+        mTickTac.start();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mMusicMainGame.stop();
-        mMusicMainGame.release();
-        mCartoonImage.stop();
-        mCartoonImage.release();
-        mWin.stop();
-        mWin.release();
-        mCorrect.stop();
-        mCorrect.release();
-        mClickGame.stop();
-        mClickGame.release();
-        mTickTac.stop();
-        mTickTac.release();
-        mOver.stop();
-        mOver.release();
+        try {
+            mMusicMainGame.stop();
+            mMusicMainGame.release();
+            mCartoonImage.stop();
+            mCartoonImage.release();
+            mWin.stop();
+            mWin.release();
+            mCorrect.stop();
+            mCorrect.release();
+            mClickGame.stop();
+            mClickGame.release();
+            mTickTac.stop();
+            mTickTac.release();
+            mOver.stop();
+            mOver.release();
+        }catch (Exception e) {
+            Log.d("a","a");
+        }
+
     }
 
     public void effectText(){
@@ -806,5 +828,11 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
             SCORE_ALL = SCORE_ONE + SCORE_TWO + SCORE_THREE + SCORE_FOUR + SCORE_FIVE + SCORE_SIX;
             txtScore.setText(String.valueOf(SCORE_ALL));
             doSaveScore();
+        }
+
+        public void startCountingTime(){
+            if(timer != null)
+                timer.cancel();
+            Timer();
         }
 }

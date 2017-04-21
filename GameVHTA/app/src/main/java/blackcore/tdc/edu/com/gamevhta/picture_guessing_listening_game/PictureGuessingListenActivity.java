@@ -261,7 +261,7 @@ public class PictureGuessingListenActivity extends AppCompatActivity implements 
         mpWrong = MediaPlayer.create(getApplicationContext(), R.raw.game_5_ohoh);
         mpLoadImage = MediaPlayer.create(getApplicationContext(), R.raw.game_5_load_image);
         mpClicked = MediaPlayer.create(getApplicationContext(), R.raw.click);
-        mpOK = MediaPlayer.create(getApplicationContext(), R.raw.dung);
+        mpOK = MediaPlayer.create(getApplicationContext(), R.raw.dung_market_game);
         mpGameOver = MediaPlayer.create(getApplicationContext(), R.raw.sai);
         mpChoose = MediaPlayer.create(getApplicationContext(), R.raw.game_5_sound_clicked);
         mpWingame = MediaPlayer.create(getApplicationContext(), R.raw.wingame);

@@ -119,9 +119,9 @@ public class BubbleHittingActivity extends AppCompatActivity {
         imgNextGameWin = (ImageView) dialogWinGame.findViewById(R.id.imvNextGame);
         txtScoreWin = (TextView) dialogWinGame.findViewById(R.id.txtScoreWin);
 
-        mMusicMainGame = MediaPlayer.create(BubbleHittingActivity.this, R.raw.starters);
-        mCorrect = MediaPlayer.create(BubbleHittingActivity.this,R.raw.dung);
-        mWrong = MediaPlayer.create(BubbleHittingActivity.this,R.raw.sai);
+        mMusicMainGame = MediaPlayer.create(BubbleHittingActivity.this, R.raw.picturepuzzle);
+        mCorrect = MediaPlayer.create(BubbleHittingActivity.this,R.raw.dung_market_game);
+        mWrong = MediaPlayer.create(BubbleHittingActivity.this,R.raw.wrong_market_game);
         mWin = MediaPlayer.create(BubbleHittingActivity.this, R.raw.wingame);
 
 

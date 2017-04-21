@@ -302,7 +302,7 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
     }
 
     protected void playThemeMusic() {
-        songThemeMusic = MediaPlayer.create(getApplicationContext(), R.raw.blizzards);
+        songThemeMusic = MediaPlayer.create(getApplicationContext(), R.raw.game_5_screen_background_sound);
         songThemeMusic.setVolume(0.25f, 0.25f);
         songThemeMusic.setLooping(true);
 

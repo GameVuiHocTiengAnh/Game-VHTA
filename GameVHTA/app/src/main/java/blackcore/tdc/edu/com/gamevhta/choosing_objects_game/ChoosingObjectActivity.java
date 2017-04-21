@@ -84,7 +84,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
         txtWordSix = (TextView) findViewById(R.id.txtWordSix);
 
         mClick = MediaPlayer.create(ChoosingObjectActivity.this, R.raw.chat_sound);
-        mMusicMainGame = MediaPlayer.create(ChoosingObjectActivity.this, R.raw.log_cabin);
+        mMusicMainGame = MediaPlayer.create(ChoosingObjectActivity.this, R.raw.background_market_game);
         mGameWin = MediaPlayer.create(ChoosingObjectActivity.this, R.raw.wingame);
 
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_in);

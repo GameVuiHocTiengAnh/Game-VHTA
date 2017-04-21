@@ -305,8 +305,6 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
         mpSoundBackground = MediaPlayer.create(getApplicationContext(), R.raw.background_market_game);
         mpSoundBackground.setLooping(true);
 
-//        Voice(mReadyGo);
-//        Voice(mpSoundBackground);
 
 //      textToSpeech
         textToSpeech = new TextToSpeech(this,this);

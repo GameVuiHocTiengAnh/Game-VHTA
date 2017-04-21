@@ -21,6 +21,7 @@ import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.CatchingWordsActivity;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models.BackgroudGameView;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
+import blackcore.tdc.edu.com.gamevhta.picture_puzzle_game.PicturePuzzleActivity;
 import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 import blackcore.tdc.edu.com.gamevhta.writing_words_game.WirtingNinjaActivity;
 
@@ -158,6 +159,7 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
                         imgList.setEnabled(true);
                         imgReplay.setEnabled(true);
                         resumeGameMH6();
+                        resumeTimePuzzle();
                         //resumeChoosingGame();
                         dialog.dismiss();
                         return true;
@@ -167,14 +169,18 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
         });
     }
 
-    public void setScreenUse(String MH, BackgroudGameView game, Activity activity){
+    public void setScreenUse(String MH, @Nullable BackgroudGameView game, Activity activity){
         this.context = activity;
-        if(MH.equals(ConfigApplication.SCREEN_USING_PAUSE_DIALOG_MH6)){
+        if(MH.equals(ConfigApplication.SCREEN_USING_PAUSE_DIALOG_MH6)&& game != null){
             this.screenUse = ConfigApplication.SCREEN_USING_PAUSE_DIALOG_MH6;
             this.game = game;
         }else{
             if(MH.equals("WRITING_GAME_NINJA")){
                 this.screenUse = "WRITING_GAME_NINJA";
+            }else{
+                if(MH.equals("PUZZLE_GAME")){
+                    this.screenUse = "PUZZLE_GAME";
+                }
             }
         }
     }
@@ -221,6 +227,14 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
         this.buildDialog(context);
         this.setOnTouchListener(this);
         this.setOnClickListener(this);
+    }
+
+    private void resumeTimePuzzle(){
+        if(screenUse.equals("PUZZLE_GAME")){
+            PicturePuzzleActivity activity = (PicturePuzzleActivity) context;
+            ((PicturePuzzleActivity) context).startCountingTime();
+        }
+
     }
 
     @Override

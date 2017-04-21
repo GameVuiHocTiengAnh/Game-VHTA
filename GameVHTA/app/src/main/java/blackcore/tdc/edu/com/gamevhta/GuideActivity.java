@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
@@ -23,32 +24,45 @@ public class GuideActivity extends AppCompatActivity {
     private BackButton btnBackGuide;
     private WebView webviewGuide;
     private MediaPlayer mpGuide;
-    private MusicService mService = new MusicService();
-    ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            MusicService.MyBinder mBinder = (MusicService.MyBinder) iBinder;
-            mService = mBinder.getService();
 
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mService = null;
-
-        }
-    };
-
+    @Override
     protected void onPause(){
-        mService.pauseMusic(mpGuide);
         super.onPause();
+        try {
+            mpGuide.pause();
+        }catch (Exception e)
+        {
+            Log.d("a","s");
+        }
 
     }
+    @Override
     protected  void onResume(){
-        mService.playMusic(mpGuide);
         super.onResume();
+        mpGuide.start();
+        mpGuide.setLooping(true);
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mpGuide.start();
+        mpGuide.setLooping(true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            mpGuide.stop();
+            mpGuide.release();
+        }catch (Exception e)
+        {
+            Log.d("a","s");
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide_layout);
@@ -67,14 +81,14 @@ public class GuideActivity extends AppCompatActivity {
         webviewGuide.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
         webviewGuide.loadUrl("file:///android_asset/guide/guide.html");
 
-        mpGuide = MediaPlayer.create(getApplicationContext(),R.raw.guide);
+        mpGuide = MediaPlayer.create(getApplicationContext(),R.raw.picturepuzzle);
         musicGuide();
 
 
     }
 
     public void musicGuide(){
-        mService.playMusic(mpGuide);
+        mpGuide.start();
         mpGuide.setLooping(true);
     }
 

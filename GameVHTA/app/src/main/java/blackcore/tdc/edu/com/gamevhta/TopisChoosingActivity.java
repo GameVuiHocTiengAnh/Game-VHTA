@@ -1,14 +1,12 @@
 package blackcore.tdc.edu.com.gamevhta;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
-import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -19,7 +17,6 @@ import java.util.ArrayList;
 
 import blackcore.tdc.edu.com.gamevhta.button.BackButton;
 import blackcore.tdc.edu.com.gamevhta.models.BitmapTopic;
-import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 import blackcore.tdc.edu.com.gamevhta.topic.FragmentTopics;
 
 public class TopisChoosingActivity extends AppCompatActivity {
@@ -28,35 +25,10 @@ public class TopisChoosingActivity extends AppCompatActivity {
     private ImageView btnPrev,btnNext;
     public ArrayList<BitmapTopic> ImageTopics = null;
     public static Integer position = 0;
-    private Animation alpha1,alpha2,alpha3;
+    private Animation alpha1,alpha3;
     private MediaPlayer mClick,mTopic;
 
-    private MusicService mService = new MusicService();
-    ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            MusicService.MyBinder mBinder = (MusicService.MyBinder) iBinder;
-            mService = mBinder.getService();
-
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mService = null;
-
-        }
-    };
-
-    protected void onPause(){
-        mService.pauseMusic(mTopic);
-        super.onPause();
-
-    }
-    protected  void onResume(){
-        mService.playMusic(mTopic);
-        super.onResume();
-    }
-
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topis_choosing_layout);
@@ -70,7 +42,6 @@ public class TopisChoosingActivity extends AppCompatActivity {
         Bitmap plants = BitmapFactory.decodeResource(getResources(),R.drawable.plants);
 
         alpha1 = AnimationUtils.loadAnimation(this, R.anim.alpha);
-        alpha2 = AnimationUtils.loadAnimation(this, R.anim.alpha);
         alpha3 = AnimationUtils.loadAnimation(this, R.anim.alpha);
 
         ImageTopics.add(new BitmapTopic("animal",animal));
@@ -91,9 +62,9 @@ public class TopisChoosingActivity extends AppCompatActivity {
         btnBack.setMoveActivity(intent,TopisChoosingActivity.this);
 
         mClick = MediaPlayer.create(getApplicationContext(),R.raw.click);
-        mTopic = MediaPlayer.create(getApplicationContext(),R.raw.topic);
-
-        musicTopic();
+        mTopic = MediaPlayer.create(getApplicationContext(),R.raw.picturepuzzle);
+        mTopic.start();
+        mTopic.setLooping(true);
 
         //call frist Topic
         this.callFragmentTopics(position);
@@ -102,7 +73,7 @@ public class TopisChoosingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 btnNext.startAnimation(alpha3);
-                mService.playMusic(mClick);
+                mClick.start();
                 if(position >= ImageTopics.size() -1){
                     position = 0;
                     callFragmentTopics(position);
@@ -118,7 +89,7 @@ public class TopisChoosingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 btnPrev.startAnimation(alpha1);
-                mService.playMusic(mClick);
+                mClick.start();
                 if(position <= 0){
                     position=ImageTopics.size() -1;
                     callFragmentTopics(position);
@@ -130,16 +101,47 @@ public class TopisChoosingActivity extends AppCompatActivity {
         });
     }
 
-    public void musicTopic(){
-        mService.playMusic(mTopic);
-        mTopic.setLooping(true);
-    }
     public void onBackPressed()
     {
         Intent intent = new Intent(getApplicationContext(),MainMenuActivity.class);
         startActivity(intent);
         finish();
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        try {
+            mTopic.pause();
+        }catch (Exception e) {
+            Log.d("a","a");
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mTopic.start();
+        mTopic.setLooping(true);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        mTopic.start();
+        mTopic.setLooping(true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            mTopic.stop();
+            mTopic.release();
+        }catch (Exception e) {
+            Log.d("a","a");
+        }
     }
 
     private void callFragmentTopics(int position){

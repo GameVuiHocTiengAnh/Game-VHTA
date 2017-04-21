@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -22,37 +23,40 @@ public class SplashScreenActivity extends AppCompatActivity {
     private ImageView imvBus;
     private Animation trans;
     private MediaPlayer mpBus;
-    private MusicService mService = new MusicService();
-    ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            MusicService.MyBinder mBinder = (MusicService.MyBinder) iBinder;
-            mService = mBinder.getService();
-
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mService = null;
-
-        }
-    };
     @Override
     protected void onPause(){
-        mService.pauseMusic(mpBus);
         super.onPause();
+        try {
+            mpBus.pause();
+        }catch (Exception e)
+        {
+            Log.d("a","s");
+        }
 
     }
     @Override
     protected  void onResume(){
-        mService.playMusic(mpBus);
         super.onResume();
+        mpBus.start();
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mpBus.start();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         handler.removeMessages(0);
-        mService.stopMusic(mpBus);
+        try {
+            mpBus.stop();
+            mpBus.release();
+        }catch (Exception e)
+        {
+            Log.d("a","s");
+        }
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +70,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         imvBus = (ImageView) findViewById(R.id.iv1);
         trans = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate);
 
-        mService.playMusic(mpBus);
+        mpBus.start();
         imvBus.startAnimation(trans);
         goNextActivity();
     }
@@ -76,7 +80,8 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void run() {
                 Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                 startActivity(intent);
-                mService.stopMusic(mpBus);
+                mpBus.stop();
+                mpBus.release();
                 finish();
             }
         }, 7000);
