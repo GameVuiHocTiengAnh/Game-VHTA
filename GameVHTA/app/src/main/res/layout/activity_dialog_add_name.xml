@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/DialogwinGameBottomandTop"
+    android:layout_marginLeft="@dimen/DialogwinGameLeftandRight"
+    android:layout_marginRight="@dimen/DialogwinGameLeftandRight"
+    android:layout_marginTop="@dimen/DialogTopicBottomandTop"
+    android:orientation="horizontal"
+    android:background="@drawable/background_add_name"
+    tools:context="blackcore.tdc.edu.com.gamevhta.MainMenuActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="@dimen/leftandrightAddName"
+            android:layout_marginRight="@dimen/leftandrightAddName"
+            android:layout_weight="1.3"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.4"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/leftandrightAddName"
+                            android:layout_weight="0.7"
+                            android:gravity="center|bottom"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/txtOldName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Old Name"
+                                android:textColor="#139ee4"
+                                android:textSize="@dimen/txtAddname" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="left|bottom"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/txtAddnew"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/leftandrightAddName"
+                                android:text="Add New"
+                                android:textColor="#5db3de"
+                                android:textSize="@dimen/txtAddname" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginLeft="@dimen/leftaddname"
+                    android:layout_marginRight="@dimen/rightaddname"
+                    android:layout_weight="0.8"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="@dimen/bottomListAddName"
+                            android:layout_weight="1"
+                            android:gravity="right|top"
+                            android:orientation="vertical">
+
+                            <ListView
+                                android:divider="@android:color/transparent"
+                                android:dividerHeight="5dp"
+                                android:id="@+id/lvOldName"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="@dimen/leftList"
+                                android:layout_marginRight="@dimen/rightList" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_marginLeft="@dimen/leftedtAddName"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+
+                                    android:orientation="horizontal">
+
+                                    <EditText
+                                        android:id="@+id/edtEnterName"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginBottom="@dimen/edtAddName"
+                                        android:layout_marginTop="@dimen/edtAddName"
+                                        android:background="@drawable/edit_text_dialog_add"
+                                        android:hint="Enter Name"
+                                        android:textAlignment="center"
+                                        android:textColor="#fafafa"
+                                        android:textColorHint="#f7f7f9"
+                                        android:textSize="@dimen/edittextanswer"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:gravity="center|top"
+                                    android:orientation="horizontal">
+
+                                    <ImageView
+                                        android:id="@+id/btnAddName"
+                                        android:layout_width="@dimen/add"
+                                        android:layout_height="@dimen/add"
+                                        android:src="@drawable/btn_apple" />
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

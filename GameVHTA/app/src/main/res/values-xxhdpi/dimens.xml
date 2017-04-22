@@ -93,5 +93,25 @@
 
     <dimen name="layout_marginLeft_image">25dp</dimen>
     <dimen name="layout_marginRight_image">25dp</dimen>
-
+    <!--dialog writing-->
+    <dimen name="clock">50dp</dimen>
+    <dimen name="textclock">30sp</dimen>
+    <dimen name="leftedittext">70dp</dimen>
+    <dimen name="rightedittext">170dp</dimen>
+    <dimen name="textanswer">13sp</dimen>
+    <dimen name="edittextanswer">20sp</dimen>
+    <dimen name="choose">50dp</dimen>
+    <dimen name="imganswer">120dp</dimen>
+    <!-- dialog add new -->
+    <dimen name="add">60dp</dimen>
+    <dimen name="leftaddname">40dp</dimen>
+    <dimen name="rightaddname">140dp</dimen>
+    <dimen name="leftandrightAddName">20dp</dimen>
+    <dimen name="txtAddname">25sp</dimen>
+    <dimen name="leftedtAddName">10dp</dimen>
+    <dimen name="edtAddName">30dp</dimen>
+    <dimen name="bottomListAddName">40dp</dimen>
+    <dimen name="rightList">0dp</dimen>
+    <dimen name="leftList">30dp</dimen>
+    <dimen name="warn">40dp</dimen>
 </resources>
