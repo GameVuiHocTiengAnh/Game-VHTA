@@ -1,12 +1,9 @@
 package blackcore.tdc.edu.com.gamevhta;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.media.MediaPlayer;
-import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ListView;
@@ -15,10 +12,9 @@ import java.util.ArrayList;
 
 import blackcore.tdc.edu.com.gamevhta.button.BackButton;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
-import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.models.Score;
+import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.my_adapter.AdapterScore;
-import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 public class ScoresActivity extends AppCompatActivity {
 

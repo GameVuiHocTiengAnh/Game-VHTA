@@ -1,23 +1,16 @@
 package blackcore.tdc.edu.com.gamevhta;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.TextView;
 
 import blackcore.tdc.edu.com.gamevhta.button.BackButton;
-import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 public class GuideActivity extends AppCompatActivity {
 

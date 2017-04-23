@@ -1,14 +1,11 @@
 package blackcore.tdc.edu.com.gamevhta;
 
 import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -30,10 +27,7 @@ import java.util.ArrayList;
 
 import blackcore.tdc.edu.com.gamevhta.models.Score;
 import blackcore.tdc.edu.com.gamevhta.my_adapter.AdapterAddName;
-import blackcore.tdc.edu.com.gamevhta.my_adapter.AdapterScore;
-import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
-//import blackcore.tdc.edu.com.gamevhta.data_models.DbScoreHelper;
 
 public class MainMenuActivity extends AppCompatActivity {
 

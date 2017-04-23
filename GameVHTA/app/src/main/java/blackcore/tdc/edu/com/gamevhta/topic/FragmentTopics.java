@@ -1,14 +1,11 @@
 package blackcore.tdc.edu.com.gamevhta.topic;
 
 import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,7 +21,6 @@ import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.RandomGameMemoryChallengeActivity;
 import blackcore.tdc.edu.com.gamevhta.RandomGamePracticeActivity;
 import blackcore.tdc.edu.com.gamevhta.models.BitmapTopic;
-import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 /**
  * Created by phong on 2/27/2017
@@ -39,22 +35,6 @@ public class FragmentTopics extends android.support.v4.app.Fragment{
     private String toPic;
     private Dialog dialog;
     private ImageView btnLearn,btnCancel,btnPractice,btnMemory;
-
-    private MusicService mService = new MusicService();
-    ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            MusicService.MyBinder mBinder = (MusicService.MyBinder) iBinder;
-            mService = mBinder.getService();
-
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mService = null;
-
-        }
-    };
 
     public FragmentTopics(){
 
@@ -98,7 +78,7 @@ public class FragmentTopics extends android.support.v4.app.Fragment{
             @Override
             public void onClick(View view) {
                 btnChoosemap.startAnimation(toPicDown);
-                mService.playMusic(mClick);
+                mClick.start();
                 EventDialogChooseTopic();
                 dialog.show();
 
@@ -115,10 +95,10 @@ public class FragmentTopics extends android.support.v4.app.Fragment{
                     case MotionEvent.ACTION_DOWN:
                         btnCancel.setSelected(!btnCancel.isSelected());
                         btnCancel.isSelected();
-                        mService.playMusic(mClick);
+                        mClick.start();
                         return true;
                     case MotionEvent.ACTION_UP:
-                        mService.playMusic(mClick);
+                        mClick.start();
                         dialog.dismiss();
                         return true;
                 }
@@ -129,7 +109,7 @@ public class FragmentTopics extends android.support.v4.app.Fragment{
         btnLearn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mService.playMusic(mClick);
+                mClick.start();
                 btnLearn.startAnimation(alpha1);
                 Intent intent = new Intent(view.getContext(),LoadingGoInGameActivity.class);
                 startActivity(intent);
@@ -140,7 +120,7 @@ public class FragmentTopics extends android.support.v4.app.Fragment{
         btnMemory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mService.playMusic(mClick);
+                mClick.start();
                 btnMemory.startAnimation(alpha2);
                 Intent intent = new Intent(view.getContext(),RandomGameMemoryChallengeActivity.class);
                 startActivity(intent);
@@ -151,7 +131,7 @@ public class FragmentTopics extends android.support.v4.app.Fragment{
         btnPractice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mService.playMusic(mClick);
+                mClick.start();
                 btnPractice.startAnimation(alpha3);
                 Intent intent = new Intent(view.getContext(),RandomGamePracticeActivity.class);
                 startActivity(intent);
