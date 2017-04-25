@@ -44,7 +44,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
 
     private Animation animation, animationsacle;
     private ImageView imgAnimalOne, imgAnimalTwo, imgAnimalThree, imgAnimalFour, imgAnimalFive, imgAnimalSix, imgAnimalDialog, imbNextGameWin;
-    private TextView txtScore, txtWordEng, txtWordVie, txtScoreWin;
+    private TextView txtScore, txtWordEng, txtWordVie, txtScoreWin, txtNameWin;
     private MediaPlayer mClick = null, mMusicMainGame = null, mGameWin = null;
     private Dialog dialogGame, dialogWin;
     private DbAccessHelper dbAccessHelper;
@@ -90,7 +90,6 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_in);
         animationsacle = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_anim_trieu);
 
-
         //dialog win game
         dialogWin = new Dialog(ChoosingObjectActivity.this);
         dialogWin.setCancelable(false);
@@ -99,7 +98,8 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
         dialogWin.setContentView(R.layout.activity_dialog_win_game);
         dialogWin.getWindow().setBackgroundDrawableResource(R.color.tran);
         dialogWin.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        txtScoreWin = (TextView) dialogWin.findViewById(R.id.txtScoreWin);
+        txtScoreWin = (TextView) dialogWin.findViewById(R.id.lblScoreGameOver);
+        txtNameWin = (TextView) dialogWin.findViewById(R.id.txtName);
         imbNextGameWin = (ImageView) dialogWin.findViewById(R.id.imvNextGame);
 
         //Text to Speech

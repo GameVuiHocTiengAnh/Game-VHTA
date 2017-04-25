@@ -47,7 +47,7 @@
                     android:gravity="center"
                     android:text="50"
                     android:textColor="#f9f7f8"
-                    android:textSize="@dimen/layout_left_timer_text_size"
+                    android:textSize="@dimen/timer_text_size"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -63,7 +63,7 @@
                     android:id="@+id/txtScore"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="100dp"
+                    android:layout_marginLeft="@dimen/layout_left_score"
                     android:background="@drawable/screen_5_background_score"
                     android:gravity="center"
                     android:text="0"
@@ -103,20 +103,20 @@
                         android:gravity="center">
 
                         <ImageView
-                            android:src="@drawable/animal_albatross"
                             android:id="@+id/imgQuestionsOne"
-                            android:layout_centerVertical="true"
+                            android:layout_width="@dimen/layout_width_imgQuestions"
+                            android:layout_height="@dimen/layout_height_imgQuestions"
                             android:layout_centerHorizontal="true"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp" />
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/animal_albatross" />
 
                         <ImageView
                             android:id="@+id/imgBubbleOne"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/btnbubble"
+                            android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            android:layout_centerHorizontal="true" />
+                            android:background="@drawable/btnbubble" />
 
                     </RelativeLayout>
                 </LinearLayout>
@@ -137,19 +137,19 @@
 
                         <ImageView
                             android:id="@+id/imgQuestionsFour"
-                            android:src="@drawable/animal_albatross"
-                            android:layout_centerVertical="true"
+                            android:layout_width="@dimen/layout_width_imgQuestions"
+                            android:layout_height="@dimen/layout_height_imgQuestions"
                             android:layout_centerHorizontal="true"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp" />
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/animal_albatross" />
 
                         <ImageView
                             android:id="@+id/imgBubbleFour"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/btnbubble"
+                            android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            android:layout_centerHorizontal="true" />
+                            android:background="@drawable/btnbubble" />
 
                     </RelativeLayout>
                 </LinearLayout>
@@ -179,19 +179,19 @@
 
                         <ImageView
                             android:id="@+id/imgQuestionsTwo"
-                            android:src="@drawable/animal_albatross"
-                            android:layout_centerVertical="true"
+                            android:layout_width="@dimen/layout_width_imgQuestions"
+                            android:layout_height="@dimen/layout_height_imgQuestions"
                             android:layout_centerHorizontal="true"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp" />
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/animal_albatross" />
 
                         <ImageView
                             android:id="@+id/imgBubbleTwo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/btnbubble"
+                            android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            android:layout_centerHorizontal="true" />
+                            android:background="@drawable/btnbubble" />
 
                     </RelativeLayout>
 
@@ -212,19 +212,19 @@
 
                         <ImageView
                             android:id="@+id/imgQuestionsFive"
-                            android:src="@drawable/animal_albatross"
-                            android:layout_centerVertical="true"
+                            android:layout_width="@dimen/layout_width_imgQuestions"
+                            android:layout_height="@dimen/layout_height_imgQuestions"
                             android:layout_centerHorizontal="true"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp" />
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/animal_albatross" />
 
                         <ImageView
                             android:id="@+id/imgBubbleFive"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/btnbubble"
+                            android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            android:layout_centerHorizontal="true" />
+                            android:background="@drawable/btnbubble" />
 
                     </RelativeLayout>
                 </LinearLayout>
@@ -252,19 +252,19 @@
 
                         <ImageView
                             android:id="@+id/imgQuestionsThree"
-                            android:src="@drawable/animal_albatross"
-                            android:layout_centerVertical="true"
+                            android:layout_width="@dimen/layout_width_imgQuestions"
+                            android:layout_height="@dimen/layout_height_imgQuestions"
                             android:layout_centerHorizontal="true"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp" />
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/animal_albatross" />
 
                         <ImageView
                             android:id="@+id/imgBubbleThree"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/btnbubble"
+                            android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            android:layout_centerHorizontal="true" />
+                            android:background="@drawable/btnbubble" />
 
                     </RelativeLayout>
                 </LinearLayout>
@@ -284,19 +284,19 @@
 
                         <ImageView
                             android:id="@+id/imgQuestionsSix"
-                            android:src="@drawable/animal_albatross"
-                            android:layout_centerVertical="true"
+                            android:layout_width="@dimen/layout_width_imgQuestions"
+                            android:layout_height="@dimen/layout_height_imgQuestions"
                             android:layout_centerHorizontal="true"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp" />
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/animal_albatross" />
 
                         <ImageView
                             android:id="@+id/imgBubbleSix"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/btnbubble"
+                            android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            android:layout_centerHorizontal="true" />
+                            android:background="@drawable/btnbubble" />
 
                     </RelativeLayout>
                 </LinearLayout>

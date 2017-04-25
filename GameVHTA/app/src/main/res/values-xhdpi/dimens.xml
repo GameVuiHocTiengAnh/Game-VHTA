@@ -86,7 +86,7 @@
     <!--Game Choosing Objects-->
     <dimen name="layout_width_image">80dp</dimen>
     <dimen name="layout_height_image">80dp</dimen>
-    <dimen name="textWordEng">35sp</dimen>
+    <dimen name="textWordEng">25sp</dimen>
     <dimen name="marginBottom">10dp</dimen>
     <dimen name="marginTop">5dp</dimen>
 
@@ -95,11 +95,16 @@
 
     <!--Game Bubble Hitting-->
     <dimen name="layout_left_timer">25dp</dimen>
-    <dimen name="layout_left_score">180dp</dimen>
+    <dimen name="layout_left_score">110dp</dimen>
     <dimen name="layout_score_textSize">25dp</dimen>
+    <dimen name="timer_text_size">25sp</dimen>
 
     <dimen name="layout_marginLeft_image">25dp</dimen>
     <dimen name="layout_marginRight_image">25dp</dimen>
+
+    <dimen name="layout_width_imgQuestions">90dp</dimen>
+    <dimen name="layout_height_imgQuestions">90dp</dimen>
+
     <!--dialog writing-->
     <dimen name="clock">50dp</dimen>
     <dimen name="textclock">30sp</dimen>

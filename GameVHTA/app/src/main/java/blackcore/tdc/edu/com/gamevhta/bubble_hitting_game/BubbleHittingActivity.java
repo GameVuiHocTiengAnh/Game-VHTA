@@ -15,7 +15,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,7 +33,6 @@ import blackcore.tdc.edu.com.gamevhta.RandomGamePracticeActivity;
 import blackcore.tdc.edu.com.gamevhta.button.PauseButton;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
-import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
 /**
@@ -48,9 +46,8 @@ public class BubbleHittingActivity extends AppCompatActivity {
     private ImageView imgBubbleOne, imgBubbleTwo, imgBubbleThree, imgBubbleFour, imgBubbleFive, imgBubbleSix, imgDialogBubbleOne, imgDialogBubbleTwo, imgDialogBubbleThree;
     private ImageView imgListOver, imgReplayOver, imgNextGameWin;
 
-    private TextView txtWordOne, txtWordTwo, txtWordThree, txtTime, txtWord, txtScore, txtScoreGameOver, txtScoreWin;
+    private TextView txtWordOne, txtWordTwo, txtWordThree, txtTime, txtScore, lblScoreGameOver, txtScoreWin, lblPlayerNameGameOver, txtNamePlayerOver, txtNameOver, txtNameWin;
     private Dialog bubbledialog, dialogGameOver, dialogWinGame;
-    private EditText edtPlayerNameGameOver;
     private MediaPlayer mMusicMainGame = null, mCorrect = null, mWrong=null, mWin=null;
     private Handler handler;
     private Timer timer;
@@ -87,9 +84,6 @@ public class BubbleHittingActivity extends AppCompatActivity {
 
         txtTime = (TextView) findViewById(R.id.txtTime);
         txtScore = (TextView) findViewById(R.id.txtScore);
-        txtWord = (TextView) findViewById(R.id.txtWordOne);
-        txtWord = (TextView) findViewById(R.id.txtWordTwo);
-        txtWord = (TextView) findViewById(R.id.txtWordThree);
 
         //dialog overgame
         dialogGameOver = new Dialog(BubbleHittingActivity.this);
@@ -102,8 +96,10 @@ public class BubbleHittingActivity extends AppCompatActivity {
 
         imgListOver = (ImageView) dialogGameOver.findViewById(R.id.imgListOver);
         imgReplayOver = (ImageView) dialogGameOver.findViewById(R.id.imgReplayOver);
-        edtPlayerNameGameOver = (EditText) dialogGameOver.findViewById(R.id.lblPlayerNameGameOver);
-        txtScoreGameOver = (TextView) dialogGameOver.findViewById(R.id.lblScoreGameOver);
+//        lblPlayerNameGameOver = (EditText) dialogGameOver.findViewById(R.id.lblPlayerNameGameOver);
+        lblScoreGameOver = (TextView) dialogGameOver.findViewById(R.id.lblScoreGameOver);
+//        txtNamePlayerOver = (TextView) dialogGameOver.findViewById(R.id.txtNamePlayer);
+        txtNameOver = (TextView) dialogGameOver.findViewById(R.id.txtName);
 
         //dialog win
         dialogWinGame = new Dialog(BubbleHittingActivity.this);
@@ -115,13 +111,13 @@ public class BubbleHittingActivity extends AppCompatActivity {
         dialogWinGame.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
 
         imgNextGameWin = (ImageView) dialogWinGame.findViewById(R.id.imvNextGame);
-        txtScoreWin = (TextView) dialogWinGame.findViewById(R.id.txtScoreWin);
+        txtScoreWin = (TextView) dialogWinGame.findViewById(R.id.lblScoreGameOver);
+        txtNameWin = (TextView) dialogWinGame.findViewById(R.id.txtName);
 
         mMusicMainGame = MediaPlayer.create(BubbleHittingActivity.this, R.raw.picturepuzzle);
         mCorrect = MediaPlayer.create(BubbleHittingActivity.this,R.raw.dung_market_game);
         mWrong = MediaPlayer.create(BubbleHittingActivity.this,R.raw.wrong_market_game);
         mWin = MediaPlayer.create(BubbleHittingActivity.this, R.raw.wingame);
-
 
         txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
 
@@ -318,7 +314,6 @@ public class BubbleHittingActivity extends AppCompatActivity {
                         Collections.shuffle(arr);
                         setTextDialog(arr);
                         bubbledialog.show();
-                        //txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
                         Timer();
                         txtWordOne.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -342,8 +337,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -372,8 +366,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -402,8 +395,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -440,7 +432,6 @@ public class BubbleHittingActivity extends AppCompatActivity {
                         txtWordOne.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                //Log.d("wordone", listImageGame.get(0).getwEng());
                                 if(listImageGame.get(1).getwEng().equals(txtWordOne.getText().toString())){
                                     getResult(2);
                                     mCorrect.start();
@@ -460,8 +451,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -490,8 +480,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -520,8 +509,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -578,8 +566,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -608,8 +595,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -638,8 +624,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -695,8 +680,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -725,8 +709,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -755,8 +738,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -813,8 +795,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -843,8 +824,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -873,8 +853,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -930,8 +909,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -960,8 +938,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -990,8 +967,8 @@ public class BubbleHittingActivity extends AppCompatActivity {
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    edtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+//                                    txtPlayerNameGameOver.setVisibility(View.VISIBLE);
+                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -1010,7 +987,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
     }
 
     private void EventOver() {
-        txtScoreGameOver.setText(String.valueOf(SCORE_ALL));
+        lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
         imgListOver.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -1024,7 +1001,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         imgListOver.setSelected(false);
                         imgReplayOver.setEnabled(true);
-                        doSaveScore();
+//                        doSaveScore();
                         Intent intent = new Intent(BubbleHittingActivity.this, LoadingGoOutGameActivity.class);
                         startActivity(intent);
                         finish();
@@ -1047,7 +1024,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                         //mService.playMusic(mClick);
                         imgReplayOver.setSelected(false);
                         imgListOver.setEnabled(true);
-                        doSaveScore();
+//                        doSaveScore();
                         SCORE_ALL = 0;
                         Intent intent = new Intent(BubbleHittingActivity.this,BubbleHittingActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
@@ -1083,18 +1060,18 @@ public class BubbleHittingActivity extends AppCompatActivity {
             }
         });
     }
-    private void doSaveScore() {
-        if (SCORE_ALL > 0) {
-            String playerName = edtPlayerNameGameOver.getText().toString();
-            if (playerName.equals(""))
-                playerName = "Unknown Player";
-            ScoreObject scoreObject = new ScoreObject();
-            scoreObject.setsPlayer(playerName);
-            scoreObject.setsScore(SCORE_ALL);
-            dbAccessHelper.doInsertScore(scoreObject);
-            edtPlayerNameGameOver.setText("");
-        }
-    }
+//    private void doSaveScore() {
+//        if (SCORE_ALL > 0) {
+//            String playerName = txtPlayerNameGameOver.getText().toString();
+//            if (playerName.equals(""))
+//                playerName = "Unknown Player";
+//            ScoreObject scoreObject = new ScoreObject();
+//            scoreObject.setsPlayer(playerName);
+//            scoreObject.setsScore(SCORE_ALL);
+//            dbAccessHelper.doInsertScore(scoreObject);
+//            txtPlayerNameGameOver.setText("");
+//        }
+//    }
     private void ktcheck_finish() {
         if (check_finish == 6){
             check_finish = 0;
