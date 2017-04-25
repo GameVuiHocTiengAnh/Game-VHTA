@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import blackcore.tdc.edu.com.gamevhta.R;
+import blackcore.tdc.edu.com.gamevhta.models.PlayerOld;
 import blackcore.tdc.edu.com.gamevhta.models.Score;
 import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 
@@ -20,10 +21,10 @@ import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 public class AdapterAddName extends ArrayAdapter<Score> {
     private Activity context;
     private int idLayout;
-    private ArrayList<Score> arr;
+    private ArrayList<PlayerOld> arr;
 
-    public AdapterAddName(Activity context, int idLayout, ArrayList<Score> arr) {
-        super(context, idLayout, arr);
+    public AdapterAddName(Activity context, int idLayout, ArrayList<PlayerOld> arr) {
+        super(context, idLayout);
         this.context = context;
         this.idLayout = idLayout;
         this.arr = arr;
@@ -33,9 +34,10 @@ public class AdapterAddName extends ArrayAdapter<Score> {
         convertView = this.context.getLayoutInflater().inflate(idLayout, null);
         TextView txtName = (TextView) convertView.findViewById(R.id.txtName);
         TextView txtLevel = (TextView) convertView.findViewById(R.id.txtLevel);
-
-        txtName.setText(arr.get(position).getName());
-        txtLevel.setText(arr.get(position).getScore());
+        if(arr.size() > 0 && position >= 0) {
+            txtName.setText(arr.get(position).getName());
+            txtLevel.setText(arr.get(position).getLvPass());
+        }
         return convertView;
     }
 }

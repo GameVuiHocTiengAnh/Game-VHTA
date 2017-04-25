@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 
 import blackcore.tdc.edu.com.gamevhta.button.BackButton;
+import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.models.BitmapTopic;
 import blackcore.tdc.edu.com.gamevhta.topic.FragmentTopics;
 
@@ -27,11 +28,21 @@ public class TopisChoosingActivity extends AppCompatActivity {
     public static Integer position = 0;
     private Animation alpha1,alpha3;
     private MediaPlayer mClick,mTopic;
+    private String newName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topis_choosing_layout);
+
+        ConfigApplication.CURRENT_CHOOSE_TOPIC = null;
+        Intent intentNewName = getIntent();
+        if(intentNewName != null){
+            Bundle b = intentNewName.getBundleExtra("data");
+            if(b != null){
+                newName = b.getString(ConfigApplication.BUNDLE_NEW_NAME);
+            }
+        }
 
         //create image of topics
         ImageTopics = new ArrayList<BitmapTopic>();
@@ -44,11 +55,11 @@ public class TopisChoosingActivity extends AppCompatActivity {
         alpha1 = AnimationUtils.loadAnimation(this, R.anim.alpha);
         alpha3 = AnimationUtils.loadAnimation(this, R.anim.alpha);
 
-        ImageTopics.add(new BitmapTopic("animal",animal));
-        ImageTopics.add(new BitmapTopic("school",school));
-        ImageTopics.add(new BitmapTopic("home",home));
-        ImageTopics.add(new BitmapTopic("country",country));
-        ImageTopics.add(new BitmapTopic("plants",plants));
+        ImageTopics.add(new BitmapTopic("animal",animal,ConfigApplication.OBJECT_ANIMALS));
+        ImageTopics.add(new BitmapTopic("school",school,ConfigApplication.OBJECT_SCHOOL));
+        ImageTopics.add(new BitmapTopic("home",home,ConfigApplication.OBJECT_HOUSEHOLD_APPLIANCES));
+        ImageTopics.add(new BitmapTopic("country",country,ConfigApplication.OBJECT_COUNTRY_SIDE));
+        ImageTopics.add(new BitmapTopic("plants",plants,ConfigApplication.OBJECT_PLANTS));
 
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -144,7 +155,7 @@ public class TopisChoosingActivity extends AppCompatActivity {
     }
 
     private void callFragmentTopics(int position){
-        FragmentTopics fragment = new FragmentTopics(ImageTopics.get(position));
+        FragmentTopics fragment = new FragmentTopics(ImageTopics.get(position),newName);
         android.support.v4.app.FragmentManager fragManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragTrans = fragManager.beginTransaction();
         fragManager.popBackStack();

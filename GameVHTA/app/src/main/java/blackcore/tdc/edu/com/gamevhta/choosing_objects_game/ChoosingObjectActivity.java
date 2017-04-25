@@ -56,6 +56,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
     private int check_finish = 0;
     private ArrayList<WordObject> listImageGame = null;
     private ArrayList<WordObject> listImageData = null;
+    private String newName = null;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_game_creen_mh7);
 
+        newName = ConfigApplication.NEW_NAME;
         dbAccessHelper = new DbAccessHelper(this);
         listImageData= new ArrayList<>();
         listImageGame= new ArrayList<>();
@@ -101,6 +103,10 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
         txtScoreWin = (TextView) dialogWin.findViewById(R.id.lblScoreGameOver);
         txtNameWin = (TextView) dialogWin.findViewById(R.id.txtName);
         imbNextGameWin = (ImageView) dialogWin.findViewById(R.id.imvNextGame);
+        TextView txtNamePlayer = (TextView) dialogWin.findViewById(R.id.txtName);
+        if(newName != null){
+            txtNamePlayer.setText(newName);
+        }
 
         //Text to Speech
         textToSpeech = new TextToSpeech(this,this);
@@ -138,8 +144,11 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
         return dr;
     }
     private void addDataList(){
-        listImageData = new ArrayList<>();
-        listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_ANIMALS);
+        if(newName != null) {
+            listImageData  = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 1); // when new player data is lv1 and lv2
+            ArrayList<WordObject> lv2 = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 2);
+            listImageData.addAll(lv2);
+        }
     }
     private void createDataGame(){
         listImageGame = new ArrayList<>();

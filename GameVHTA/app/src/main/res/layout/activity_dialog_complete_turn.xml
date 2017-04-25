@@ -105,8 +105,7 @@
             <ImageView
                 android:id="@+id/imgSpeak"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_speak" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 

@@ -95,7 +95,7 @@
                              android:textSize="@dimen/txtScoreWingame" />
                          <TextView
                              android:layout_marginLeft="2dp"
-                             android:id="@+id/lblScoreGameOver"
+                             android:id="@+id/txtScoreWin"
                              android:layout_width="wrap_content"
                              android:layout_height="wrap_content"
                              android:text="0"

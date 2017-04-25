@@ -19,6 +19,10 @@ public class ConfigApplication {
     //Time left default
     public static final int TIME_LEFT_GAME = 50;
 
+    public static final String BUNDLE_NEW_NAME = "newName";
+    public static  String CURRENT_CHOOSE_TOPIC ="";
+    public static String NEW_NAME = null;
+
 
     //Object
     public static final String OBJECT_SELECTED = "OBJECT_SELECTED";
@@ -39,6 +43,8 @@ public class ConfigApplication {
     //TABLE
     public static final String TABLE_WORD = "TABLE_WORD";
     public static final String TABLE_SCORE = "TABLE_SCORE";
+    public static final String TABLE_PLAYER_OLD ="TABLE_PLAYER_OLD";
+
 
     //COLUMN
     //TABLE WORD
@@ -54,6 +60,11 @@ public class ConfigApplication {
     public static final String S_COLUMN_ID_PLAYER = "ID_PLAYER";
     public static final String S_COLUMN_PLAYER_NAME = "PLAYER_NAME";
     public static final String S_COLUMN_PLAYER_SCORE = "PLAYER_SCORE";
+
+    //TABLE PLAYER
+    public static final String S_COLUMN_PLAYER_ID_AUTO = "PLAYER_ID_AUTO";
+    public static final String S_COLUMN_PLAYER_NAME_OLD = "PLAYER_NAME_OLD";
+    public static final String S_COLUMN_PLAYER_LEVEL_PASS = "PLAYER_LEVEL_PASS";
 
     /*------------- END HOANG -----------------*/
 

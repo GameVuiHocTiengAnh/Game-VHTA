@@ -9,10 +9,12 @@ import android.graphics.Bitmap;
 public class BitmapTopic {
     String topic;
     Bitmap imageTopic;
+    String keyWordTable;
 
-    public BitmapTopic(String topic, Bitmap imageTopic) {
+    public BitmapTopic(String topic, Bitmap imageTopic,String keyWordTable ) {
         this.topic = topic;
         this.imageTopic = imageTopic;
+        this.keyWordTable = keyWordTable;
     }
 
     public String getTopic() {
@@ -29,5 +31,13 @@ public class BitmapTopic {
 
     public void setImageTopic(Bitmap imageTopic) {
         this.imageTopic = imageTopic;
+    }
+
+    public String getKeyWordTable() {
+        return keyWordTable;
+    }
+
+    public void setKeyWordTable(String keyWordTable) {
+        this.keyWordTable = keyWordTable;
     }
 }

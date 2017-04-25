@@ -29,7 +29,7 @@ public class CustomToask extends Toast {
     Toast toast;
     View layout;
 
-    public CustomToask(Activity activity,int idImage, String text) {
+    public CustomToask(Activity activity,int idImage, String text){
         super(activity);
         LayoutInflater inflater = activity.getLayoutInflater();
         layout = inflater.inflate(R.layout.activity_custom_toask,

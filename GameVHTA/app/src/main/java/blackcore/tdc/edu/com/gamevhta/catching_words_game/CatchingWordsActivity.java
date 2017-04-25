@@ -86,9 +86,13 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
 
     private boolean modeWriting;
 
+    private String newName = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        newName = ConfigApplication.NEW_NAME;
+
         //WindowManager.LayoutParams attribute = getWindow().getAttributes();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -103,8 +107,14 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         try {
             db = new DbAccessHelper(this);
             listWordsUsing = new ArrayList<WordObject>();
-            if (db != null)
-                listWords = db.getWordObject(ConfigApplication.OBJECT_ANIMALS);
+            if (db != null && newName != null) {
+                listWords = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 1); // when new player data is lv1 and lv2
+                ArrayList<WordObject> lv2 = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 2);
+                listWords.addAll(lv2);
+                Log.d("Tagtest", ConfigApplication.CURRENT_CHOOSE_TOPIC);
+            } else{
+
+            }
             initObjectUSing();
             // Log.d("Tagtest",listWords.get(0).getwPathImage());
         } catch (NullPointerException e) {
@@ -336,6 +346,7 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         String imvName = listWordsUsing.get(countComplete).getwPathImage();
         String imvText = listWordsUsing.get(countComplete).getwEng();
         int idImgeDr = getResources().getIdentifier(imvName, "drawable", getApplicationContext().getPackageName());
+        Log.d("Tagtest",idImgeDr+"");
         Bitmap imgVoca = BitmapFactory.decodeResource(getResources(), idImgeDr);
         if (imgVoca != null) {
             this.imgUsing = imgVoca;
@@ -376,8 +387,11 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
 
         final ImageView imbNextGameWin = (ImageView) dialogWin.findViewById(R.id.imvNextGame);
         TextView txtNameScoreWin = (TextView) dialogWin.findViewById(R.id.txtNameScoreWin);
-        txtNameScoreWin.setTypeface(gothic);
         TextView txtScoreWin = (TextView) dialogWin.findViewById(R.id.txtScoreWin);
+        TextView txtNamePlayer = (TextView) dialogWin.findViewById(R.id.txtName);
+        if(newName != null){
+            txtNamePlayer.setText(newName);
+        }
         txtScoreWin.setText(this.scores + "");
         txtScoreWin.setTypeface(gothic);
         dialogWinSound.start();
@@ -475,24 +489,6 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        //  Log.d("Tagtest","destroy");
-        if (textToSpeech != null) {
-            textToSpeech.stop();
-            textToSpeech.shutdown();
-
-        }
-        if (songThemeMusic != null) {
-            if (songThemeMusic.isPlaying()) {
-                songThemeMusic.stop();
-                songThemeMusic.release();
-            } else
-                songThemeMusic.release();
-        }
-        super.onDestroy();
-    }
-
     protected Typeface getTyeface() {
         return this.gothic;
     }
@@ -568,5 +564,23 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
     }
     protected void setScreenUsingPauseBnt(String key, BackgroudGameView bgv, Activity activity){
         btnPause.setScreenUse(key,bgv,activity);
+    }
+
+    @Override
+    protected void onDestroy() {
+        //  Log.d("Tagtest","destroy");
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+
+        }
+        if (songThemeMusic != null) {
+            if (songThemeMusic.isPlaying()) {
+                songThemeMusic.stop();
+                songThemeMusic.release();
+            } else
+                songThemeMusic.release();
+        }
+        super.onDestroy();
     }
 }

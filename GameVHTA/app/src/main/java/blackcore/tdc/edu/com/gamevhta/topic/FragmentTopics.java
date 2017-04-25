@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,10 +17,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Collection;
+
 import blackcore.tdc.edu.com.gamevhta.LoadingGoInGameActivity;
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.RandomGameMemoryChallengeActivity;
 import blackcore.tdc.edu.com.gamevhta.RandomGamePracticeActivity;
+import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.models.BitmapTopic;
 
 /**
@@ -35,17 +39,27 @@ public class FragmentTopics extends android.support.v4.app.Fragment{
     private String toPic;
     private Dialog dialog;
     private ImageView btnLearn,btnCancel,btnPractice,btnMemory;
+    private String newName = null;
+    private Bundle dataTranfer = null;
+
 
     public FragmentTopics(){
 
     }
-    public FragmentTopics(BitmapTopic bitmapTopic){
+    public FragmentTopics(BitmapTopic bitmapTopic, @Nullable String newName){
         this.imageTopic = bitmapTopic.getImageTopic();
         this.toPic = bitmapTopic.getTopic();
+        ConfigApplication.CURRENT_CHOOSE_TOPIC = bitmapTopic.getKeyWordTable();
+        if(newName != null){
+            this.newName = newName;
+        }
     }
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.activity_fragment_topic,container,false);
 
+        dataTranfer = new Bundle();
+        if(newName != null)
+            dataTranfer.putString(ConfigApplication.BUNDLE_NEW_NAME,this.newName);
         final ImageView btnChoosemap = (ImageView) view.findViewById(R.id.btnSchool);
         alpha1 = AnimationUtils.loadAnimation(view.getContext(), R.anim.alpha);
         alpha2 = AnimationUtils.loadAnimation(view.getContext(), R.anim.alpha);
@@ -112,6 +126,9 @@ public class FragmentTopics extends android.support.v4.app.Fragment{
                 mClick.start();
                 btnLearn.startAnimation(alpha1);
                 Intent intent = new Intent(view.getContext(),LoadingGoInGameActivity.class);
+                if(newName != null){
+                    intent.putExtra("data",dataTranfer);
+                }
                 startActivity(intent);
                 getActivity().finish();
             }
@@ -123,6 +140,9 @@ public class FragmentTopics extends android.support.v4.app.Fragment{
                 mClick.start();
                 btnMemory.startAnimation(alpha2);
                 Intent intent = new Intent(view.getContext(),RandomGameMemoryChallengeActivity.class);
+                if(newName != null){
+                    intent.putExtra("data",dataTranfer);
+                }
                 startActivity(intent);
                 getActivity().finish();
             }
@@ -134,6 +154,9 @@ public class FragmentTopics extends android.support.v4.app.Fragment{
                 mClick.start();
                 btnPractice.startAnimation(alpha3);
                 Intent intent = new Intent(view.getContext(),RandomGamePracticeActivity.class);
+                if(newName != null){
+                    intent.putExtra("data",dataTranfer);
+                }
                 startActivity(intent);
                 getActivity().finish();
             }

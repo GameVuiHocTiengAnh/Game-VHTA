@@ -37,6 +37,7 @@ import java.util.TimerTask;
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.RandomGameMemoryChallengeActivity;
 import blackcore.tdc.edu.com.gamevhta.RandomGamePracticeActivity;
+import blackcore.tdc.edu.com.gamevhta.ScoresActivity;
 import blackcore.tdc.edu.com.gamevhta.TopisChoosingActivity;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.CatchingWordsActivity;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models.BackgroudGameView;
@@ -73,7 +74,7 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
     private boolean inDialogWriting;
     private ImageView imgListOver;
     private ImageView imgReplayOver;
-    private EditText lblPlayerNameGameOver;
+    private TextView lblPlayerNameGameOver;
     private TextView lblScoreGameOver;
 
     @Override
@@ -291,7 +292,7 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
         imgListOver = (ImageView) dialogGameOver.findViewById(R.id.imgListOver);
         imgReplayOver = (ImageView) dialogGameOver.findViewById(R.id.imgReplayOver);
         lblScoreGameOver = (TextView) dialogGameOver.findViewById(R.id.lblScoreGameOver);
-        lblPlayerNameGameOver = (EditText) dialogGameOver.findViewById(R.id.lblPlayerNameGameOver);
+        lblPlayerNameGameOver = (TextView) dialogGameOver.findViewById(R.id.lblPlayerNameGOver);
 
         imgListOver.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -304,10 +305,10 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
                         imgReplayOver.setEnabled(false);
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
-                        // RELEASED
+                        // RELEASEDZ
                         doSaveScore();
                         imgListOver.setSelected(false);
-                        startActivity(new Intent(WirtingNinjaActivity.this, TopisChoosingActivity.class));
+                        startActivity(new Intent(WirtingNinjaActivity.this, ScoresActivity.class));
                         finish();
                         imgReplayOver.setEnabled(true);
                         return true; // if you want to handle the touch event

@@ -51,7 +51,7 @@ import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
 public class PicturePuzzleActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
-    TextView txtTime,txtScore,txtAnswerOne,txtAnswerTwo,txtAnswerThree,txtAnswerFour,txtAnswerFive,txtAnswerSix,lblScoreGameOver,txtNameScoreWin,txtScoreWin,txtNamePlayerOver,txtNameOver,
+    TextView txtTime,txtScore,txtAnswerOne,txtAnswerTwo,txtAnswerThree,txtAnswerFour,txtAnswerFive,txtAnswerSix,lblScoreGameOver,txtNameScoreWin,txtScoreWin,txtNamePlayerOver,
             txtNamePlayerWin,txtNameWin,lblPlayerNameGameOver;
 
     private Dialog dialogOver,dialogWin;
@@ -78,6 +78,8 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
     ImageView imbAnimalQuestionOne,imbAnimalQuestionTwo,imbAnimalQuestionThree,imbAnimalQuestionFour,imbAnimalQuestionFive,imbAnimalQuestionSix;
     private LinearLayout background;
 
+    private String newName = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +88,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        newName = ConfigApplication.NEW_NAME;
         listImageGame = new ArrayList<>();
         listImageData = new ArrayList<>();
 
@@ -171,10 +174,10 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
 
         imgListOver = (ImageView) dialogOver.findViewById(R.id.imgListOver);
         imgReplayOver = (ImageView) dialogOver.findViewById(R.id.imgReplayOver);
-        lblPlayerNameGameOver = (TextView) dialogOver.findViewById(R.id.lblPlayerNameGameOver);
+        lblPlayerNameGameOver = (TextView) dialogOver.findViewById(R.id.lblPlayerNameGOver);
         lblScoreGameOver = (TextView) dialogOver.findViewById(R.id.lblScoreGameOver);
         txtNamePlayerOver = (TextView) dialogOver.findViewById(R.id.txtNamePlayer);
-        txtNameOver = (TextView) dialogOver.findViewById(R.id.txtName);
+
 
         //dialog win
         dialogWin = new Dialog(PicturePuzzleActivity.this);
@@ -187,10 +190,14 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
 
         imbNextGameWin = (ImageView) dialogWin.findViewById(R.id.imvNextGame);
         txtNameScoreWin = (TextView) dialogWin.findViewById(R.id.txtNameScoreWin);
-        txtScoreWin = (TextView) dialogWin.findViewById(R.id.lblScoreGameOver);
+        txtScoreWin = (TextView) dialogWin.findViewById(R.id.txtScoreWin);
         txtNamePlayerWin = (TextView) dialogWin.findViewById(R.id.txtNamePlayer);
         txtNameWin = (TextView) dialogWin.findViewById(R.id.txtName);
 
+        if(newName != null){
+            lblPlayerNameGameOver.setText(newName);
+            txtNameWin.setText(newName);
+        }
 
         mMusicMainGame.start();
         mMusicMainGame.setLooping(true);
@@ -224,7 +231,11 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
 
     private void addDataList() {
         listImageData = new ArrayList<>();
-        listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_ANIMALS);
+        if(newName != null){
+            listImageData  = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 1); // when new player data is lv1 and lv2
+            ArrayList<WordObject> lv2 = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 2);
+            listImageData.addAll(lv2);
+        }
 //        if (getIntent().getExtras() != null) {
 //
 //            OBJECT = getIntent().getStringExtra(ConfigApplication.OBJECT_SELECTED);
@@ -396,7 +407,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         txtNamePlayerWin.setTypeface(custom_font);
         txtNameWin.setTypeface(custom_font);
         txtNamePlayerOver.setTypeface(custom_font);
-        txtNameOver.setTypeface(custom_font);
+
     }
 
     public void moveActivity() {

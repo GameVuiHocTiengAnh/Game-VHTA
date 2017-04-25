@@ -16,14 +16,16 @@ public class SplashScreenActivity extends AppCompatActivity {
     Handler handler =  new Handler();
     private ImageView imvBus;
     private Animation trans;
-    private MediaPlayer mpBus;
+    private MediaPlayer mpBus = null;
     @Override
     protected void onPause(){
-        super.onPause();
-        if (mpBus != null) {
-            mpBus.pause();
-        }
 
+        if (mpBus != null) {
+            if(mpBus.isPlaying())
+                 mpBus.pause();
+            Log.d("Tagtest","pausesound");
+        }
+        super.onPause();
     }
     @Override
     protected  void onResume(){
@@ -56,12 +58,11 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        mpBus = MediaPlayer.create(getApplicationContext(),R.raw.bussound);
         imvBus = (ImageView) findViewById(R.id.iv1);
         trans = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate);
-
+        mpBus = MediaPlayer.create(getApplicationContext(),R.raw.bussound);
         mpBus.start();
+        Log.d("Tagtest","starsound");
         imvBus.startAnimation(trans);
         goNextActivity();
     }
@@ -73,6 +74,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 startActivity(intent);
                 mpBus.stop();
                 mpBus.release();
+                mpBus = null;
                 finish();
             }
         }, 7000);

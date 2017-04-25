@@ -53,7 +53,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
     private TextView lblTimer, lblWord, lblScore, lblScoreGameOver, txtNameScoreWin, txtScoreWin;
     private MediaPlayer mpChoose, mpSoundBackground, mpWingame, mpGameOver, mpOK, mpClicked, mpLoadImage, mpWrong;
     private ImageView imgListOver, imgReplayOver, imgList, imgReplay, imgResume, imvNextGame, imgSleep;
-    private EditText lblPlayerNameGameOver;
+    private TextView lblPlayerNameGameOver;
     private LinearLayout lnBackGroundWord;
     private String OBJECT = "";
     private int TURN = 0;
@@ -192,7 +192,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
         imgListOver = (ImageView) dialogGameOver.findViewById(R.id.imgListOver);
         imgReplayOver = (ImageView) dialogGameOver.findViewById(R.id.imgReplayOver);
         lblScoreGameOver = (TextView) dialogGameOver.findViewById(R.id.lblScoreGameOver);
-        lblPlayerNameGameOver = (EditText) dialogGameOver.findViewById(R.id.lblPlayerNameGameOver);
+        lblPlayerNameGameOver = (TextView) dialogGameOver.findViewById(R.id.lblPlayerNameGOver);
 
         //dialog back game
         dialogBack = new Dialog(ImageGuessingActivity.this);

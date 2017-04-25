@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
+import blackcore.tdc.edu.com.gamevhta.models.PlayerOld;
 import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
@@ -229,6 +230,22 @@ public class DbAccessHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         return arrWord;
+    }
+
+    public ArrayList<PlayerOld> getListPlayerOld() {
+        ArrayList<PlayerOld> arrPlayerOld = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + ConfigApplication.TABLE_PLAYER_OLD , null);
+        res.moveToFirst();
+        while (!res.isAfterLast()) {
+            PlayerOld playerOld = new PlayerOld();
+            playerOld.setId(res.getInt(res.getColumnIndex(ConfigApplication.S_COLUMN_PLAYER_ID_AUTO)));
+            playerOld.setName(res.getString(res.getColumnIndex(ConfigApplication.S_COLUMN_PLAYER_NAME_OLD)));
+            playerOld.setLvPass(res.getInt(res.getColumnIndex(ConfigApplication.S_COLUMN_PLAYER_LEVEL_PASS)));
+            arrPlayerOld.add(playerOld);
+            res.moveToNext();
+        }
+        return arrPlayerOld;
     }
 
     public ArrayList<WordObject> getWordObjectLevel(String strObject, int size, int level) {

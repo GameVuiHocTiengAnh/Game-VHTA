@@ -25,6 +25,9 @@ import com.podcopic.animationlib.library.StartSmartAnimation;
 
 import java.util.ArrayList;
 
+import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
+import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
+import blackcore.tdc.edu.com.gamevhta.models.PlayerOld;
 import blackcore.tdc.edu.com.gamevhta.models.Score;
 import blackcore.tdc.edu.com.gamevhta.my_adapter.AdapterAddName;
 
@@ -32,7 +35,7 @@ import blackcore.tdc.edu.com.gamevhta.my_adapter.AdapterAddName;
 public class MainMenuActivity extends AppCompatActivity {
 
     AdapterAddName adapter;
-    private ArrayList<Score> list = new ArrayList<Score>();
+    private ArrayList<PlayerOld> list  = null;
     private ListView listView;
     private boolean flagMain = true;
     private MediaPlayer mMain,mClick;
@@ -40,6 +43,8 @@ public class MainMenuActivity extends AppCompatActivity {
     private Animation scaleBtnPlay,scaleBtnScore,scaleBtnGuide,scaleBtnExit,zoomIn,rotate_crazy;
     private final int TIME_DELAY_SCALE_BTN = 500;
     private Dialog dialog,dialogAddName,dialogWarnAddName;
+    private DbAccessHelper db;
+    private String newPlayer ;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,13 +53,15 @@ public class MainMenuActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        ConfigApplication.NEW_NAME = null;
         scaleBtnPlay = AnimationUtils.loadAnimation(this, R.anim.scale_anim);
         scaleBtnScore = AnimationUtils.loadAnimation(this, R.anim.scale_anim);
         scaleBtnGuide = AnimationUtils.loadAnimation(this, R.anim.scale_anim);
         scaleBtnExit = AnimationUtils.loadAnimation(this, R.anim.scale_anim);
         zoomIn = AnimationUtils.loadAnimation(this, R.anim.zoom_in);
         rotate_crazy = AnimationUtils.loadAnimation(MainMenuActivity.this,R.anim.scale_anim_trieu);
-
+        newPlayer = null;
+        db = new DbAccessHelper(this);
         mMain = MediaPlayer.create(getApplicationContext(),R.raw.game_5_screen_background_sound);
         mClick = MediaPlayer.create(getApplicationContext(),R.raw.click);
 
@@ -287,6 +294,7 @@ public class MainMenuActivity extends AppCompatActivity {
                 }else {
                     dialogAddName.dismiss();
                     Intent intent = new Intent(MainMenuActivity.this, TopisChoosingActivity.class);
+                    ConfigApplication.NEW_NAME = edtAddName.getText().toString();
                     startActivity(intent);
                     finish();
                 }
@@ -318,18 +326,7 @@ public class MainMenuActivity extends AppCompatActivity {
     public void lvOldName(){
 
         listView = (ListView) dialogAddName.findViewById(R.id.lvOldName);
-        list.add(new Score("assdsd" +
-                "ddff               " +
-                "s","1"));
-        list.add(new Score("as","2"));
-        list.add(new Score("as","3"));
-        list.add(new Score("as","4"));
-        list.add(new Score("as","5"));
-        list.add(new Score("as","6"));
-        list.add(new Score("as","7"));
-        list.add(new Score("as","8"));
-        list.add(new Score("as","9"));
-        list.add(new Score("as","10"));
+        list = db.getListPlayerOld();
 
         adapter = new AdapterAddName(this,R.layout.activity_lv_add_name_item,list);
         listView.setAdapter(adapter);

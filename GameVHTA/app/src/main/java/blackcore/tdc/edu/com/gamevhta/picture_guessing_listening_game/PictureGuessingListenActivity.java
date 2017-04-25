@@ -60,7 +60,7 @@ public class PictureGuessingListenActivity extends AppCompatActivity implements 
     private TextView lblTimer, lblScore, lblScoreGameOver, txtNameScoreWin, txtScoreWin;
     private MediaPlayer mpChoose, mpSoundBackground, mpWingame, mpGameOver, mpOK, mpClicked, mpLoadImage, mpWrong;
     private ImageView imgListOver, imgReplayOver, imgList, imgReplay, imgResume, imvNextGame, imgSleep;
-    private EditText lblPlayerNameGameOver;
+    private TextView lblPlayerNameGameOver;
     private String OBJECT = "";
     private int TURN = 0;
     private int SCORE = 0;
@@ -236,7 +236,7 @@ public class PictureGuessingListenActivity extends AppCompatActivity implements 
         imgListOver = (ImageView) dialogGameOver.findViewById(R.id.imgListOver);
         imgReplayOver = (ImageView) dialogGameOver.findViewById(R.id.imgReplayOver);
         lblScoreGameOver = (TextView) dialogGameOver.findViewById(R.id.lblScoreGameOver);
-        lblPlayerNameGameOver = (EditText) dialogGameOver.findViewById(R.id.lblPlayerNameGameOver);
+        lblPlayerNameGameOver = (TextView) dialogGameOver.findViewById(R.id.lblPlayerNameGOver);
 
         //dialog back game
         dialogBack = new Dialog(PictureGuessingListenActivity.this);

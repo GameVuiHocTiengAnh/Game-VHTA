@@ -53,10 +53,10 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
     private Handler handler;
     private Animation animation;
     private Animation animationRotate;
-    private TextView txtvLevel, txtvScore, lblScoreGameOver, txtScoreWin, txtWordEngNextTurn, txtWordVieNextTurn, txtNameScoreWin, txtScoreWinEndGame, txtPlayerNameWinEndGame, txtvHelp;
+    private TextView lblPlayerNameGameOver,txtvLevel, txtvScore, lblScoreGameOver, txtScoreWin, txtWordEngNextTurn, txtWordVieNextTurn, txtNameScoreWin, txtScoreWinEndGame, txtPlayerNameWinEndGame, txtvHelp;
     private ImageView imgListOver, imgReplayOver, imgvObject1, imgvObject2, imgvObject3, imgvObject4, imgvObject5, imgvObject6, imgResume, imgList, imgReplay, imbNextGameWin, imgObjectNextTurn, imgSpeak, imgListWinEndGame, imgReplayWinEndGame;
     private MediaPlayer test, mButtonClick, mCorrect, mWrong, mClick, mTickTac, mpSoundBackground, mReadyGo, mNextLevel, mGameOver, mYaah, mtornado, mLoadImage;
-    private EditText lblPlayerNameGameOver, txtWord;
+    private EditText  txtWord;
     LinearLayout layoutWritingPracticeGame;
     private ImageButton btnPause, btnCheck;
 
@@ -173,7 +173,7 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
         imgListOver = (ImageView) dialogGameOver.findViewById(R.id.imgListOver);
         imgReplayOver = (ImageView) dialogGameOver.findViewById(R.id.imgReplayOver);
         lblScoreGameOver = (TextView) dialogGameOver.findViewById(R.id.lblScoreGameOver);
-        lblPlayerNameGameOver = (EditText) dialogGameOver.findViewById(R.id.lblPlayerNameGameOver);
+        lblPlayerNameGameOver = (TextView) dialogGameOver.findViewById(R.id.lblPlayerNameGOver);
 
 //      dialog Pause game
         dialogBack = new Dialog(writing_practice_game.this);
