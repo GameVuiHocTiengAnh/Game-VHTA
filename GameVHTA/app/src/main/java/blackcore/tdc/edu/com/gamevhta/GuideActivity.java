@@ -21,11 +21,8 @@ public class GuideActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
-        try {
+        if (mpGuide != null) {
             mpGuide.pause();
-        }catch (Exception e)
-        {
-            Log.d("a","s");
         }
 
     }
@@ -46,12 +43,12 @@ public class GuideActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        try {
-            mpGuide.stop();
-            mpGuide.release();
-        }catch (Exception e)
-        {
-            Log.d("a","s");
+        if (mpGuide != null) {
+            if (mpGuide.isPlaying()) {
+                mpGuide.stop();
+                mpGuide.release();
+            } else
+                mpGuide.release();
         }
     }
 

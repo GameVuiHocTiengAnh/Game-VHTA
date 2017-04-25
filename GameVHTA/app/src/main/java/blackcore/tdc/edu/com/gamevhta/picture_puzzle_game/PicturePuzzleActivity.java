@@ -1,5 +1,6 @@
 package blackcore.tdc.edu.com.gamevhta.picture_puzzle_game;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.Intent;
@@ -42,6 +43,7 @@ import blackcore.tdc.edu.com.gamevhta.LoadingGoOutGameActivity;
 import blackcore.tdc.edu.com.gamevhta.R;
 import blackcore.tdc.edu.com.gamevhta.RandomGameMemoryChallengeActivity;
 import blackcore.tdc.edu.com.gamevhta.button.PauseButton;
+import blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models.BackgroudGameView;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
@@ -49,8 +51,8 @@ import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
 public class PicturePuzzleActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
-    TextView txtTime,txtScore,txtAnswerOne,txtAnswerTwo,txtAnswerThree,txtAnswerFour,txtAnswerFive,txtAnswerSix,lblScoreGameOver,txtNameScoreWin,txtScoreWin;
-    EditText lblPlayerNameGameOver;
+    TextView txtTime,txtScore,txtAnswerOne,txtAnswerTwo,txtAnswerThree,txtAnswerFour,txtAnswerFive,txtAnswerSix,lblScoreGameOver,txtNameScoreWin,txtScoreWin,txtNamePlayerOver,txtNameOver,
+            txtNamePlayerWin,txtNameWin,lblPlayerNameGameOver;
 
     private Dialog dialogOver,dialogWin;
     private ArrayList<WordObject> listImageGame = null;
@@ -116,7 +118,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         txtAnswerFive = (TextView) findViewById(R.id.txtAnswerFive);
         txtAnswerSix = (TextView) findViewById(R.id.txtAnswerSix);
 
-        zoom_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_in);
+        zoom_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.takingoffanimator);
         scale = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_anim_trieu);
 
         imbAnimalOne = (ImageView) findViewById(R.id.imbAnimalone);
@@ -169,8 +171,10 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
 
         imgListOver = (ImageView) dialogOver.findViewById(R.id.imgListOver);
         imgReplayOver = (ImageView) dialogOver.findViewById(R.id.imgReplayOver);
-        lblPlayerNameGameOver = (EditText) dialogOver.findViewById(R.id.lblPlayerNameGameOver);
+        lblPlayerNameGameOver = (TextView) dialogOver.findViewById(R.id.lblPlayerNameGameOver);
         lblScoreGameOver = (TextView) dialogOver.findViewById(R.id.lblScoreGameOver);
+        txtNamePlayerOver = (TextView) dialogOver.findViewById(R.id.txtNamePlayer);
+        txtNameOver = (TextView) dialogOver.findViewById(R.id.txtName);
 
         //dialog win
         dialogWin = new Dialog(PicturePuzzleActivity.this);
@@ -183,7 +187,9 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
 
         imbNextGameWin = (ImageView) dialogWin.findViewById(R.id.imvNextGame);
         txtNameScoreWin = (TextView) dialogWin.findViewById(R.id.txtNameScoreWin);
-        txtScoreWin = (TextView) dialogWin.findViewById(R.id.txtScoreWin);
+        txtScoreWin = (TextView) dialogWin.findViewById(R.id.lblScoreGameOver);
+        txtNamePlayerWin = (TextView) dialogWin.findViewById(R.id.txtNamePlayer);
+        txtNameWin = (TextView) dialogWin.findViewById(R.id.txtName);
 
 
         mMusicMainGame.start();
@@ -315,14 +321,9 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
                 int t = Integer.parseInt(time);
                 if (t > 0 && t <= 10) {
                     txtTime.startAnimation(zoom_in);
-                    mTickTac.start();
-                    mTickTac.setLooping(true);
-
                 } else if (t == 0) {
                     timer.cancel();
                     try {
-                        mTickTac.stop();
-                        mTickTac.release();
                         mOver.start();
                         effectWin();
                         EventOver();
@@ -352,8 +353,6 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         };
         timer.schedule(timerTask,1000, 1000);
     }
-
-
 
     private void Text(){
         txtAnswerOne.setText(listImageGame.get(0).getwEng());
@@ -394,6 +393,10 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         lblPlayerNameGameOver.setTypeface(custom_font);
         txtNameScoreWin.setTypeface(custom_font);
         txtScoreWin.setTypeface(custom_font);
+        txtNamePlayerWin.setTypeface(custom_font);
+        txtNameWin.setTypeface(custom_font);
+        txtNamePlayerOver.setTypeface(custom_font);
+        txtNameOver.setTypeface(custom_font);
     }
 
     public void moveActivity() {
@@ -404,7 +407,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
 
     public void onBackPressed() {
         // TODO Auto-generated method stub
-        super.onBackPressed();
+        return;
     }
     @Override
     protected void onPause() {
@@ -436,15 +439,26 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         mMusicMainGame.setLooping(true);
         timer.cancel();
         Timer();
-        mTickTac.start();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+
+        }
+        if (mMusicMainGame != null) {
+            if (mMusicMainGame.isPlaying()) {
+                mMusicMainGame.stop();
+                mMusicMainGame.release();
+            } else
+                mMusicMainGame.release();
+        }
+
         try {
-            mMusicMainGame.stop();
-            mMusicMainGame.release();
             mCartoonImage.stop();
             mCartoonImage.release();
             mWin.stop();
@@ -693,7 +707,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
                             mClick.start();
                             imgListOver.setSelected(false);
                             imgReplayOver.setEnabled(true);
-                            doSaveScore();
+//                            doSaveScore();
                             SCORE_ALL = 0;
                             Intent intent = new Intent(PicturePuzzleActivity.this, LoadingGoOutGameActivity.class);
                             startActivity(intent);
@@ -718,7 +732,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
                             mClick.start();
                             imgReplayOver.setSelected(false);
                             imgListOver.setEnabled(true);
-                            doSaveScore();
+//                            doSaveScore();
                             SCORE_ALL = 0;
                             Intent intent = new Intent(PicturePuzzleActivity.this,PicturePuzzleActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
@@ -772,26 +786,25 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
     }
 
     //Save Score
-    private void doSaveScore() {
-        if(SCORE_ALL>0) {
-            String playerName = lblPlayerNameGameOver.getText().toString();
-            if (playerName.equals(""))
-                playerName = "Unknown Player";
-            else {
-                ScoreObject scoreObject = new ScoreObject();
-                scoreObject.setsPlayer(playerName);
-                scoreObject.setsScore(SCORE_ALL);
-                Log.d("ScoreSave", String.valueOf(SCORE_ALL));
-                Log.d("ScoreSavePlayer", playerName);
-                dbAccessHelper.doInsertScore(scoreObject);
-                if(SCORE_ALL == 0) {
-                    lblPlayerNameGameOver.setVisibility(View.GONE);
-                }else
-                    lblPlayerNameGameOver.setText("");
-                Toast.makeText(getApplicationContext(), "Saving Score", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+//    private void doSaveScore() {
+//        if(SCORE_ALL>0) {
+//            String playerName = lblPlayerNameGameOver.getText().toString();
+//            if (playerName.equals(""))
+//                playerName = "Unknown Player";
+//            else {
+//                ScoreObject scoreObject = new ScoreObject();
+//                scoreObject.setsPlayer(playerName);
+//                scoreObject.setsScore(SCORE_ALL);
+//                Log.d("ScoreSave", String.valueOf(SCORE_ALL));
+//                Log.d("ScoreSavePlayer", playerName);
+//                dbAccessHelper.doInsertScore(scoreObject);
+//                if(SCORE_ALL == 0) {
+//                    lblPlayerNameGameOver.setVisibility(View.GONE);
+//                }else
+//                    lblPlayerNameGameOver.setText("");
+//            }
+//        }
+//    }
 
     @Override
     public void onInit(int status) {
@@ -823,7 +836,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         }
             SCORE_ALL = SCORE_ONE + SCORE_TWO + SCORE_THREE + SCORE_FOUR + SCORE_FIVE + SCORE_SIX;
             txtScore.setText(String.valueOf(SCORE_ALL));
-            doSaveScore();
+//            doSaveScore();
         }
 
         public void startCountingTime(){

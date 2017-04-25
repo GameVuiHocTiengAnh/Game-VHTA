@@ -222,11 +222,8 @@ public class MainMenuActivity extends AppCompatActivity {
 
     protected void onPause(){
         super.onPause();
-        try {
+        if (mMain != null) {
             mMain.pause();
-        }catch (Exception e)
-        {
-            Log.d("a","s");
         }
 
     }
@@ -239,12 +236,12 @@ public class MainMenuActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        try {
-            mMain.stop();
-            mMain.release();
-        }catch (Exception e)
-        {
-            Log.d("a","s");
+        if (mMain != null) {
+            if (mMain.isPlaying()) {
+                mMain.stop();
+                mMain.release();
+            } else
+                mMain.release();
         }
     }
 

@@ -112,10 +112,8 @@ public class TopisChoosingActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
-        try {
+        if (mTopic != null) {
             mTopic.pause();
-        }catch (Exception e) {
-            Log.d("a","a");
         }
     }
 
@@ -136,11 +134,12 @@ public class TopisChoosingActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        try {
-            mTopic.stop();
-            mTopic.release();
-        }catch (Exception e) {
-            Log.d("a","a");
+        if (mTopic != null) {
+            if (mTopic.isPlaying()) {
+                mTopic.stop();
+                mTopic.release();
+            } else
+                mTopic.release();
         }
     }
 

@@ -107,7 +107,6 @@
                     android:src="@drawable/btnreplay" />
             </LinearLayout>
 
-,
         </LinearLayout>
     </LinearLayout>
 

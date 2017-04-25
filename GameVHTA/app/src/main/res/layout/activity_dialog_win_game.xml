@@ -43,7 +43,7 @@
                     android:layout_width="0dp"
                     android:orientation="vertical"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.7">
+                    android:layout_weight="0.5">
                     <ImageView
                         android:layout_marginRight="10dp"
                         android:layout_width="wrap_content"
@@ -62,25 +62,40 @@
                          android:layout_weight="1"
                          android:gravity="left|bottom"
                          android:orientation="horizontal">
-
                          <TextView
-                             android:id="@+id/txtNameScoreWin"
+                             android:id="@+id/txtNamePlayer"
                              android:layout_width="wrap_content"
                              android:layout_height="wrap_content"
-                             android:text="Score:"
+                             android:text="Name:"
                              android:textColor="#502618"
-                             android:textSize="@dimen/txtNameWingame" />
+                             android:textSize="@dimen/txtScoreWingame" />
+                         <TextView
+                             android:layout_marginLeft="2dp"
+                             android:maxLength="6"
+                             android:id="@+id/txtName"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:text="onepiece"
+                             android:textColor="#ffffff"
+                             android:textSize="@dimen/txtScoreWingame" />
                      </LinearLayout>
 
                      <LinearLayout
                          android:layout_width="match_parent"
                          android:layout_height="0dp"
                          android:layout_weight="1"
-                         android:gravity="left"
+                         android:gravity="left|center"
                          android:orientation="horizontal">
-
                          <TextView
-                             android:id="@+id/txtScoreWin"
+                             android:id="@+id/txtNameScoreWin"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:text="Score:"
+                             android:textColor="#502618"
+                             android:textSize="@dimen/txtScoreWingame" />
+                         <TextView
+                             android:layout_marginLeft="2dp"
+                             android:id="@+id/lblScoreGameOver"
                              android:layout_width="wrap_content"
                              android:layout_height="wrap_content"
                              android:text="0"

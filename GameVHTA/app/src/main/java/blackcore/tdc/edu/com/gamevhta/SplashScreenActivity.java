@@ -20,11 +20,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
-        try {
+        if (mpBus != null) {
             mpBus.pause();
-        }catch (Exception e)
-        {
-            Log.d("a","s");
         }
 
     }
@@ -44,12 +41,12 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         handler.removeMessages(0);
-        try {
-            mpBus.stop();
-            mpBus.release();
-        }catch (Exception e)
-        {
-            Log.d("a","s");
+        if (mpBus != null) {
+            if (mpBus.isPlaying()) {
+                mpBus.stop();
+                mpBus.release();
+            } else
+                mpBus.release();
         }
     }
 

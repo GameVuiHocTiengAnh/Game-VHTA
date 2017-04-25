@@ -5,8 +5,8 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/DialogBackGameLeftandRight"
-    android:layout_marginRight="@dimen/DialogBackGameLeftandRight"
+    android:layout_marginLeft="@dimen/DialogOverGameLeftandRight"
+    android:layout_marginRight="@dimen/DialogOverGameLeftandRight"
     android:layout_marginTop="10dp"
     tools:context="blackcore.tdc.edu.com.gamevhta.MainMenuActivity">
 
@@ -23,8 +23,8 @@
 
             <ImageView
                 android:layout_marginBottom="15dp"
-                android:layout_marginRight="@dimen/txtNamedialog"
-                android:layout_marginLeft="@dimen/txtNamedialog"
+                android:layout_marginRight="@dimen/txtNameOverdialog"
+                android:layout_marginLeft="@dimen/txtNameOverdialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_name_over" />
@@ -33,41 +33,76 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:orientation="vertical">
+            android:layout_weight="1.3"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/background_score_win"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:gravity="center|right"
+                android:layout_width="0dp"
+                android:orientation="vertical"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
+                <ImageView
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/tryagains"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:orientation="vertical"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8">
 
-            <TextView
-                android:id="@+id/lblScoreGameOver"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="@dimen/DialogBackGameLeftandRight"
-                android:layout_marginRight="@dimen/DialogBackGameLeftandRight"
-                android:background="@drawable/end_game"
-                android:gravity="center"
-                android:lines="1"
-                android:text="1000"
-                android:textColor="#ffffff"
-                android:textColorHint="#ffffff"
-                android:textSize="@dimen/textScoreOverGame" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="left|bottom"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/txtNamePlayer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Name:"
+                        android:textColor="#502618"
+                        android:textSize="@dimen/txtScoreWingame" />
+                    <TextView
+                        android:layout_marginLeft="2dp"
+                        android:maxLength="6"
+                        android:id="@+id/txtName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="onepiece"
+                        android:textColor="#ffffff"
+                        android:textSize="@dimen/txtScoreWingame" />
+                </LinearLayout>
 
-            <EditText
-                android:id="@+id/lblPlayerNameGameOver"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/DialogBackGameLeftandRight"
-                android:layout_marginRight="@dimen/DialogBackGameLeftandRight"
-                android:background="@drawable/end_game"
-                android:gravity="center"
-                android:hint="Enter your name!"
-                android:lines="1"
-                android:padding="10dp"
-                android:text=""
-                android:textColor="#ffffff"
-                android:textColorHint="#ffffff"
-                android:textSize="@dimen/textNameOverGame" />
-
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="left|center"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/lblPlayerNameGameOver"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Score:"
+                        android:textColor="#502618"
+                        android:textSize="@dimen/txtScoreWingame" />
+                    <TextView
+                        android:layout_marginLeft="2dp"
+                        android:id="@+id/lblScoreGameOver"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="#ffffff"
+                        android:textSize="@dimen/txtScoreWingame" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

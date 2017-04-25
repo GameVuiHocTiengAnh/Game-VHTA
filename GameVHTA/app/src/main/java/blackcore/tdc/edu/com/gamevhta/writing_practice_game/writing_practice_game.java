@@ -1,10 +1,8 @@
 package blackcore.tdc.edu.com.gamevhta.writing_practice_game;
 
 import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -13,7 +11,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.os.SystemClock;
 import android.speech.tts.TextToSpeech;
@@ -47,7 +44,6 @@ import blackcore.tdc.edu.com.gamevhta.custom_toask.CustomToask;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
-import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 import static blackcore.tdc.edu.com.gamevhta.R.id.imgvWPObject1;
 import static blackcore.tdc.edu.com.gamevhta.R.raw.click;
@@ -60,7 +56,6 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
     private TextView txtvLevel, txtvScore, lblScoreGameOver, txtScoreWin, txtWordEngNextTurn, txtWordVieNextTurn, txtNameScoreWin, txtScoreWinEndGame, txtPlayerNameWinEndGame, txtvHelp;
     private ImageView imgListOver, imgReplayOver, imgvObject1, imgvObject2, imgvObject3, imgvObject4, imgvObject5, imgvObject6, imgResume, imgList, imgReplay, imbNextGameWin, imgObjectNextTurn, imgSpeak, imgListWinEndGame, imgReplayWinEndGame;
     private MediaPlayer test, mButtonClick, mCorrect, mWrong, mClick, mTickTac, mpSoundBackground, mReadyGo, mNextLevel, mGameOver, mYaah, mtornado, mLoadImage;
-    private MusicService mService = new MusicService();
     private EditText lblPlayerNameGameOver, txtWord;
     LinearLayout layoutWritingPracticeGame;
     private ImageButton btnPause, btnCheck;
@@ -88,21 +83,6 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
     private ArrayList<Bitmap> listBitMapAnswer = null;
     CustomToask customToask;
 
-    //service
-    ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            MusicService.MyBinder mBinder = (MusicService.MyBinder) iBinder;
-            mService    = mBinder.getService();
-
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mService = null;
-
-        }
-    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -646,7 +626,7 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
 
     public void Voice(MediaPlayer nameSound) {
         if (flagVoice == true) {
-            mService.playMusic(nameSound);
+            nameSound.start();
         } else if (flagVoice == false) {
             //khi nguoi dung tat am thanh
         }

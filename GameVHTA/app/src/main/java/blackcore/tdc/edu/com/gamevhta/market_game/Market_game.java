@@ -2,10 +2,8 @@ package blackcore.tdc.edu.com.gamevhta.market_game;
 
 import android.app.Dialog;
 import android.content.ClipData;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,7 +14,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
@@ -54,7 +51,6 @@ import blackcore.tdc.edu.com.gamevhta.custom_toask.CustomToask;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
-import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 import static blackcore.tdc.edu.com.gamevhta.R.layout.activity_market_game;
 
@@ -67,7 +63,6 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
     private TextView txtvWord, txtvTimer, txtvLevel, txtvScore, lblScoreGameOver, txtvTurnNumber, txtScoreWin, txtWordEngNextTurn, txtWordVieNextTurn, txtNameScoreWin, txtScoreWinEndGame, txtPlayerNameWinEndGame;
     private ImageView imgListOver, imgReplayOver, imgvObject1, imgvObject2, imgvObject3, imgvObject4, imgvObject5, imgvObject6, imgResume, imgList, imgReplay, imgBag, imbNextGameWin, imgObjectNextTurn, imgSpeak, imgListWinEndGame, imgReplayWinEndGame;
     private MediaPlayer mButtonClick, mCorrect, mWrong, mClick, mTickTac, mpSoundBackground, mReadyGo, mNextLevel, mGameOver, mYaah, mtornado, mLoadImage;
-    private MusicService mService = new MusicService();
     private EditText lblPlayerNameGameOver;
     private Layout layoutBag;
     LinearLayout layoutMarketgame;
@@ -99,21 +94,6 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
     private ArrayList<Bitmap> listBitMapAnswer = null;
     CustomToask customToask;
 
-    //service
-    ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            MusicService.MyBinder mBinder = (MusicService.MyBinder) iBinder;
-            mService = mBinder.getService();
-
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mService = null;
-
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -928,7 +908,7 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
     //  Play Sound
     public void Voice(MediaPlayer nameSound) {
         if (flagVoice == true) {
-            mService.playMusic(nameSound);
+            nameSound.start();
         } else if (flagVoice == false) {
             //khi nguoi dung tat am thanh
         }

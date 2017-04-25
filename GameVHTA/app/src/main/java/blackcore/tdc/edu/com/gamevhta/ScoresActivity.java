@@ -27,10 +27,8 @@ public class ScoresActivity extends AppCompatActivity {
 
     protected void onPause(){
         super.onPause();
-        try{
+        if (mScore != null) {
             mScore.pause();
-        }catch (Exception e){
-            Log.d("ss","dd");
         }
 
     }
@@ -43,11 +41,12 @@ public class ScoresActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        try{
-            mScore.stop();
-            mScore.release();
-        }catch (Exception e){
-            Log.d("a","s");
+        if (mScore != null) {
+            if (mScore.isPlaying()) {
+                mScore.stop();
+                mScore.release();
+            } else
+                mScore.release();
         }
     }
 

@@ -2,12 +2,9 @@ package blackcore.tdc.edu.com.gamevhta.button;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.media.MediaPlayer;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -22,7 +19,6 @@ import blackcore.tdc.edu.com.gamevhta.catching_words_game.CatchingWordsActivity;
 import blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models.BackgroudGameView;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.picture_puzzle_game.PicturePuzzleActivity;
-import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 import blackcore.tdc.edu.com.gamevhta.writing_words_game.WirtingNinjaActivity;
 
 /**

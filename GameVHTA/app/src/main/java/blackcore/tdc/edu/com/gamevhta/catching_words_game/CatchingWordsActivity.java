@@ -244,7 +244,6 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         tvScore = new TextView(this);
         lnScore.setLayoutParams(lpWrap);
         lnScore.setGravity(Gravity.CENTER_HORIZONTAL);
-        lnScore.setBackgroundResource(R.drawable.backgroud_word);
         LinearLayout.LayoutParams lpWrapScores = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         lpWrapScores.setMargins(0, ConfigCWGame.getMarginScoresView(), 0, 0);

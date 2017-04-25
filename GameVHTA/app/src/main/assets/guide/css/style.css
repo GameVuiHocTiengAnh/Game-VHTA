@@ -1,12 +1,38 @@
+@font-face {
+    font-family: myFirstFont;
+    src: url(../font/UVNBanhMi.ttf);
+}
+body {
+    font-family: myFirstFont;
+}
+p{
+    color:#eaad09;
+    font-size:1.4em;
+}
 img{
 	width:300px;
 	height:150px;
 }
 h1{
-	font-size:35px;
-	color:#d5af17;
+	font-size:40px;
+	color:#1266ad;
 }
 strong{
-    font-size:15px;
     color:#2fc1b8;
+}
+.s{
+    font-size:1.2em;
+    color:#3ca865;
+}
+.a{
+    color:#0f9bf4;
+    font-size:1.4em;
+}
+#imgs{
+    width:20px;
+    height:20px;
+}
+h3{
+    font-size:1.2em;
+    color:#eaad09;
 }

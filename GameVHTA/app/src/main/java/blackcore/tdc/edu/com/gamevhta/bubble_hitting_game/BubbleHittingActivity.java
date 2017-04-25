@@ -36,7 +36,6 @@ import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
-import blackcore.tdc.edu.com.gamevhta.service.MusicService;
 
 /**
  * Created by Canh on 30/03/2017.
@@ -53,7 +52,6 @@ public class BubbleHittingActivity extends AppCompatActivity {
     private Dialog bubbledialog, dialogGameOver, dialogWinGame;
     private EditText edtPlayerNameGameOver;
     private MediaPlayer mMusicMainGame = null, mCorrect = null, mWrong=null, mWin=null;
-    private MusicService mService = new MusicService();
     private Handler handler;
     private Timer timer;
     private int check_finish = 0;
