@@ -4,26 +4,34 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
+
         android:largeHeap="true"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_vhta"
+        android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".SplashScreenActivity"
             android:screenOrientation="landscape">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".MainMenuActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape" >
+
+        </activity>
         <activity
             android:name=".ScoresActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".GuideActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape">
+
+        </activity>
         <activity
             android:name=".TopisChoosingActivity"
             android:screenOrientation="landscape" />
@@ -57,10 +65,7 @@
         </activity>
         <activity android:name=".picture_guessing_listening_game.PictureGuessingListenActivity"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <!--end-->
 
@@ -82,10 +87,6 @@
         <activity
             android:name=".writing_practice_game.writing_practice_game"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

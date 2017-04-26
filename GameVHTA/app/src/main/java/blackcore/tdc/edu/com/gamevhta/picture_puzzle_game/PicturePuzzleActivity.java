@@ -73,7 +73,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
     private int timesDrop = 0;
     private DbAccessHelper dbAccessHelper;
     private String OBJECT = "";
-
+    private String topicBackground;
     ImageView imbAnimalOne,imbAnimalTwo,imbAnimalThree,imbAnimalFour,imbAnimalFive,imbAnimalSix,imbNextGameWin;
     ImageView imbAnimalQuestionOne,imbAnimalQuestionTwo,imbAnimalQuestionThree,imbAnimalQuestionFour,imbAnimalQuestionFive,imbAnimalQuestionSix;
     private LinearLayout background;
@@ -218,15 +218,61 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
 
         txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
         Timer();
+
     }
+
     public void randomBackground(){
-        background = (LinearLayout) findViewById(R.id.scene);
-        Resources res = getResources();
-        TypedArray topicSchool = res.obtainTypedArray(R.array.topicHome);
-        Random random = new Random();
-        int r = random.nextInt(topicSchool.length());
-        int i = topicSchool.getResourceId(r, -1);
-        background.setBackgroundResource(i);
+        topicBackground = ConfigApplication.CURRENT_CHOOSE_TOPIC;
+        if (topicBackground.equals(ConfigApplication.OBJECT_ANIMALS))
+        {
+            background = (LinearLayout) findViewById(R.id.scene);
+            Resources res = getResources();
+            TypedArray topicSchool = res.obtainTypedArray(R.array.topicAnimal);
+            Random random = new Random();
+            int r = random.nextInt(topicSchool.length());
+            int i = topicSchool.getResourceId(r, -1);
+            background.setBackgroundResource(i);
+
+        }else if (topicBackground.equals(ConfigApplication.OBJECT_SCHOOL))
+        {
+            background = (LinearLayout) findViewById(R.id.scene);
+            Resources res = getResources();
+            TypedArray topicAnimal = res.obtainTypedArray(R.array.topicSchool);
+            Random random = new Random();
+            int r = random.nextInt(topicAnimal.length());
+            int i = topicAnimal.getResourceId(r, -1);
+            background.setBackgroundResource(i);
+
+        }else if (topicBackground.equals(ConfigApplication.OBJECT_COUNTRY_SIDE))
+        {
+            background = (LinearLayout) findViewById(R.id.scene);
+            Resources res = getResources();
+            TypedArray topicFarm = res.obtainTypedArray(R.array.topicFarm);
+            Random random = new Random();
+            int r = random.nextInt(topicFarm.length());
+            int i = topicFarm.getResourceId(r, -1);
+            background.setBackgroundResource(i);
+
+        }else if (topicBackground.equals(ConfigApplication.OBJECT_HOUSEHOLD_APPLIANCES))
+        {
+            background = (LinearLayout) findViewById(R.id.scene);
+            Resources res = getResources();
+            TypedArray topicHome = res.obtainTypedArray(R.array.topicHome);
+            Random random = new Random();
+            int r = random.nextInt(topicHome.length());
+            int i = topicHome.getResourceId(r, -1);
+            background.setBackgroundResource(i);
+
+        }else if (topicBackground.equals(ConfigApplication.OBJECT_PLANTS))
+        {
+            background = (LinearLayout) findViewById(R.id.scene);
+            Resources res = getResources();
+            TypedArray topicPlant = res.obtainTypedArray(R.array.topicPlant);
+            Random random = new Random();
+            int r = random.nextInt(topicPlant.length());
+            int i = topicPlant.getResourceId(r, -1);
+            background.setBackgroundResource(i);
+        }
     }
 
     private void addDataList() {
@@ -236,66 +282,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
             ArrayList<WordObject> lv2 = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 2);
             listImageData.addAll(lv2);
         }
-//        if (getIntent().getExtras() != null) {
-//
-//            OBJECT = getIntent().getStringExtra(ConfigApplication.OBJECT_SELECTED);
-//
-//            if (ConfigApplication.OBJECT_SELECTED == ConfigApplication.OBJECT_ANIMALS)
-//            {
-//                listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_ANIMALS);
-//                background = (LinearLayout) findViewById(R.id.scene);
-//                Resources res = getResources();
-//                TypedArray topicSchool = res.obtainTypedArray(R.array.topicAnimal);
-//                Random random = new Random();
-//                int r = random.nextInt(topicSchool.length());
-//                int i = topicSchool.getResourceId(r, -1);
-//                background.setBackgroundResource(i);
-//
-//            }else if (ConfigApplication.OBJECT_SELECTED == ConfigApplication.OBJECT_SCHOOL)
-//            {
-//                listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_SCHOOL);
-//                background = (LinearLayout) findViewById(R.id.scene);
-//                Resources res = getResources();
-//                TypedArray topicAnimal = res.obtainTypedArray(R.array.topicAnimal);
-//                Random random = new Random();
-//                int r = random.nextInt(topicAnimal.length());
-//                int i = topicAnimal.getResourceId(r, -1);
-//                background.setBackgroundResource(i);
-//
-//            }else if (ConfigApplication.OBJECT_SELECTED == ConfigApplication.OBJECT_COUNTRY_SIDE)
-//            {
-//                listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_COUNTRY_SIDE);
-//                background = (LinearLayout) findViewById(R.id.scene);
-//                Resources res = getResources();
-//                TypedArray topicFarm = res.obtainTypedArray(R.array.topicFarm);
-//                Random random = new Random();
-//                int r = random.nextInt(topicFarm.length());
-//                int i = topicFarm.getResourceId(r, -1);
-//                background.setBackgroundResource(i);
-//
-//            }else if (ConfigApplication.OBJECT_SELECTED == ConfigApplication.OBJECT_HOUSEHOLD_APPLIANCES)
-//            {
-//                listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_HOUSEHOLD_APPLIANCES);
-//                background = (LinearLayout) findViewById(R.id.scene);
-//                Resources res = getResources();
-//                TypedArray topicHome = res.obtainTypedArray(R.array.topicHome);
-//                Random random = new Random();
-//                int r = random.nextInt(topicHome.length());
-//                int i = topicHome.getResourceId(r, -1);
-//                background.setBackgroundResource(i);
-//
-//            }else if (ConfigApplication.OBJECT_SELECTED == ConfigApplication.OBJECT_PLANTS)
-//            {
-//                listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_PLANTS);
-//                background = (LinearLayout) findViewById(R.id.scene);
-//                Resources res = getResources();
-//                TypedArray topicPlant = res.obtainTypedArray(R.array.topicPlant);
-//                Random random = new Random();
-//                int r = random.nextInt(topicPlant.length());
-//                int i = topicPlant.getResourceId(r, -1);
-//                background.setBackgroundResource(i);
-//            }
-//        }
+
     }
 
     public void randomImage(){
@@ -418,7 +405,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
 
     public void onBackPressed() {
         // TODO Auto-generated method stub
-        return;
+        imgBackGame.callOnClick();
     }
     @Override
     protected void onPause() {
@@ -436,6 +423,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
     @Override
     protected void onRestart() {
         super.onRestart();
+        imgBackGame.callOnClick();
         mMusicMainGame.start();
         mMusicMainGame.setLooping(true);
         timer.cancel();
@@ -718,7 +706,6 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
                             mClick.start();
                             imgListOver.setSelected(false);
                             imgReplayOver.setEnabled(true);
-//                            doSaveScore();
                             SCORE_ALL = 0;
                             Intent intent = new Intent(PicturePuzzleActivity.this, LoadingGoOutGameActivity.class);
                             startActivity(intent);
@@ -743,7 +730,6 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
                             mClick.start();
                             imgReplayOver.setSelected(false);
                             imgListOver.setEnabled(true);
-//                            doSaveScore();
                             SCORE_ALL = 0;
                             Intent intent = new Intent(PicturePuzzleActivity.this,PicturePuzzleActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
@@ -796,27 +782,6 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         }
     }
 
-    //Save Score
-//    private void doSaveScore() {
-//        if(SCORE_ALL>0) {
-//            String playerName = lblPlayerNameGameOver.getText().toString();
-//            if (playerName.equals(""))
-//                playerName = "Unknown Player";
-//            else {
-//                ScoreObject scoreObject = new ScoreObject();
-//                scoreObject.setsPlayer(playerName);
-//                scoreObject.setsScore(SCORE_ALL);
-//                Log.d("ScoreSave", String.valueOf(SCORE_ALL));
-//                Log.d("ScoreSavePlayer", playerName);
-//                dbAccessHelper.doInsertScore(scoreObject);
-//                if(SCORE_ALL == 0) {
-//                    lblPlayerNameGameOver.setVisibility(View.GONE);
-//                }else
-//                    lblPlayerNameGameOver.setText("");
-//            }
-//        }
-//    }
-
     @Override
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
@@ -847,7 +812,6 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         }
             SCORE_ALL = SCORE_ONE + SCORE_TWO + SCORE_THREE + SCORE_FOUR + SCORE_FIVE + SCORE_SIX;
             txtScore.setText(String.valueOf(SCORE_ALL));
-//            doSaveScore();
         }
 
         public void startCountingTime(){
