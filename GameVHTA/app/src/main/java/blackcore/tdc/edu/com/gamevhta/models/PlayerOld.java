@@ -7,9 +7,9 @@ package blackcore.tdc.edu.com.gamevhta.models;
 public class PlayerOld {
     private String name;
     private int id;
-    private int lvPass;
+    private String lvPass;
 
-    public PlayerOld(String name, int id, int lvPass) {
+    public PlayerOld(String name, int id, String lvPass) {
         this.name = name;
         this.id = id;
         this.lvPass = lvPass;
@@ -35,11 +35,11 @@ public class PlayerOld {
         this.id = id;
     }
 
-    public int getLvPass() {
+    public String getLvPass() {
         return lvPass;
     }
 
-    public void setLvPass(int lvPass) {
+    public void setLvPass(String lvPass) {
         this.lvPass = lvPass;
     }
 }

@@ -241,7 +241,7 @@ public class DbAccessHelper extends SQLiteOpenHelper {
             PlayerOld playerOld = new PlayerOld();
             playerOld.setId(res.getInt(res.getColumnIndex(ConfigApplication.S_COLUMN_PLAYER_ID_AUTO)));
             playerOld.setName(res.getString(res.getColumnIndex(ConfigApplication.S_COLUMN_PLAYER_NAME_OLD)));
-            playerOld.setLvPass(res.getInt(res.getColumnIndex(ConfigApplication.S_COLUMN_PLAYER_LEVEL_PASS)));
+            playerOld.setLvPass(res.getString(res.getColumnIndex(ConfigApplication.S_COLUMN_PLAYER_LEVEL_PASS)));
             arrPlayerOld.add(playerOld);
             res.moveToNext();
         }
@@ -354,5 +354,15 @@ public class DbAccessHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         return arrWord;
+    }
+
+    //Table Score
+    public boolean doInsertPlayerOlde( PlayerOld playerOld) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ConfigApplication.S_COLUMN_PLAYER_NAME_OLD, playerOld.getName());
+        contentValues.put(ConfigApplication.S_COLUMN_PLAYER_LEVEL_PASS, playerOld.getLvPass());
+        db.insert(ConfigApplication.TABLE_PLAYER_OLD, null, contentValues);
+        return true;
     }
 }

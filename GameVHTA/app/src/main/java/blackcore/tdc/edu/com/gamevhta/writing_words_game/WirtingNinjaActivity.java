@@ -45,6 +45,7 @@ import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.custom_toask.CustomToask;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.image_guessing_game.ImageGuessingActivity;
+import blackcore.tdc.edu.com.gamevhta.models.PlayerOld;
 import blackcore.tdc.edu.com.gamevhta.models.Score;
 import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
@@ -78,12 +79,22 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
     private TextView lblPlayerNameGameOver;
     private TextView lblScoreGameOver;
     private String newName = null;
+    private int lvPass;
+    private String oldName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         scores = 0;
         newName = ConfigApplication.NEW_NAME;
+        lvPass = ConfigApplication.LV_PASS;
+        oldName = ConfigApplication.OLD_NAME;
+        if(newName=="" || newName == null){
+            oldName = ConfigApplication.OLD_NAME;
+            if(!(oldName=="")|| oldName != null){
+                newName = oldName;
+            }
+        }
         Intent i = getIntent();
         if(i != null){
             Bundle b = i.getExtras();
@@ -92,7 +103,7 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
                 scores += 600;
                 this.setScores(scores);
             }else{
-                listUsing = this.getListWordsUsing();
+                listUsing = this.getListUsing();
             }
         }
 
@@ -160,11 +171,14 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
 //                        Log.d("Tagtest",getCountComplete()+"....."+listUsing.size());
                         if(WirtingNinjaActivity.this.getCountComplete() == listUsing.size()){
                             dialogWriting.dismiss();
+                            WirtingNinjaActivity.this.setScores(scores);
                             Intent intent = new Intent(WirtingNinjaActivity.this,RandomGamePracticeActivity.class);
                             Bundle data = new Bundle();
                             data.putInt(ConfigApplication.SCORES_BEFOR_GAME,scores);
                             intent.putExtras(data);
                             WirtingNinjaActivity.this.levelComplete(intent);
+                            savelevelPass();
+
 
                         }else{
 
@@ -378,11 +392,22 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
     public ArrayList<WordObject> getListUsing() {
         DbAccessHelper db = new DbAccessHelper(this);
         if (db != null && newName != null) {
-            listUsing = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 1); // when new player data is lv1 and lv2
-            ArrayList<WordObject> lv2 = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 2);
+            listUsing = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC,lvPass+1 ); // when new player data is lv1 and lv2
+            ArrayList<WordObject> lv2 = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC,lvPass+2);
             listUsing.addAll(lv2);
             Log.d("Tagtest", ConfigApplication.CURRENT_CHOOSE_TOPIC);
         }
         return listUsing;
+    }
+
+    public void savelevelPass(){
+        DbAccessHelper db = new DbAccessHelper(this);
+        PlayerOld playerOld = new PlayerOld();
+        String tokenLVPass = (lvPass+1)+"_"+ConfigApplication.CURRENT_CHOOSE_TOPIC;
+        playerOld.setName(newName);
+        playerOld.setLvPass(tokenLVPass);
+        db.doInsertPlayerOlde(playerOld);
+        db.close();
+        ConfigApplication.LV_PASS = lvPass+1;
     }
 }

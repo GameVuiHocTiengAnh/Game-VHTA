@@ -24,6 +24,11 @@ public class ConfigApplication {
     public static String NEW_NAME = "";
 
 
+    //////////// lv pass, topic pass
+    public static int LV_PASS = 0;
+    public static String TOPIC_CHOOSING_PASSLV = "";
+    public static String OLD_NAME = "";
+
     //Object
     public static final String OBJECT_SELECTED = "OBJECT_SELECTED";
     //School

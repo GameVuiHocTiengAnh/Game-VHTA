@@ -30,6 +30,7 @@ import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.PlayerOld;
 import blackcore.tdc.edu.com.gamevhta.models.Score;
 import blackcore.tdc.edu.com.gamevhta.my_adapter.AdapterAddName;
+import blackcore.tdc.edu.com.gamevhta.my_adapter.AdapterPlayerOld;
 
 
 public class MainMenuActivity extends AppCompatActivity {
@@ -328,14 +329,20 @@ public class MainMenuActivity extends AppCompatActivity {
         listView = (ListView) dialogAddName.findViewById(R.id.lvOldName);
         list = db.getListPlayerOld();
 
-        adapter = new AdapterAddName(this,R.layout.activity_lv_add_name_item,list);
-        listView.setAdapter(adapter);
-
+//        adapter = new AdapterAddName(this,R.layout.activity_lv_add_name_item,list);
+        AdapterPlayerOld adapterPlayerOld = new AdapterPlayerOld(this,R.layout.activity_lv_add_name_item,list);
+        listView.setAdapter(adapterPlayerOld);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 mClick.start();
-                Intent intent = new Intent(MainMenuActivity.this,TopisChoosingActivity.class);
+                PlayerOld playerOld = list.get(i);
+                String[] lvPass = playerOld.getLvPass().split("_");
+                ConfigApplication.LV_PASS = Integer.parseInt(lvPass[0]);
+                ConfigApplication.TOPIC_CHOOSING_PASSLV = lvPass[1];
+                ConfigApplication.OLD_NAME = playerOld.getName();
+                ConfigApplication.CURRENT_CHOOSE_TOPIC = lvPass[1];
+                Intent intent = new Intent(MainMenuActivity.this,LoadingGoInGameActivity.class);
                 startActivity(intent);
             }
         });
