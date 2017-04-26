@@ -44,6 +44,7 @@ import blackcore.tdc.edu.com.gamevhta.catching_words_game.my_models.ShurikenView
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.models.ConfigCWGame;
+import blackcore.tdc.edu.com.gamevhta.models.Score;
 import blackcore.tdc.edu.com.gamevhta.models.SizeOfDevice;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
@@ -87,11 +88,20 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
     private boolean modeWriting;
 
     private String newName = null;
+    private String oldName = null;
+    private int lvPass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        lvPass = ConfigApplication.LV_PASS;
         newName = ConfigApplication.NEW_NAME;
+        if(newName=="" || newName == null){
+            oldName = ConfigApplication.OLD_NAME;
+            if(!(oldName=="")|| oldName != null){
+                newName = oldName;
+            }
+        }
 
         //WindowManager.LayoutParams attribute = getWindow().getAttributes();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -108,8 +118,8 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
             db = new DbAccessHelper(this);
             listWordsUsing = new ArrayList<WordObject>();
             if (db != null && newName != null) {
-                listWords = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 1); // when new player data is lv1 and lv2
-                ArrayList<WordObject> lv2 = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 2);
+                listWords = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, lvPass+1); // when new player data is lv1 and lv2
+                ArrayList<WordObject> lv2 = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, lvPass+2);
                 listWords.addAll(lv2);
                 Log.d("Tagtest", ConfigApplication.CURRENT_CHOOSE_TOPIC);
             } else{
@@ -258,7 +268,7 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         lpWrapScores.setMargins(0, ConfigCWGame.getMarginScoresView(), 0, 0);
         tvScore.setLayoutParams(lpWrapScores);
-        tvScore.setText("0");
+        tvScore.setText(scores+"");
         tvScore.setTextColor(Color.RED);
         tvScore.setTextSize(ConfigCWGame.getSizeTextScores());
         tvScore.setTypeface(gothic);
@@ -548,6 +558,7 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
 
     public void setScores(int scores) {
         tvScore.setText(scores + "");
+        this.scores = scores;
     }
 
     protected void setWordObjectActionbar(Bitmap bitmap, String wordUsing) {
@@ -583,4 +594,5 @@ public class CatchingWordsActivity extends AppCompatActivity implements TextToSp
         }
         super.onDestroy();
     }
+
 }
