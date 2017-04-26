@@ -85,9 +85,15 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
         super.onCreate(savedInstanceState);
 
         //get du lieu playername
-        if(ConfigApplication.NEW_NAME != "") {
-            PLAYER_NAME = ConfigApplication.NEW_NAME;
+        String newName = ConfigApplication.NEW_NAME;
+        String oldName = ConfigApplication.OLD_NAME;
+        if(newName=="" || newName == null){
+            oldName = ConfigApplication.OLD_NAME;
+            if(!(oldName=="")|| oldName != null){
+                newName = oldName;
+            }
         }
+        PLAYER_NAME = newName;
         if(ConfigApplication.CURRENT_CHOOSE_TOPIC != "") {
             OBJECT = ConfigApplication.CURRENT_CHOOSE_TOPIC;
         }

@@ -17,7 +17,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
@@ -62,7 +61,6 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
     private ImageView imgListOver, imgReplayOver, imgvObject1, imgvObject2, imgvObject3, imgvObject4, imgvObject5, imgvObject6, imgResume, imgList, imgReplay, imgBag, imbNextGameWin, imgObjectNextTurn, imgSpeak, imgListWinEndGame, imgReplayWinEndGame;
     private MediaPlayer mButtonClick, mCorrect, mWrong, mClick, mTickTac, mpSoundBackground, mReadyGo, mNextLevel, mGameOver, mYaah, mtornado, mLoadImage;
     private TextView lblPlayerNameGameOver;
-    private Layout layoutBag;
     LinearLayout layoutMarketgame;
     private ImageButton btnPause;
 
@@ -75,7 +73,6 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
     private int TIMES_PAUSE = 0;
     private boolean TIMER_IS_RUN = false;
     private boolean IS_RESUM = false;
-    private int score_temp = 0;
     private int LEVEL_LIMIT = 0;
     private ArrayList<WordObject> listImageFromDataO;
     private ArrayList<WordObject> listImageLevelO;
@@ -98,10 +95,23 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
         super.onCreate(savedInstanceState);
 
         //get du lieu playername
-        if(ConfigApplication.NEW_NAME != "") {
-            PLAYER_NAME = ConfigApplication.NEW_NAME;
+        String newName = ConfigApplication.NEW_NAME;
+        String oldName = ConfigApplication.OLD_NAME;
+        if(newName=="" || newName == null){
+            oldName = ConfigApplication.OLD_NAME;
+            if(!(oldName=="")|| oldName != null){
+                newName = oldName;
+            }
         }
-        if(ConfigApplication.CURRENT_CHOOSE_TOPIC != "") {
+        PLAYER_NAME = newName;
+//        if(ConfigApplication.NEW_NAME != "") {
+//            PLAYER_NAME = ConfigApplication.NEW_NAME;
+//        }
+//        else if (ConfigApplication.OLD_NAME != "")
+//        {
+//            PLAYER_NAME = ConfigApplication.OLD_NAME;
+//        }
+        if(ConfigApplication.CURRENT_CHOOSE_TOPIC.toString() != "") {
             OBJECT = ConfigApplication.CURRENT_CHOOSE_TOPIC;
         }
         //get du lieu score
@@ -455,6 +465,9 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
     };
 
     private void loadGame() {
+        if(ConfigApplication.CURRENT_CHOOSE_TOPIC.toString().equals("") == false) {
+            OBJECT = ConfigApplication.CURRENT_CHOOSE_TOPIC;
+        }
         clearAnimation();
 
         Voice(mLoadImage);
@@ -477,12 +490,12 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
         }
         addDataList();
         listImageLevelO = new ArrayList<>();
+        Log.d("Tong listImageFromDataO", String.valueOf(listImageFromDataO.size()) + "  OBJECT: " + String.valueOf(OBJECT));
 
         Random rdLevel = new Random();
         int nLevel = listImageWithLevel.size();
         int xLevel = rdLevel.nextInt(nLevel);
         listImageLevelO.add(listImageWithLevel.get(xLevel));
-
         Random rd = new Random();
         for (int j = 0; j < 5; j++) {
             int n = listImageFromDataO.size();
