@@ -26,7 +26,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.podcopic.animationlib.library.AnimationType;
 import com.podcopic.animationlib.library.StartSmartAnimation;
@@ -60,14 +59,13 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
     LinearLayout layoutWritingPracticeGame;
     private ImageButton btnPause, btnCheck;
 
-    private String OBJECT = "ANI", PLAYER_NAME = "NEW PLAYER";
+    private String OBJECT = "ANI", PLAYER_NAME = "TRIEU";
     private int SCORE = 0, SCORE_TEMP = 0;
     private int RESULT_FAILED = 0;
     private int LEVEL = 1;
     private int LEVEL_LIMIT = 0;
     private int COUNT_IMAGES = 6;
     private int CHOOSE = -1;
-    private boolean ENABLE = true;
     private long mLastClickTime = 0;
 
     private ArrayList<WordObject> listImageWithLevel1, listImageWithLevel2, listImageLevelO;
@@ -194,6 +192,7 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
         layoutWritingPracticeGame = (LinearLayout) findViewById(R.id.layoutWritingPracticeGame);
         btnPause = (ImageButton) findViewById(R.id.btnWPPause);
         btnCheck = (ImageButton) findViewById(R.id.btnCheck);
+        txtvScore.setText(String.valueOf(SCORE));
 
 //      Dialog game over
         dialogGameOver = new Dialog(writing_practice_game.this);
@@ -702,7 +701,6 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
             }
             enableImageObject(CHOOSE + 1, false, false);
             SCORE += (listImageLevelO.get(CHOOSE).getwEng().toString().trim().length() * 100) / (COUNT_IMAGES + 1);
-            Toast.makeText(getApplicationContext(), "Score: " + String.valueOf(SCORE), Toast.LENGTH_SHORT).show();
             txtvScore.setText(String.valueOf(SCORE));
             showDialogNextTurn();
             dialogNextTurn.setOnDismissListener(new DialogInterface.OnDismissListener() {

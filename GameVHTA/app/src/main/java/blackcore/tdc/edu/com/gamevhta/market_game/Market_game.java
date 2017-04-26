@@ -30,7 +30,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.podcopic.animationlib.library.AnimationType;
 import com.podcopic.animationlib.library.StartSmartAnimation;
@@ -67,7 +66,7 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
     LinearLayout layoutMarketgame;
     private ImageButton btnPause;
 
-    private String OBJECT = "", PLAYER_NAME = "NEW PLAYER";
+    private String OBJECT = "ANI", PLAYER_NAME = "TRIEU";
     private int TURN = 0;
     private int SCORE = 0, SCORE_TEMP = 0;
     private int RESULT_FAILED = 0;
@@ -132,10 +131,8 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
         if (dialogBack.isShowing() == true || dialogComplete.isShowing() == true || dialogGameOver.isShowing() == true) {
             if(dialogBack.isShowing() == true)
             {
-                TIMES_PAUSE++;
+                //TIMES_PAUSE++;
                 flagVoice = true;
-                //timer.cancel();
-                Toast.makeText(getApplicationContext(),"da vao duoc if trong resum" + String.valueOf(TIMES_PAUSE), Toast.LENGTH_SHORT).show();
                 setWhenPause();
                 IS_RESUM = true;
             }
@@ -536,7 +533,6 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
         imgvObject5.setVisibility(View.VISIBLE);
         imgvObject6.setVisibility(View.VISIBLE);
         lblPlayerNameGameOver.setEnabled(true);
-        lblPlayerNameGameOver.setHint("Enter your name!");
     }
 
     //List Image was loaded from database
@@ -701,9 +697,6 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
 
     private void doWhenClickImglist() {
         timer.cancel();
-//        txtvLevel.setText("Level. 1"); dung xoa
-//        txtvTurnNumber.setText("1");
-//        lblPlayerNameGameOver.setText("");
         startActivity(new Intent(Market_game.this, TopisChoosingActivity.class));
         finish();
     }
@@ -717,7 +710,6 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
         getDataWithLevel(OBJECT, LEVEL);
         txtvLevel.setText("Level. 1");
         txtvTurnNumber.setText("1");
-        lblPlayerNameGameOver.setText("");
         loadGame();
         if(LEVEL == 1)
         {
@@ -1031,22 +1023,6 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
         } else {
             Log.e("TTS", "Initilization Failed!");
         }
-    }
-
-    private void addScore() {
-        new CountDownTimer(txtvWord.getText().length() * (Integer.parseInt(txtvTimer.getText().toString()) * 5), 1) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                Toast.makeText(getApplicationContext(), String.valueOf(txtvWord.getText().length() * (Integer.parseInt(txtvTimer.getText().toString()) * 5)), Toast.LENGTH_SHORT).show();
-                SCORE++;
-                txtvScore.setText(String.valueOf(SCORE));
-            }
-
-            @Override
-            public void onFinish() {
-                Toast.makeText(getApplicationContext(), "da chay  xong", Toast.LENGTH_SHORT).show();
-            }
-        }.start();
     }
 
     private void clearAnimation() {
