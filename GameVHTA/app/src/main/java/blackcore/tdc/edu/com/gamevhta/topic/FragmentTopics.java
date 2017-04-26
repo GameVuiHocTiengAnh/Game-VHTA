@@ -1,5 +1,6 @@
 package blackcore.tdc.edu.com.gamevhta.topic;
 
+
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
