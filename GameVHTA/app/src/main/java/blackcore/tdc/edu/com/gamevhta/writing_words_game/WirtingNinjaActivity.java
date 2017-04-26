@@ -108,6 +108,10 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
             }
         }
 
+        if(listUsing.size() > 0 && scores == 0){
+            scores += 600;
+        }
+
         this.setListWordsUsing(listUsing);
 
         gothic = this.getTyeface();
@@ -394,9 +398,18 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
         DbAccessHelper db = new DbAccessHelper(this);
         ArrayList<WordObject> list = new ArrayList<>();
         if (db != null && newName != null) {
-            listUsing = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC,lvPass+1 ); // when new player data is lv1 and lv2
-            ArrayList<WordObject> lv2 = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC,lvPass+2);
-            listUsing.addAll(lv2);
+            ArrayList<WordObject> lv2 = null;
+            try{
+                listUsing = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC,lvPass+1 ); // when new player data is lv1 and lv2
+                lv2 = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC,lvPass+2);
+            }catch (NullPointerException e){
+                int max = db.getLevelHighest(ConfigApplication.CURRENT_CHOOSE_TOPIC);
+                listUsing = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC,max); // when new player data is lv1 and lv2
+               lv2 = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC,max -1);
+            }finally {
+                if(lv2 != null)
+                    listUsing.addAll(lv2);
+            }
             Log.d("Tagtest", ConfigApplication.CURRENT_CHOOSE_TOPIC);
 
             for(int i = 0; i < 6; i++){
