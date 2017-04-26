@@ -79,7 +79,8 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
     private LinearLayout background;
 
     private String newName = null;
-
+    private int lvPass;
+    private String oldName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +89,15 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        lvPass = ConfigApplication.LV_PASS;
         newName = ConfigApplication.NEW_NAME;
+        oldName = ConfigApplication.OLD_NAME;
+        if(newName=="" || newName == null){
+            oldName = ConfigApplication.OLD_NAME;
+            if(!(oldName=="")|| oldName != null){
+                newName = oldName;
+            }
+        }
         listImageGame = new ArrayList<>();
         listImageData = new ArrayList<>();
 
@@ -278,8 +287,8 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
     private void addDataList() {
         listImageData = new ArrayList<>();
         if(newName != null){
-            listImageData  = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 1); // when new player data is lv1 and lv2
-            ArrayList<WordObject> lv2 = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 2);
+            listImageData  = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, lvPass+1); // when new player data is lv1 and lv2
+            ArrayList<WordObject> lv2 = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, lvPass+2);
             listImageData.addAll(lv2);
         }
 
@@ -294,6 +303,8 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
             listImageGame.add(listImageData.get(n));
             listImageData.remove(n);
         }
+
+
     }
 
     //Add image from resource to ImageButton
@@ -706,6 +717,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
                             mClick.start();
                             imgListOver.setSelected(false);
                             imgReplayOver.setEnabled(true);
+                            doSaveScore();
                             SCORE_ALL = 0;
                             Intent intent = new Intent(PicturePuzzleActivity.this, LoadingGoOutGameActivity.class);
                             startActivity(intent);
@@ -819,4 +831,17 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
                 timer.cancel();
             Timer();
         }
+    private void doSaveScore() {
+        if (SCORE_ALL > 0) {
+            String playerName = lblPlayerNameGameOver.getText().toString();
+            if (playerName.equals(""))
+                playerName = "Unknown Player";
+            ScoreObject scoreObject = new ScoreObject();
+            scoreObject.setsPlayer(playerName);
+            scoreObject.setsScore(SCORE_ALL);
+            DbAccessHelper db = new DbAccessHelper(this);
+            db.doInsertScore(scoreObject);
+            lblPlayerNameGameOver.setText("");
+        }
+    }
 }

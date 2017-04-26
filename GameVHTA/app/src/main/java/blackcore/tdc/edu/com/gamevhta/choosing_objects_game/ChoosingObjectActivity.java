@@ -57,6 +57,8 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
     private ArrayList<WordObject> listImageGame = null;
     private ArrayList<WordObject> listImageData = null;
     private String newName = null;
+    private String oldName= "";
+    int lvPass;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +68,15 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_game_creen_mh7);
 
+        lvPass = ConfigApplication.LV_PASS;
         newName = ConfigApplication.NEW_NAME;
+        if(newName=="" || newName == null){
+            oldName = ConfigApplication.OLD_NAME;
+            if(!(oldName=="")|| oldName != null){
+                newName = oldName;
+            }
+        }
+
         dbAccessHelper = new DbAccessHelper(this);
         listImageData= new ArrayList<>();
         listImageGame= new ArrayList<>();
@@ -100,7 +110,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
         dialogWin.setContentView(R.layout.activity_dialog_win_game);
         dialogWin.getWindow().setBackgroundDrawableResource(R.color.tran);
         dialogWin.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        txtScoreWin = (TextView) dialogWin.findViewById(R.id.lblScoreGameOver);
+        txtScoreWin = (TextView) dialogWin.findViewById(R.id.txtScoreWin);
         txtNameWin = (TextView) dialogWin.findViewById(R.id.txtName);
         imbNextGameWin = (ImageView) dialogWin.findViewById(R.id.imvNextGame);
         TextView txtNamePlayer = (TextView) dialogWin.findViewById(R.id.txtName);
@@ -145,8 +155,8 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
     }
     private void addDataList(){
         if(newName != null) {
-            listImageData  = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 1); // when new player data is lv1 and lv2
-            ArrayList<WordObject> lv2 = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 2);
+            listImageData  = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, lvPass+1); // when new player data is lv1 and lv2
+            ArrayList<WordObject> lv2 = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, lvPass+2);
             listImageData.addAll(lv2);
         }
     }
@@ -600,9 +610,9 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
                         mClick.start();
                         imbNextGameWin.setSelected(false);
                         Intent intent = new Intent(getApplicationContext(),RandomGameMemoryChallengeActivity.class);
-                        Bundle sendScore = new Bundle();
-                        sendScore.putInt("score",SCORE_ALL);
-                        intent.putExtra("pictutepuzzle",sendScore);
+                        Bundle data = new Bundle();
+                        data.putSerializable(ConfigApplication.NAME_DATA_LIST, listImageGame);
+                        intent.putExtras(data);
                         startActivity(intent);
                         finish();
                         return true;
