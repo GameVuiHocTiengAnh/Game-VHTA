@@ -45,6 +45,7 @@ import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.custom_toask.CustomToask;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
 import blackcore.tdc.edu.com.gamevhta.image_guessing_game.ImageGuessingActivity;
+import blackcore.tdc.edu.com.gamevhta.models.Score;
 import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
@@ -76,16 +77,31 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
     private ImageView imgReplayOver;
     private TextView lblPlayerNameGameOver;
     private TextView lblScoreGameOver;
+    private String newName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        listUsing = this.getListWordsUsing();
+        scores = 0;
+        newName = ConfigApplication.NEW_NAME;
+        Intent i = getIntent();
+        if(i != null){
+            Bundle b = i.getExtras();
+            if(b != null){
+                listUsing = (ArrayList<WordObject>) b.getSerializable(ConfigApplication.NAME_DATA_LIST);
+                scores += 600;
+                this.setScores(scores);
+            }else{
+                listUsing = this.getListWordsUsing();
+            }
+        }
+
+        this.setListWordsUsing(listUsing);
+
         gothic = this.getTyeface();
         textWord = null;
         time = 50;
         bmUsing = null;
-        scores = 0;
         inDialogWriting = false;
         this.setWritingMode(true);
         animationTimer = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_anim_trieu);
@@ -293,6 +309,9 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
         imgReplayOver = (ImageView) dialogGameOver.findViewById(R.id.imgReplayOver);
         lblScoreGameOver = (TextView) dialogGameOver.findViewById(R.id.lblScoreGameOver);
         lblPlayerNameGameOver = (TextView) dialogGameOver.findViewById(R.id.lblPlayerNameGOver);
+        if(newName != null){
+            lblPlayerNameGameOver.setText(newName);
+        }
 
         imgListOver.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -328,7 +347,11 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
                         return true; // if you want to handle the touch event
                     case MotionEvent.ACTION_UP:
                         dialogGameOver.dismiss();
-                        startActivity(new Intent(WirtingNinjaActivity.this,WirtingNinjaActivity.class));
+                        Intent intent = new Intent(WirtingNinjaActivity.this,WirtingNinjaActivity.class);
+                        Bundle data = new Bundle();
+                        data.putSerializable(ConfigApplication.NAME_DATA_LIST, listUsing);
+                        intent.putExtras(data);
+                        startActivity(intent);
                         finish();
                         imgListOver.setEnabled(true);
                         return true; // if you want to handle the touch event
@@ -349,5 +372,17 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
             db.doInsertScore(scoreObject);
             lblPlayerNameGameOver.setText("");
         }
+    }
+
+
+    public ArrayList<WordObject> getListUsing() {
+        DbAccessHelper db = new DbAccessHelper(this);
+        if (db != null && newName != null) {
+            listUsing = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 1); // when new player data is lv1 and lv2
+            ArrayList<WordObject> lv2 = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 2);
+            listUsing.addAll(lv2);
+            Log.d("Tagtest", ConfigApplication.CURRENT_CHOOSE_TOPIC);
+        }
+        return listUsing;
     }
 }
