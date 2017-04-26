@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -391,13 +392,22 @@ public class WirtingNinjaActivity extends CatchingWordsActivity{
 
     public ArrayList<WordObject> getListUsing() {
         DbAccessHelper db = new DbAccessHelper(this);
+        ArrayList<WordObject> list = new ArrayList<>();
         if (db != null && newName != null) {
             listUsing = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC,lvPass+1 ); // when new player data is lv1 and lv2
             ArrayList<WordObject> lv2 = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC,lvPass+2);
             listUsing.addAll(lv2);
             Log.d("Tagtest", ConfigApplication.CURRENT_CHOOSE_TOPIC);
+
+            for(int i = 0; i < 6; i++){
+                Random ran = new Random();
+                int s = listUsing.size();
+                int dom = ran.nextInt(s);
+                list.add(listUsing.get(dom));
+                listUsing.remove(dom);
+            }
         }
-        return listUsing;
+        return list;
     }
 
     public void savelevelPass(){

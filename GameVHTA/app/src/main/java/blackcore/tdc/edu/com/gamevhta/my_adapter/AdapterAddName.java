@@ -36,7 +36,9 @@ public class AdapterAddName extends ArrayAdapter<Score> {
         TextView txtLevel = (TextView) convertView.findViewById(R.id.txtLevel);
         if(arr.size() > 0 && position >= 0) {
             txtName.setText(arr.get(position).getName());
-            txtLevel.setText(arr.get(position).getLvPass());
+            String text = arr.get(position).getLvPass();
+            String[] textLv = text.split("_");
+            txtLevel.setText(textLv[0] +" : "+textLv[1]);
         }
         return convertView;
     }

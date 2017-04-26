@@ -98,11 +98,11 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
         super.onCreate(savedInstanceState);
 
         //get du lieu playername
-        if(ConfigApplication.NEW_NAME.toString() != "") {
-            PLAYER_NAME = ConfigApplication.NEW_NAME.toString();
+        if(ConfigApplication.NEW_NAME != "") {
+            PLAYER_NAME = ConfigApplication.NEW_NAME;
         }
-        if(ConfigApplication.CURRENT_CHOOSE_TOPIC.toString() != "") {
-            OBJECT = ConfigApplication.CURRENT_CHOOSE_TOPIC.toString();
+        if(ConfigApplication.CURRENT_CHOOSE_TOPIC != "") {
+            OBJECT = ConfigApplication.CURRENT_CHOOSE_TOPIC;
         }
         //get du lieu score
         Intent i = getIntent();
@@ -111,6 +111,7 @@ public class Market_game extends AppCompatActivity implements TextToSpeech.OnIni
             if(b != null){
                 SCORE = b.getInt(ConfigApplication.SCORES_BEFOR_GAME);
                 SCORE_TEMP = SCORE;
+                Log.d("Tagtest",SCORE_TEMP+"");
             }else{
                 SCORE = 0;
                 SCORE_TEMP = 0;

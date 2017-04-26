@@ -26,6 +26,7 @@ import com.podcopic.animationlib.library.AnimationType;
 import com.podcopic.animationlib.library.StartSmartAnimation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -36,9 +37,11 @@ import blackcore.tdc.edu.com.gamevhta.TopisChoosingActivity;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.custom_toask.CustomToask;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
+import blackcore.tdc.edu.com.gamevhta.models.PlayerOld;
 import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.models.SizeOfDevice;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
+import blackcore.tdc.edu.com.gamevhta.writing_words_game.WirtingNinjaActivity;
 
 
 /**
@@ -50,7 +53,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
     private Animation animation, animationTimer, animationOver;
     private Timer timer = new Timer();
     private ImageButton btnImage1, btnImage2, btnImage3, btnImage4, btnImage5, btnImage6, btnPauseGame5;
-    private TextView lblTimer, lblWord, lblScore, lblScoreGameOver, txtNameScoreWin, txtScoreWin;
+    private TextView lblTimer, lblWord, lblScore, lblScoreGameOver, txtNameScoreWin, txtScoreWin, txtPlayer;
     private MediaPlayer mpChoose, mpSoundBackground, mpWingame, mpGameOver, mpOK, mpClicked, mpLoadImage, mpWrong;
     private ImageView imgListOver, imgReplayOver, imgList, imgReplay, imgResume, imvNextGame, imgSleep;
     private TextView lblPlayerNameGameOver;
@@ -70,6 +73,9 @@ public class ImageGuessingActivity extends AppCompatActivity {
     private DbAccessHelper dbAccessHelper;
 
     private String newName;
+    private int lvPass;
+    private String oldName;
+    private boolean flagNullBundle = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,26 +84,41 @@ public class ImageGuessingActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_game_screen_mh_9);
-        initialize();
         dbAccessHelper = new DbAccessHelper(this);
         newName = ConfigApplication.NEW_NAME;
+        lvPass = ConfigApplication.LV_PASS;
+        oldName = ConfigApplication.OLD_NAME;
+        if(newName=="" || newName == null){
+            oldName = ConfigApplication.OLD_NAME;
+            if(!(oldName=="")|| oldName != null){
+                newName = oldName;
+            }
+        }
         Intent i = getIntent();
         if(i != null){
+            Log.d("Tagtest","intent ");
             Bundle b = i.getExtras();
             if(b != null){
+                Log.d("Tagtest","bundle");
                 listImageLevelGame = (ArrayList<WordObject>) b.getSerializable(ConfigApplication.NAME_DATA_LIST);
+                Log.d("Tagtest",listImageLevelGame.size()+"  listgame from bundle");
                 SCORE += 600;
                 addDataList();
+                flagNullBundle = false;
             }else{
+                flagNullBundle = true;
                 Log.d("Tagtest","vao data khong hi");
                 //addDataList();
                 listImageFromDataO = dbAccessHelper.getWordObject(ConfigApplication.CURRENT_CHOOSE_TOPIC);
-                listImageLevelGame = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC,1); // when new player data is lv1 and lv2
-                ArrayList<WordObject> lv2 = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 2);
+                listImageLevelGame = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC,lvPass+1); // when new player data is lv1 and lv2
+                ArrayList<WordObject> lv2 = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, lvPass+2);
                 listImageLevelGame.addAll(lv2);
                 Log.d("Tagtest", listImageLevelGame.size()+"");
             }
         }
+
+        initialize();
+
 
         handler = new Handler() {
             @Override
@@ -236,6 +257,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
         dialogWinGame.getWindow().setBackgroundDrawableResource(R.color.tran);
         dialogWinGame.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         txtNameScoreWin = (TextView) dialogWinGame.findViewById(R.id.txtNameScoreWin);
+        txtPlayer = (TextView) dialogWinGame.findViewById(R.id.txtName);
         txtScoreWin = (TextView) dialogWinGame.findViewById(R.id.txtScoreWin);
         imvNextGame = (ImageView) dialogWinGame.findViewById(R.id.imvNextGame);
 
@@ -252,7 +274,6 @@ public class ImageGuessingActivity extends AppCompatActivity {
 
         //set time left default
         lblTimer.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-        listImageLevelGame = new ArrayList<>();
         listImageFromDataO = new ArrayList<>();
         listImageLevelO = new ArrayList<>();
         getEvents();
@@ -303,10 +324,12 @@ public class ImageGuessingActivity extends AppCompatActivity {
         Random rd = new Random();
         Log.d("RESULT", "Size: "+ String.valueOf(listImageFromDataO.size()));
         int t = listImageLevelGame.size();
-        if(t > 0) {
+        if(t > 0 && !flagNullBundle) {
             int xt = rd.nextInt(t);
             listImageLevelO.add(listImageLevelGame.get(xt));
+            listImageFromDataO.remove(listImageLevelGame.get(xt));
             listImageLevelGame.remove(xt);
+
             for (int j = 0; j < 5; j++) {
                 rd = new Random();
                 int n = listImageFromDataO.size();
@@ -323,9 +346,13 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 listImageFromDataO.remove(x);
             }
         }
-        RESULT_CHOSEN = rd.nextInt(listImageLevelO.size());
+
         Log.d("RESULT", String.valueOf(RESULT_CHOSEN));
-        String word = listImageLevelO.get(RESULT_CHOSEN).getwEng();
+        String word = listImageLevelO.get(0).getwEng();
+        WordObject correctOject = listImageLevelO.get(0);
+        Collections.shuffle(listImageLevelO);
+
+        RESULT_CHOSEN = listImageLevelO.indexOf(correctOject);
 //        if(word.length()>5) {
 //            lnBackGroundWord.getLayoutParams().width = 300;
 //        }
@@ -542,10 +569,9 @@ public class ImageGuessingActivity extends AppCompatActivity {
                         // RELEASED
                         imvNextGame.setSelected(false);
                         dialogWinGame.dismiss();
-                        Intent intent = new Intent(ImageGuessingActivity.this, RandomGamePracticeActivity.class);
+                        Intent intent = new Intent(ImageGuessingActivity.this,RandomGamePracticeActivity.class);
                         Bundle data = new Bundle();
-                        data.putSerializable(ConfigApplication.NAME_DATA_LIST, listImageLevelO);
-                        data.putInt(ConfigApplication.SCORES_BEFOR_GAME, SCORE);
+                        data.putInt(ConfigApplication.SCORES_BEFOR_GAME,SCORE);
                         intent.putExtras(data);
                         startActivity(intent);
                         finish();
@@ -703,8 +729,10 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 timer.cancel();
                 executeAnimation();
                 txtScoreWin.setText(String.valueOf(SCORE));
+                txtPlayer.setText(newName);
                 dialogWinGame.show();
                 mpWingame.start();
+                savelevelPass();
             } else {
                 timer.cancel();
                 loadGame();
@@ -724,6 +752,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 lblScoreGameOver.setText(String.valueOf(SCORE));
                 timer.cancel();
                 dialogGameOver.show();
+                lblPlayerNameGameOver.setText(newName);
             }
         }
     }
@@ -750,5 +779,16 @@ public class ImageGuessingActivity extends AppCompatActivity {
         btnImage4.startAnimation(animationOver);
         btnImage5.startAnimation(animationOver);
         btnImage6.startAnimation(animationOver);
+    }
+
+    public void savelevelPass(){
+        DbAccessHelper db = new DbAccessHelper(this);
+        PlayerOld playerOld = new PlayerOld();
+        String tokenLVPass = (lvPass+1)+"_"+ConfigApplication.CURRENT_CHOOSE_TOPIC;
+        playerOld.setName(newName);
+        playerOld.setLvPass(tokenLVPass);
+        db.doInsertPlayerOlde(playerOld);
+        db.close();
+        ConfigApplication.LV_PASS = lvPass+1;
     }
 }

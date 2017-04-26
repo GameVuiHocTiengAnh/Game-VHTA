@@ -98,7 +98,14 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
                 newName = oldName;
             }
         }
-        listImageGame = new ArrayList<>();
+       DbAccessHelper db = new DbAccessHelper(this);
+        if (db != null && newName != null) {
+            listImageGame = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, lvPass+1); // when new player data is lv1 and lv2
+            ArrayList<WordObject> lv2 = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, lvPass+2);
+            listImageGame.addAll(lv2);
+            Log.d("Tagtest", ConfigApplication.CURRENT_CHOOSE_TOPIC);
+        }
+//        listImageGame = new ArrayList<>();
         listImageData = new ArrayList<>();
 
         textToSpeech = new TextToSpeech(this,this);

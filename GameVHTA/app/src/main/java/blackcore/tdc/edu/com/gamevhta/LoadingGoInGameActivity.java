@@ -23,9 +23,9 @@ import blackcore.tdc.edu.com.gamevhta.picture_puzzle_game.PicturePuzzleActivity;
 public class LoadingGoInGameActivity extends AppCompatActivity {
 
     private Random ran;
-    private final int  PICTURE_PUZZLE_GAME = 0;
+    private final int  PICTURE_PUZZLE_GAME = 2;
     private final int MH6_CATCHING_WORDS_GAME = 1;
-    private final int CHOOSE_IMAGE_OBJECT_GAME= 2;
+    private final int CHOOSE_IMAGE_OBJECT_GAME= 0;
     private ArrayList<Integer> screenGame;
     private String newName = null;
     private Bundle dataTranfer = null;
@@ -41,9 +41,9 @@ public class LoadingGoInGameActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_loading_go_in);
         screenGame = new ArrayList<Integer>();
-//        screenGame.add(PICTURE_PUZZLE_GAME);
+        screenGame.add(PICTURE_PUZZLE_GAME);
         screenGame.add(MH6_CATCHING_WORDS_GAME);
-//        screenGame.add(CHOOSE_IMAGE_OBJECT_GAME);
+        screenGame.add(CHOOSE_IMAGE_OBJECT_GAME);
         Random ran = new Random();
         int dom = ran.nextInt(screenGame.size());
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,

@@ -39,7 +39,7 @@ public class RandomGamePracticeActivity extends AppCompatActivity {
 
         screenGame = new ArrayList<Integer>();
         screenGame.add(MAKET_GAME);
-        screenGame.add(WRITING_PRACTICE_GAME);
+//        screenGame.add(WRITING_PRACTICE_GAME);
 
 
         Random ran = new Random();

@@ -23,9 +23,9 @@ import blackcore.tdc.edu.com.gamevhta.writing_words_game.WirtingNinjaActivity;
 public class RandomGameMemoryChallengeActivity extends AppCompatActivity {
 
     private Random ran;
-    private final int IMAGE_GUESING_GAME = 0;
-    private final int WRITING_NINJA_GAME = 1;
-    private final int BUBBLE_HITTING_GAME = 2;
+    private final int IMAGE_GUESING_GAME = 2;
+    private final int WRITING_NINJA_GAME = 0;
+    private final int BUBBLE_HITTING_GAME = 1;
     private ArrayList<Integer> screenGame;
     private Bundle listAndScores = null;
 
@@ -71,7 +71,6 @@ public class RandomGameMemoryChallengeActivity extends AppCompatActivity {
                 //ADD BUNDLE HERE
                 if(listAndScores != null)
                     intent.putExtras(listAndScores);
-
                 startActivity(intent);
                 finish();
             }

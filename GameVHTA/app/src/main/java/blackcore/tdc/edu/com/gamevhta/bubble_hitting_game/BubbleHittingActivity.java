@@ -33,6 +33,7 @@ import blackcore.tdc.edu.com.gamevhta.RandomGamePracticeActivity;
 import blackcore.tdc.edu.com.gamevhta.button.PauseButton;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
+import blackcore.tdc.edu.com.gamevhta.models.PlayerOld;
 import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
@@ -59,6 +60,8 @@ public class BubbleHittingActivity extends AppCompatActivity {
     private ArrayList<WordObject> listImageData = null;
     private String newName = null;
     PauseButton imgBackGame;
+    private int lvPass;
+    private String oldName;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +82,14 @@ public class BubbleHittingActivity extends AppCompatActivity {
         imgQuestionsSix = (ImageView) findViewById(R.id.imgQuestionsSix);
 
         newName = ConfigApplication.NEW_NAME;
+        lvPass = ConfigApplication.LV_PASS;
+        oldName = ConfigApplication.OLD_NAME;
+        if(newName=="" || newName == null){
+            oldName = ConfigApplication.OLD_NAME;
+            if(!(oldName=="")|| oldName != null){
+                newName = oldName;
+            }
+        }
         Intent i = getIntent();
         if(i != null){
             Bundle b = i.getExtras();
@@ -205,7 +216,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
     }
     private void addDataList(){
         listImageData = new ArrayList<>();
-        listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_ANIMALS);
+        listImageData = dbAccessHelper.getWordObject(ConfigApplication.CURRENT_CHOOSE_TOPIC);
     }
     private void createDataGame(){
 //        listImageGame = new ArrayList<>();
@@ -327,6 +338,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
             EventWin();
             mWin.start();
             dialogWinGame.show();
+            savelevelPass();
         }
     }
 
@@ -925,6 +937,16 @@ public class BubbleHittingActivity extends AppCompatActivity {
             Log.d("Tagtest", ConfigApplication.CURRENT_CHOOSE_TOPIC);
         }
         return listImageData;
+    }
+    public void savelevelPass(){
+        DbAccessHelper db = new DbAccessHelper(this);
+        PlayerOld playerOld = new PlayerOld();
+        String tokenLVPass = (lvPass+1)+"_"+ConfigApplication.CURRENT_CHOOSE_TOPIC;
+        playerOld.setName(newName);
+        playerOld.setLvPass(tokenLVPass);
+        db.doInsertPlayerOlde(playerOld);
+        db.close();
+        ConfigApplication.LV_PASS = lvPass+1;
     }
 
 }
