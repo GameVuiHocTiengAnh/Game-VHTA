@@ -55,15 +55,14 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
     private Animation animationRotate;
     private TextView lblPlayerNameGameOver,txtvLevel, txtvScore, lblScoreGameOver, txtScoreWin, txtWordEngNextTurn, txtWordVieNextTurn, txtNameScoreWin, txtScoreWinEndGame, txtPlayerNameWinEndGame, txtvHelp;
     private ImageView imgListOver, imgReplayOver, imgvObject1, imgvObject2, imgvObject3, imgvObject4, imgvObject5, imgvObject6, imgResume, imgList, imgReplay, imbNextGameWin, imgObjectNextTurn, imgSpeak, imgListWinEndGame, imgReplayWinEndGame;
-    private MediaPlayer test, mButtonClick, mCorrect, mWrong, mClick, mTickTac, mpSoundBackground, mReadyGo, mNextLevel, mGameOver, mYaah, mtornado, mLoadImage;
+    private MediaPlayer mButtonClick, mCorrect, mWrong, mClick, mpSoundBackground, mReadyGo, mNextLevel, mGameOver, mYaah, mtornado, mLoadImage;
     private EditText  txtWord;
     LinearLayout layoutWritingPracticeGame;
     private ImageButton btnPause, btnCheck;
 
-    private String OBJECT = "";
-    private int SCORE = 0;
+    private String OBJECT = "ANI", PLAYER_NAME = "NEW PLAYER";
+    private int SCORE = 0, SCORE_TEMP = 0;
     private int RESULT_FAILED = 0;
-    private int RESULT_CHOSEN = -1;
     private int LEVEL = 1;
     private int LEVEL_LIMIT = 0;
     private int COUNT_IMAGES = 6;
@@ -87,9 +86,41 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(OBJECT.equals("SCH"))
+        //get du lieu playername
+        if(ConfigApplication.NEW_NAME.toString() != "") {
+            PLAYER_NAME = ConfigApplication.NEW_NAME.toString();
+        }
+        if(ConfigApplication.CURRENT_CHOOSE_TOPIC.toString() != "") {
+            OBJECT = ConfigApplication.CURRENT_CHOOSE_TOPIC.toString();
+        }
+        //get du lieu score
+        Intent i = getIntent();
+        if(i != null){
+            Bundle b = i.getExtras();
+            if(b != null){
+                SCORE = b.getInt(ConfigApplication.SCORES_BEFOR_GAME);
+                SCORE_TEMP = SCORE;
+            }else{
+                SCORE = 0;
+                SCORE_TEMP = 0;
+            }
+        }
+        //get du lieu topic
+        if(OBJECT.equals(ConfigApplication.OBJECT_SCHOOL))
         {
             setContentView(R.layout.activity_writing_practice_game_school);
+        }
+        else if(OBJECT.equals(ConfigApplication.OBJECT_PLANTS))
+        {
+            setContentView(R.layout.activity_writing_practice_game_plants);
+        }
+        else if(OBJECT.equals(ConfigApplication.OBJECT_COUNTRY_SIDE))
+        {
+            setContentView(R.layout.activity_writing_practice_game_contryside);
+        }
+        else if(OBJECT.equals(ConfigApplication.OBJECT_HOUSEHOLD_APPLIANCES))
+        {
+            setContentView(R.layout.activity_writing_practice_game_household_appliances);
         }
         else {
             setContentView(R.layout.activity_writing_practice_game);
@@ -147,6 +178,7 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
 
 
     private void initialize() {
+
         imgvObject1 = (ImageView) findViewById(imgvWPObject1);
         imgvObject2 = (ImageView) findViewById(R.id.imgvWPObject2);
         imgvObject3 = (ImageView) findViewById(R.id.imgvWPObject3);
@@ -174,6 +206,7 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
         imgReplayOver = (ImageView) dialogGameOver.findViewById(R.id.imgReplayOver);
         lblScoreGameOver = (TextView) dialogGameOver.findViewById(R.id.lblScoreGameOver);
         lblPlayerNameGameOver = (TextView) dialogGameOver.findViewById(R.id.lblPlayerNameGOver);
+        lblPlayerNameGameOver.setText(PLAYER_NAME);
 
 //      dialog Pause game
         dialogBack = new Dialog(writing_practice_game.this);
@@ -194,9 +227,10 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
         dialogComplete.setContentView(R.layout.activity_dialog_win_game);
         dialogComplete.getWindow().setBackgroundDrawableResource(R.color.tran);
         dialogComplete.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        txtNameScoreWin = (TextView) dialogComplete.findViewById(R.id.txtNameScoreWin);
+        txtNameScoreWin = (TextView) dialogComplete.findViewById(R.id.txtName);
         txtScoreWin = (TextView) dialogComplete.findViewById(R.id.txtScoreWin);
         imbNextGameWin = (ImageView) dialogComplete.findViewById(R.id.imvNextGame);
+        txtNameScoreWin.setText(PLAYER_NAME);
 
 //      dialog Next Turn
         dialogNextTurn = new Dialog(writing_practice_game.this);
@@ -222,13 +256,13 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
         imgListWinEndGame = (ImageView) dialogWinEndGame.findViewById(R.id.imgListWinEndGame);
         imgReplayWinEndGame = (ImageView) dialogWinEndGame.findViewById(R.id.imgReplayWinEndGame);
         txtScoreWinEndGame = (TextView) dialogWinEndGame.findViewById(R.id.lblScoreWinEndGame);
-        txtPlayerNameWinEndGame = (EditText) dialogWinEndGame.findViewById(R.id.lblPlayerNameWinEndGame);
+        txtPlayerNameWinEndGame = (TextView) dialogWinEndGame.findViewById(R.id.lblPlayerNameWinEndGame);
+        txtPlayerNameWinEndGame.setText(PLAYER_NAME);
 
 //      Sound
         mButtonClick = MediaPlayer.create(writing_practice_game.this, click);
         mCorrect = MediaPlayer.create(writing_practice_game.this, dung_market_game);
         mClick = MediaPlayer.create(writing_practice_game.this, R.raw.click_market_game);
-        mTickTac = MediaPlayer.create(writing_practice_game.this, R.raw.time);
         mReadyGo = MediaPlayer.create(writing_practice_game.this, R.raw.ready_go);
         mNextLevel = MediaPlayer.create(writing_practice_game.this, R.raw.next_level_market_game);
         mGameOver = MediaPlayer.create(writing_practice_game.this, R.raw.game_over_market_game);
@@ -248,20 +282,18 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
 //      database
         dbAccessHelper = new DbAccessHelper(this);
 
-//        Get Object Name
-        if (getIntent().getExtras() != null) {
-            OBJECT = getIntent().getStringExtra(ConfigApplication.OBJECT_SELECTED);
-        }
+
         setEnableWP(false);
         //setBackgroundLayout();
         setFont();
         getEvents();
 //      Get gioi han level, Chi lay so chan
-        LEVEL_LIMIT = dbAccessHelper.getLevelHighest("ANI");
+        LEVEL_LIMIT = dbAccessHelper.getLevelHighest(OBJECT);
         if(LEVEL_LIMIT % 2 != 0)
         {
             LEVEL_LIMIT--;
         }
+        Log.d("LEVEL limit : ", String.valueOf(LEVEL_LIMIT) );
         loadGame();
         handler = new Handler() {
             @Override
@@ -289,7 +321,7 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
         StartSmartAnimation.startAnimation(findViewById(R.id.imgvWPObject5), AnimationType.BounceInRight, 1500, 0, false);
         StartSmartAnimation.startAnimation(findViewById(R.id.imgvWPObject6), AnimationType.BounceInRight, 1500, 0, false);
 
-        getDataWithLevel("ANI", LEVEL);
+        getDataWithLevel(OBJECT, LEVEL);
 
         imgvObject1.setBackground(getBitmapResource(listImageLevelO.get(0).getwPathImage()));
         imgvObject2.setBackground(getBitmapResource(listImageLevelO.get(1).getwPathImage()));
@@ -301,7 +333,6 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
             Log.d("Patch image", listImageLevelO.get(j).getwPathImage() );
         }
         lblPlayerNameGameOver.setEnabled(true);
-        lblPlayerNameGameOver.setHint("Enter your name!");
 
     }
 
@@ -367,7 +398,7 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Voice(mClick);
+                Voice(mButtonClick);
                 StartSmartAnimation.startAnimation(findViewById(R.id.btnWPPause), AnimationType.Tada, 300, 0, false);
                 dialogBack.show();
             }
@@ -376,7 +407,7 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
         imgResume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Voice(mClick);
+                Voice(mButtonClick);
                 dialogBack.dismiss();
 
             }
@@ -402,7 +433,7 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
         imbNextGameWin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Voice(mClick);
+                Voice(mButtonClick);
                 txtvLevel.setText("LEVEL. " + LEVEL);
                 txtWord.setText("");
                 txtvHelp.setText("");
@@ -528,27 +559,26 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
                 }
                 StartSmartAnimation.startAnimation(findViewById(R.id.btnCheck), AnimationType.Tada, 300, 0, false);
                 mLastClickTime = SystemClock.elapsedRealtime();
-                Voice(mClick);
+                Voice(mButtonClick);
                 getResult(CHOOSE);
             }
         });
     }
 
     private void doWhenClickImglist() {
-        Voice(mClick);
+        Voice(mButtonClick);
         startActivity(new Intent(writing_practice_game.this, TopisChoosingActivity.class));
         finish();
     }
     private void doWhenClickImgReplay() {
-        Voice(mClick);
+        Voice(mButtonClick);
         RESULT_FAILED = 0;
-        SCORE = 0;
+        SCORE = SCORE_TEMP;
         LEVEL = 1;
         setEnableWP(false);
         txtvLevel.setText("Level. 1");
         txtWord.setText("");
-        txtvScore.setText("0");
-        lblPlayerNameGameOver.setText("");
+        txtvScore.setText(String.valueOf(SCORE_TEMP));
         txtvHelp.setText("");
         txtvHelp.setVisibility(View.INVISIBLE);
         loadGame();
@@ -588,11 +618,11 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
     }
     private void getDataWithLevel(String object, int level) {
         switch (LEVEL) {
-            case 1: getDB2LEVEL("ANI", 1, 2);break;
-            case 2: getDB2LEVEL("ANI", 3, 4);break;
-            case 3: getDB2LEVEL("ANI", 5, 6);break;
-            case 4: getDB2LEVEL("ANI", 7, 8);break;
-            case 5: getDB2LEVEL("ANI", 9, 10);break;
+            case 1: getDB2LEVEL(OBJECT, 1, 2);break;
+            case 2: getDB2LEVEL(OBJECT, 3, 4);break;
+            case 3: getDB2LEVEL(OBJECT, 5, 6);break;
+            case 4: getDB2LEVEL(OBJECT, 7, 8);break;
+            case 5: getDB2LEVEL(OBJECT, 9, 10);break;
 
         }
 
@@ -661,8 +691,7 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
             Voice(mCorrect);
             COUNT_IMAGES --;
             if(COUNT_IMAGES < 1){
-
-                if(LEVEL + LEVEL + 2 <= LEVEL_LIMIT)
+                if(LEVEL + LEVEL <= LEVEL_LIMIT)
                 {
                     PlayTwoSound(1000, 1000, mCorrect, mNextLevel);
                 }
@@ -684,7 +713,8 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
                     if(COUNT_IMAGES < 1){
 
                         LEVEL++;
-                        if(LEVEL + LEVEL < LEVEL_LIMIT)
+                        Log.d("LEVEL HIEN TAI", "LEVEL LIMIT: " + String.valueOf(LEVEL_LIMIT) + String.valueOf(LEVEL) +  "  LEVEL KHI CONG: " + String.valueOf(LEVEL+ LEVEL));
+                        if(LEVEL + LEVEL - 1 <= LEVEL_LIMIT)
                         {
                             txtScoreWin.setText(String.valueOf(SCORE));
                             dialogComplete.show();
@@ -716,7 +746,6 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
                     public void onFinish() {
                         if (SCORE == 0) {
                             lblPlayerNameGameOver.setEnabled(false);
-                            lblPlayerNameGameOver.setHint("");
                         }
                         dialogGameOver.show();
                     }
@@ -856,8 +885,6 @@ public class writing_practice_game extends AppCompatActivity implements TextToSp
             scoreObject.setsPlayer(playerName);
             scoreObject.setsScore(SCORE);
             dbAccessHelper.doInsertScore(scoreObject);
-            lblPlayerNameGameOver.setText("");
-            txtPlayerNameWinEndGame.setText("");
             //Toast.makeText(getApplicationContext(), "Saved Score", Toast.LENGTH_SHORT).show();
         }
     }

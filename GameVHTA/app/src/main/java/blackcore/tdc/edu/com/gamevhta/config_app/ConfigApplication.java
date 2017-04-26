@@ -21,7 +21,7 @@ public class ConfigApplication {
 
     public static final String BUNDLE_NEW_NAME = "newName";
     public static  String CURRENT_CHOOSE_TOPIC ="";
-    public static String NEW_NAME = null;
+    public static String NEW_NAME = "";
 
 
     //Object
