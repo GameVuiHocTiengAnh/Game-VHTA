@@ -33,6 +33,7 @@ import blackcore.tdc.edu.com.gamevhta.RandomGamePracticeActivity;
 import blackcore.tdc.edu.com.gamevhta.button.PauseButton;
 import blackcore.tdc.edu.com.gamevhta.config_app.ConfigApplication;
 import blackcore.tdc.edu.com.gamevhta.data_models.DbAccessHelper;
+import blackcore.tdc.edu.com.gamevhta.models.ScoreObject;
 import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 
 /**
@@ -56,6 +57,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
     private DbAccessHelper dbAccessHelper;
     private ArrayList<WordObject> listImageGame = null;
     private ArrayList<WordObject> listImageData = null;
+    private String newName = null;
     PauseButton imgBackGame;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +67,9 @@ public class BubbleHittingActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_bubble_hitting_game);
 
-        dbAccessHelper = new DbAccessHelper(this);
-        listImageData= new ArrayList<>();
+        txtTime = (TextView) findViewById(R.id.txtTime);
+        txtScore = (TextView) findViewById(R.id.txtScore);
+
         listImageGame= new ArrayList<>();
         imgQuestionsOne = (ImageView) findViewById(R.id.imgQuestionsOne);
         imgQuestionsTwo = (ImageView) findViewById(R.id.imgQuestionsTwo);
@@ -75,15 +78,28 @@ public class BubbleHittingActivity extends AppCompatActivity {
         imgQuestionsFive = (ImageView) findViewById(R.id.imgQuestionsFive);
         imgQuestionsSix = (ImageView) findViewById(R.id.imgQuestionsSix);
 
+        newName = ConfigApplication.NEW_NAME;
+        Intent i = getIntent();
+        if(i != null){
+            Bundle b = i.getExtras();
+            if(b != null){
+                listImageGame = (ArrayList<WordObject>) b.getSerializable(ConfigApplication.NAME_DATA_LIST);
+                SCORE_ALL += 600;
+                txtScore.setText(SCORE_ALL+"");
+            }else{
+                listImageGame = this.getListUsing();
+            }
+        }
+
+        dbAccessHelper = new DbAccessHelper(this);
+        listImageData= new ArrayList<>();
+
         imgBubbleOne = (ImageView) findViewById(R.id.imgBubbleOne);
         imgBubbleTwo = (ImageView) findViewById(R.id.imgBubbleTwo);
         imgBubbleThree = (ImageView) findViewById(R.id.imgBubbleThree);
         imgBubbleFour = (ImageView) findViewById(R.id.imgBubbleFour);
         imgBubbleFive = (ImageView) findViewById(R.id.imgBubbleFive);
         imgBubbleSix = (ImageView) findViewById(R.id.imgBubbleSix);
-
-        txtTime = (TextView) findViewById(R.id.txtTime);
-        txtScore = (TextView) findViewById(R.id.txtScore);
 
         //dialog overgame
         dialogGameOver = new Dialog(BubbleHittingActivity.this);
@@ -96,10 +112,8 @@ public class BubbleHittingActivity extends AppCompatActivity {
 
         imgListOver = (ImageView) dialogGameOver.findViewById(R.id.imgListOver);
         imgReplayOver = (ImageView) dialogGameOver.findViewById(R.id.imgReplayOver);
-//        lblPlayerNameGameOver = (EditText) dialogGameOver.findViewById(R.id.lblPlayerNameGameOver);
         lblScoreGameOver = (TextView) dialogGameOver.findViewById(R.id.lblScoreGameOver);
-//        txtNamePlayerOver = (TextView) dialogGameOver.findViewById(R.id.txtNamePlayer);
-        txtNameOver = (TextView) dialogGameOver.findViewById(R.id.txtName);
+        txtNameOver = (TextView) dialogGameOver.findViewById(R.id.lblPlayerNameGOver);
 
         //dialog win
         dialogWinGame = new Dialog(BubbleHittingActivity.this);
@@ -111,7 +125,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
         dialogWinGame.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
 
         imgNextGameWin = (ImageView) dialogWinGame.findViewById(R.id.imvNextGame);
-        txtScoreWin = (TextView) dialogWinGame.findViewById(R.id.lblScoreGameOver);
+        txtScoreWin = (TextView) dialogWinGame.findViewById(R.id.txtScoreWin);
         txtNameWin = (TextView) dialogWinGame.findViewById(R.id.txtName);
 
         mMusicMainGame = MediaPlayer.create(BubbleHittingActivity.this, R.raw.picturepuzzle);
@@ -194,15 +208,20 @@ public class BubbleHittingActivity extends AppCompatActivity {
         listImageData = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_ANIMALS);
     }
     private void createDataGame(){
-        listImageGame = new ArrayList<>();
-        Random random = new Random();
-        for (int i = 0; i < 6; i++){
-            int x = listImageData.size();
-            int n = random.nextInt(x);
-            listImageGame.add(listImageData.get(n));
-            listImageData.remove(n);
-        }
+//        listImageGame = new ArrayList<>();
+//        Random random = new Random();
+//        for (int i = 0; i < 6; i++){
+//            int x = listImageData.size();
+//            int n = random.nextInt(x);
+//            listImageGame.add(listImageData.get(n));
+//            listImageData.remove(n);
+//        }
     }
+    @Override
+    public void onBackPressed() {
+        imgBackGame.callOnClick();
+    }
+
     @Override
     protected void onPause() {
         // TODO Auto-generated method stub
@@ -295,6 +314,21 @@ public class BubbleHittingActivity extends AppCompatActivity {
         listImageData.remove(dom);
         return object ;
     }
+    public void getAnswerWord(){
+        mCorrect.start();
+        timer.cancel();
+        txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
+        Timer();
+        timer.cancel();
+        bubbledialog.dismiss();
+
+        ktcheck_finish ();
+        if(check_finish == 6) {
+            EventWin();
+            mWin.start();
+            dialogWinGame.show();
+        }
+    }
 
     public void getImageButton() {
         imgQuestionsOne.setOnTouchListener(new View.OnTouchListener() {
@@ -320,24 +354,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(0).getwEng().equals(txtWordOne.getText().toString())){
                                     getResult(1);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                    getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsOne) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleOne) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
-                                } else {
+                                } else{
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -349,24 +371,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(0).getwEng().equals(txtWordTwo.getText().toString())){
                                     getResult(1);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                    getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsOne) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleOne) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -378,24 +388,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(0).getwEng().equals(txtWordThree.getText().toString())){
                                     getResult(1);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                    getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsOne) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleOne) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -434,24 +432,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(1).getwEng().equals(txtWordOne.getText().toString())){
                                     getResult(2);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                    getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsTwo) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleTwo) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -463,24 +449,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(1).getwEng().equals(txtWordTwo.getText().toString())){
                                     getResult(2);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                  getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsTwo) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleTwo) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -492,24 +466,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(1).getwEng().equals(txtWordThree.getText().toString())){
                                     getResult(2);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                    getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsTwo) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleTwo) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -549,24 +511,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(2).getwEng().equals(txtWordOne.getText().toString())){
                                     getResult(3);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                    getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsThree) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleThree) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -578,24 +528,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(2).getwEng().equals(txtWordTwo.getText().toString())){
                                     getResult(3);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                    getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsThree) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleThree) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -607,24 +545,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(2).getwEng().equals(txtWordThree.getText().toString())){
                                     getResult(3);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                    getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsThree) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleThree) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -663,24 +589,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(3).getwEng().equals(txtWordOne.getText().toString())){
                                     getResult(4);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                    getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsFour) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleFour) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -692,24 +606,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(3).getwEng().equals(txtWordTwo.getText().toString())){
                                     getResult(4);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                    getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsFour) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleFour) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -721,24 +623,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(3).getwEng().equals(txtWordThree.getText().toString())){
                                     getResult(4);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                    getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsFour) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleFour) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -778,24 +668,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(4).getwEng().equals(txtWordOne.getText().toString())){
                                     getResult(5);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                    getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsFive) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleFive) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -807,24 +685,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(4).getwEng().equals(txtWordTwo.getText().toString())){
                                     getResult(5);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                    getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsFive) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleFive) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -836,24 +702,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(4).getwEng().equals(txtWordThree.getText().toString())){
                                     getResult(5);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                    getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsFive) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleFive) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -892,24 +746,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(5).getwEng().equals(txtWordOne.getText().toString())){
                                     getResult(6);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                    getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsSix) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleSix) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -921,24 +763,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(5).getwEng().equals(txtWordTwo.getText().toString())){
                                     getResult(6);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                    getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsSix) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleSix) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -950,25 +780,12 @@ public class BubbleHittingActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if(listImageGame.get(5).getwEng().equals(txtWordThree.getText().toString())){
                                     getResult(6);
-                                    mCorrect.start();
-                                    timer.cancel();
-                                    txtTime.setText(String.valueOf(ConfigApplication.TIME_LEFT_GAME));
-                                    Timer();
-                                    timer.cancel();
-                                    bubbledialog.dismiss();
+                                    getAnswerWord();
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgQuestionsSix) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
                                     StartSmartAnimation.startAnimation( findViewById(R.id.imgBubbleSix) , AnimationType.ZoomOutUp , 2000 , 0 , true , 300 );
-                                    ktcheck_finish ();
-                                    if(check_finish == 6) {
-                                        EventWin();
-                                        mWin.start();
-                                        dialogWinGame.show();
-                                    }
                                 } else {
                                     mWrong.start();
                                     bubbledialog.dismiss();
-//                                    txtPlayerNameGameOver.setVisibility(View.VISIBLE);
-                                    lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
                                     timer.cancel();
                                     effectGameOver();
                                     dialogGameOver.show();
@@ -987,7 +804,8 @@ public class BubbleHittingActivity extends AppCompatActivity {
     }
 
     private void EventOver() {
-        lblScoreGameOver.setText(String.valueOf(SCORE_ALL));
+        lblScoreGameOver.setText(SCORE_ALL+"");
+        txtNameOver.setText(newName);
         imgListOver.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -1017,15 +835,14 @@ public class BubbleHittingActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         imgReplayOver.setSelected(!imgReplayOver.isSelected());
                         imgReplayOver.isSelected();
-                        //mService.playMusic(mClick);
                         imgListOver.setEnabled(false);
                         return true;
                     case MotionEvent.ACTION_UP:
-                        //mService.playMusic(mClick);
                         imgReplayOver.setSelected(false);
                         imgListOver.setEnabled(true);
 //                        doSaveScore();
-                        SCORE_ALL = 0;
+//                        SCORE_ALL = 0;
+                        txtScore.setText(SCORE_ALL+"");
                         Intent intent = new Intent(BubbleHittingActivity.this,BubbleHittingActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
                         startActivity(intent);
@@ -1037,7 +854,8 @@ public class BubbleHittingActivity extends AppCompatActivity {
         });
     }
     private void EventWin() {
-        txtScoreWin.setText(String.valueOf(SCORE_ALL));
+        txtScoreWin.setText(SCORE_ALL+"");
+        txtNameWin.setText(newName);
         imgNextGameWin.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -1050,7 +868,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                         imgNextGameWin.setSelected(false);
                         Intent intent = new Intent(BubbleHittingActivity.this,RandomGamePracticeActivity.class);
                         Bundle data = new Bundle();
-                        data.putSerializable(ConfigApplication.NAME_DATA_LIST,listImageGame);
+                        data.putInt(ConfigApplication.SCORES_BEFOR_GAME,SCORE_ALL);
                         intent.putExtras(data);
                         startActivity(intent);
                         finish();
@@ -1060,18 +878,18 @@ public class BubbleHittingActivity extends AppCompatActivity {
             }
         });
     }
-//    private void doSaveScore() {
-//        if (SCORE_ALL > 0) {
-//            String playerName = txtPlayerNameGameOver.getText().toString();
-//            if (playerName.equals(""))
-//                playerName = "Unknown Player";
-//            ScoreObject scoreObject = new ScoreObject();
-//            scoreObject.setsPlayer(playerName);
-//            scoreObject.setsScore(SCORE_ALL);
-//            dbAccessHelper.doInsertScore(scoreObject);
-//            txtPlayerNameGameOver.setText("");
-//        }
-//    }
+    private void doSaveScore() {
+        if (SCORE_ALL > 0) {
+            String playerName = lblPlayerNameGameOver.getText().toString();
+            if (playerName.equals(""))
+                playerName = "Unknown Player";
+            ScoreObject scoreObject = new ScoreObject();
+            scoreObject.setsPlayer(playerName);
+            scoreObject.setsScore(SCORE_ALL);
+            dbAccessHelper.doInsertScore(scoreObject);
+            lblPlayerNameGameOver.setText("");
+        }
+    }
     private void ktcheck_finish() {
         if (check_finish == 6){
             check_finish = 0;
@@ -1082,20 +900,31 @@ public class BubbleHittingActivity extends AppCompatActivity {
     }
     private  void getResult(int choose){
         if (choose == 1) {
-            SCORE_ONE += 10 * Integer.parseInt(txtTime.getText().toString());
+            SCORE_ONE +=  2 * Integer.parseInt(txtTime.getText().toString());
         }else if(choose == 2) {
-            SCORE_TWO += 10 * Integer.parseInt(txtTime.getText().toString());
+            SCORE_TWO +=  2 * Integer.parseInt(txtTime.getText().toString());
         }else if(choose == 3) {
-            SCORE_THREE +=  10 * Integer.parseInt(txtTime.getText().toString());
+            SCORE_THREE += 2 * Integer.parseInt(txtTime.getText().toString());
         }else if(choose == 4) {
-            SCORE_FOUR +=  10 * Integer.parseInt(txtTime.getText().toString());
+            SCORE_FOUR += 2 * Integer.parseInt(txtTime.getText().toString());
         }else if(choose == 5) {
-            SCORE_FIVE +=  10 * Integer.parseInt(txtTime.getText().toString());
+            SCORE_FIVE += 2 * Integer.parseInt(txtTime.getText().toString());
         }else if(choose == 6) {
-            SCORE_SIX +=  10 * Integer.parseInt(txtTime.getText().toString());
+            SCORE_SIX +=  2 * Integer.parseInt(txtTime.getText().toString());
         }
-        SCORE_ALL = SCORE_ONE + SCORE_TWO + SCORE_THREE + SCORE_FOUR + SCORE_FIVE + SCORE_SIX;
-        txtScore.setText(String.valueOf(SCORE_ALL));
+        SCORE_ALL += SCORE_ONE + SCORE_TWO + SCORE_THREE + SCORE_FOUR + SCORE_FIVE + SCORE_SIX;
+        txtScore.setText(SCORE_ALL+"");
 
     }
+    public ArrayList<WordObject> getListUsing() {
+        DbAccessHelper db = new DbAccessHelper(this);
+        if (db != null && newName != null) {
+            listImageData = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 1); // when new player data is lv1 and lv2
+            ArrayList<WordObject> lv2 = db.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 2);
+            listImageData.addAll(lv2);
+            Log.d("Tagtest", ConfigApplication.CURRENT_CHOOSE_TOPIC);
+        }
+        return listImageData;
+    }
+
 }

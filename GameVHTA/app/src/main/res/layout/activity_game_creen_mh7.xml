@@ -45,11 +45,11 @@
                     android:id="@+id/txtScore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/screen_5_background_score"
-                    android:gravity="center_horizontal"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="5dp"
-                    android:textColor="#D50000"
+                    android:layout_marginLeft="@dimen/background_score_game_left"
+                    android:layout_marginRight="30dp"
+                    android:gravity="center"
+                    android:text="@string/txtScore"
+                    android:textColor="@color/TimeAndScore"
                     android:textSize="@dimen/txtScore" />
             </LinearLayout>
         </LinearLayout>
