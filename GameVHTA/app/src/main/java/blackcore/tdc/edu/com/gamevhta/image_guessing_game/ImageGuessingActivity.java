@@ -61,12 +61,14 @@ public class ImageGuessingActivity extends AppCompatActivity {
     private int RESULT_FAILED = 0;
     private int RESULT_CHOSEN = -1;
     private ArrayList<WordObject> listImageFromDataO;
-    private ArrayList<WordObject> listImageLevelO;
+    private ArrayList<WordObject> listImageLevelO = null;
 
     private Dialog dialogBack;
     private Dialog dialogGameOver;
     private Dialog dialogWinGame;
     private DbAccessHelper dbAccessHelper;
+
+    private String newName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,18 @@ public class ImageGuessingActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_game_screen_mh_9);
+        newName = ConfigApplication.NEW_NAME;
+        Intent i = getIntent();
+        if(i != null){
+            Bundle b = i.getExtras();
+            if(b != null){
+                listImageFromDataO = (ArrayList<WordObject>) b.getSerializable(ConfigApplication.NAME_DATA_LIST);
+                SCORE += 600;
+            }else{
+                Log.d("Tagtest","vao data khong hi");
+                addDataList();
+            }
+        }
         initialize();
         handler = new Handler() {
             @Override
@@ -102,10 +116,10 @@ public class ImageGuessingActivity extends AppCompatActivity {
             }
         };
         //get Object selected at screen topic
-        if (getIntent().getExtras() != null) {
-            OBJECT = getIntent().getStringExtra(ConfigApplication.OBJECT_SELECTED);
-            addDataList();
-        }
+//        if (getIntent().getExtras() != null) {
+//            OBJECT = getIntent().getStringExtra(ConfigApplication.OBJECT_SELECTED);
+//            addDataList();
+//        }
         new CustomToask(ImageGuessingActivity.this, R.drawable.animal_bat, "Chọn 1 tấm hình đúng với từ vựng nhé...");
         Log.d("Guessing", SizeOfDevice.getScreenWidth() + "x" + SizeOfDevice.getScreenHeight());
 //        for (String arr : ConfigApplication.getListImageFromSDCard("/Download/")) {
@@ -164,8 +178,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
     }
 
     private void initialize() {
-        //database
-        dbAccessHelper = new DbAccessHelper(this);
+
         lnBackGroundWord = (LinearLayout) findViewById(R.id.lnBackGroundWord);
         btnImage1 = (ImageButton) findViewById(R.id.btnImage1);
         btnImage2 = (ImageButton) findViewById(R.id.btnImage2);
@@ -235,7 +248,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
         setFont();
         getAnimationImageButton();
 
-        addDataList();
+//        addDataList();
         loadGame();
     }
 
@@ -275,12 +288,13 @@ public class ImageGuessingActivity extends AppCompatActivity {
         StartSmartAnimation.startAnimation(lblWord, AnimationType.ZoomInRubberBand, 1500, 0, true);
 
         listImageLevelO = new ArrayList<>();
+        ArrayList<WordObject> cloneData0 = (ArrayList<WordObject>) listImageFromDataO.clone();
         Random rd = new Random();
-        for (int j = 0; j < 6; j++) {
-            int n = listImageFromDataO.size();
+        for (int j = 0; j < 5; j++) {
+            int n = cloneData0.size();
             int x = rd.nextInt(n);
-            listImageLevelO.add(listImageFromDataO.get(x));
-            listImageFromDataO.remove(x);
+            listImageLevelO.add(cloneData0.get(x));
+            cloneData0.remove(x);
         }
         RESULT_CHOSEN = rd.nextInt(listImageLevelO.size());
         Log.d("RESULT", String.valueOf(RESULT_CHOSEN));
@@ -304,8 +318,14 @@ public class ImageGuessingActivity extends AppCompatActivity {
 
     //List Image was loaded from database
     private void addDataList() {
-        listImageFromDataO = new ArrayList<>();
-        listImageFromDataO = dbAccessHelper.getWordObject(ConfigApplication.OBJECT_ANIMALS);
+        //database
+        dbAccessHelper = new DbAccessHelper(this);
+        if (dbAccessHelper != null && newName != null) {
+            listImageFromDataO = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 1); // when new player data is lv1 and lv2
+            ArrayList<WordObject> lv2 = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, 2);
+            listImageFromDataO.addAll(lv2);
+            Log.d("Tagtest", listImageFromDataO.size()+"");
+        }
     }
 
     //Add image from resource to ImageButton
