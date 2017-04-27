@@ -52,7 +52,7 @@ import blackcore.tdc.edu.com.gamevhta.models.WordObject;
 public class PicturePuzzleActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     TextView txtTime,txtScore,txtAnswerOne,txtAnswerTwo,txtAnswerThree,txtAnswerFour,txtAnswerFive,txtAnswerSix,lblScoreGameOver,txtNameScoreWin,txtScoreWin,txtNamePlayerOver,
-            txtNamePlayerWin,txtNameWin,lblPlayerNameGameOver;
+            txtNamePlayerWin,txtNameWin,lblPlayerNameGameOver,lblPlayerNameScoreOver;
 
     private Dialog dialogOver,dialogWin;
     private ArrayList<WordObject> listImageGame = null;
@@ -190,6 +190,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
 
         imgListOver = (ImageView) dialogOver.findViewById(R.id.imgListOver);
         imgReplayOver = (ImageView) dialogOver.findViewById(R.id.imgReplayOver);
+        lblPlayerNameScoreOver = (TextView) dialogOver.findViewById(R.id.lblPlayerNameGameOver);
         lblPlayerNameGameOver = (TextView) dialogOver.findViewById(R.id.lblPlayerNameGOver);
         lblScoreGameOver = (TextView) dialogOver.findViewById(R.id.lblScoreGameOver);
         txtNamePlayerOver = (TextView) dialogOver.findViewById(R.id.txtNamePlayer);
@@ -412,6 +413,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         txtNamePlayerWin.setTypeface(custom_font);
         txtNameWin.setTypeface(custom_font);
         txtNamePlayerOver.setTypeface(custom_font);
+        lblPlayerNameScoreOver.setTypeface(custom_font);
 
     }
 
@@ -423,7 +425,7 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
 
     public void onBackPressed() {
         // TODO Auto-generated method stub
-        imgBackGame.callOnClick();
+        return;
     }
     @Override
     protected void onPause() {
