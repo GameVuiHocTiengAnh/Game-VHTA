@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import blackcore.tdc.edu.com.gamevhta.market_game.Market_game;
+import blackcore.tdc.edu.com.gamevhta.picture_guessing_listening_game.PictureGuessingListenActivity;
 import blackcore.tdc.edu.com.gamevhta.writing_practice_game.writing_practice_game;
 
 /**
@@ -22,8 +23,9 @@ import blackcore.tdc.edu.com.gamevhta.writing_practice_game.writing_practice_gam
 public class RandomGamePracticeActivity extends AppCompatActivity {
 
     private Random ran;
-    private final int MAKET_GAME = 0;
-    private final int WRITING_PRACTICE_GAME = 1;
+    private final int MAKET_GAME = 1;
+    private final int WRITING_PRACTICE_GAME = 2;
+    private final int LISTEN_GAME = 0;
     private ArrayList<Integer> screenGame;
     private Bundle listWordsUsing = null;
 
@@ -39,8 +41,8 @@ public class RandomGamePracticeActivity extends AppCompatActivity {
 
         screenGame = new ArrayList<Integer>();
         screenGame.add(MAKET_GAME);
-//        screenGame.add(WRITING_PRACTICE_GAME);
-
+        screenGame.add(WRITING_PRACTICE_GAME);
+        screenGame.add(LISTEN_GAME);
 
         Random ran = new Random();
         int dom = ran.nextInt(screenGame.size());
@@ -61,6 +63,9 @@ public class RandomGamePracticeActivity extends AppCompatActivity {
                         break;
                     case WRITING_PRACTICE_GAME:
                         intent = new Intent(RandomGamePracticeActivity.this,writing_practice_game.class);
+                        break;
+                    case LISTEN_GAME:
+                        intent = new Intent(RandomGamePracticeActivity.this,PictureGuessingListenActivity.class);
                         break;
                 }
 
