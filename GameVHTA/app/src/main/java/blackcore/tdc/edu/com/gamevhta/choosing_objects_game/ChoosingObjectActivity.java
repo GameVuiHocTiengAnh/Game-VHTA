@@ -220,6 +220,7 @@ public class ChoosingObjectActivity extends AppCompatActivity implements TextToS
     }
     public void moveActivity() {
         imgBackGame = (PauseButton) findViewById(R.id.btnPausegame);
+        imgBackGame.setScreenUse("choosiing",null,this);
         Intent intent = new Intent(getApplicationContext(),LoadingGoOutGameActivity.class);
         imgBackGame.setMoveActivity(intent,this);
     }

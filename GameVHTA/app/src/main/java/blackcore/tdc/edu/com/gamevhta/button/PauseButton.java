@@ -226,7 +226,7 @@ public class PauseButton extends android.support.v7.widget.AppCompatImageView im
     }
 
     private void resumeTimePuzzle(){
-        if(screenUse.equals("PUZZLE_GAME")){
+        if(screenUse == "PUZZLE_GAME"){
             PicturePuzzleActivity activity = (PicturePuzzleActivity) context;
             ((PicturePuzzleActivity) context).startCountingTime();
         }
