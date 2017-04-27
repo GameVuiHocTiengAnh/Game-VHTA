@@ -45,10 +45,10 @@ public class BubbleHittingActivity extends AppCompatActivity {
 
     private Animation mAnimation;
     private ImageView imgQuestionsOne, imgQuestionsTwo, imgQuestionsThree, imgQuestionsFour, imgQuestionsFive, imgQuestionsSix, imgAnimalDialog;
-    private ImageView imgBubbleOne, imgBubbleTwo, imgBubbleThree, imgBubbleFour, imgBubbleFive, imgBubbleSix, imgDialogBubbleOne, imgDialogBubbleTwo, imgDialogBubbleThree;
+    private ImageView imgBubbleOne, imgBubbleTwo, imgBubbleThree, imgBubbleFour, imgBubbleFive, imgBubbleSix;
     private ImageView imgListOver, imgReplayOver, imgNextGameWin;
 
-    private TextView txtWordOne, txtWordTwo, txtWordThree, txtTime, txtScore, lblScoreGameOver, txtScoreWin, lblPlayerNameGameOver, txtNamePlayerOver, txtNameOver, txtNameWin;
+    private TextView txtWordOne, txtWordTwo, txtWordThree, txtTime, txtScore, lblScoreGameOver, txtScoreWin, txtNameOver, txtNameWin;
     private Dialog bubbledialog, dialogGameOver, dialogWinGame;
     private MediaPlayer mMusicMainGame = null, mCorrect = null, mWrong=null, mWin=null;
     private Handler handler;
@@ -831,7 +831,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         imgListOver.setSelected(false);
                         imgReplayOver.setEnabled(true);
-//                        doSaveScore();
+                        doSaveScore();
                         Intent intent = new Intent(BubbleHittingActivity.this, LoadingGoOutGameActivity.class);
                         startActivity(intent);
                         finish();
@@ -852,8 +852,7 @@ public class BubbleHittingActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         imgReplayOver.setSelected(false);
                         imgListOver.setEnabled(true);
-//                        doSaveScore();
-//                        SCORE_ALL = 0;
+                        doSaveScore();
                         txtScore.setText(SCORE_ALL+"");
                         Intent intent = new Intent(BubbleHittingActivity.this,BubbleHittingActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
@@ -892,14 +891,14 @@ public class BubbleHittingActivity extends AppCompatActivity {
     }
     private void doSaveScore() {
         if (SCORE_ALL > 0) {
-            String playerName = lblPlayerNameGameOver.getText().toString();
+            String playerName = txtNameOver.getText().toString();
             if (playerName.equals(""))
                 playerName = "Unknown Player";
             ScoreObject scoreObject = new ScoreObject();
             scoreObject.setsPlayer(playerName);
             scoreObject.setsScore(SCORE_ALL);
             dbAccessHelper.doInsertScore(scoreObject);
-            lblPlayerNameGameOver.setText("");
+            txtNameOver.setText("");
         }
     }
     private void ktcheck_finish() {
