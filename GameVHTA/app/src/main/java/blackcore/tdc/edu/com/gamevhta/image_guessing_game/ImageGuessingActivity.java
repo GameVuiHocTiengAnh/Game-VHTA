@@ -85,6 +85,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_game_screen_mh_9);
         dbAccessHelper = new DbAccessHelper(this);
+        listImageFromDataO = dbAccessHelper.getWordObject(ConfigApplication.CURRENT_CHOOSE_TOPIC);
         newName = ConfigApplication.NEW_NAME;
         lvPass = ConfigApplication.LV_PASS;
         oldName = ConfigApplication.OLD_NAME;
@@ -101,6 +102,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
             if(b != null){
                 Log.d("Tagtest","bundle");
                 listImageLevelGame = (ArrayList<WordObject>) b.getSerializable(ConfigApplication.NAME_DATA_LIST);
+                listImageFromDataO.removeAll(listImageLevelGame);
                 Log.d("Tagtest",listImageLevelGame.size()+"  listgame from bundle");
                 SCORE += 600;
                 addDataList();
@@ -109,10 +111,11 @@ public class ImageGuessingActivity extends AppCompatActivity {
                 flagNullBundle = true;
                 Log.d("Tagtest","vao data khong hi");
                 //addDataList();
-                listImageFromDataO = dbAccessHelper.getWordObject(ConfigApplication.CURRENT_CHOOSE_TOPIC);
+
                 listImageLevelGame = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC,lvPass+1); // when new player data is lv1 and lv2
                 ArrayList<WordObject> lv2 = dbAccessHelper.getWordObjectLevel(ConfigApplication.CURRENT_CHOOSE_TOPIC, lvPass+2);
                 listImageLevelGame.addAll(lv2);
+
                 Log.d("Tagtest", listImageLevelGame.size()+"");
             }
         }
@@ -165,7 +168,7 @@ public class ImageGuessingActivity extends AppCompatActivity {
         timer.cancel();
         if (!dialogBack.isShowing())
             dialogBack.show();
-        return;
+        //return;
     }
 
     @Override
@@ -329,12 +332,14 @@ public class ImageGuessingActivity extends AppCompatActivity {
             listImageLevelO.add(listImageLevelGame.get(xt));
             listImageFromDataO.remove(listImageLevelGame.get(xt));
             listImageLevelGame.remove(xt);
-
+//            Log.d("RESULT_A", "DUNG: "+ listImageLevelGame.get(xt).getwPathImage());
             for (int j = 0; j < 5; j++) {
                 rd = new Random();
+
                 int n = listImageFromDataO.size();
                 int x = rd.nextInt(n);
                 listImageLevelO.add(listImageFromDataO.get(x));
+//                Log.d("RESULT_A", "DUNG: "+ listImageLevelO.get(x).getwPathImage());
                 listImageFromDataO.remove(x);
             }
         }else {
