@@ -552,7 +552,8 @@ public class PicturePuzzleActivity extends AppCompatActivity implements TextToSp
         public boolean onTouch(View v, MotionEvent motionEvent) {
             switch (motionEvent.getAction()){
                 case MotionEvent.ACTION_DOWN:
-                    mClickGame.start();
+                    if(mClick != null)
+                        mClickGame.start();
                     ClipData data = ClipData.newPlainText("", "");
                     View.DragShadowBuilder myShadowBuilder = new View.DragShadowBuilder(v);
                     v.startAnimation(scale);
